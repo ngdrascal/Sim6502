@@ -69,7 +69,7 @@ public class InstLSR : InstBase
     // [0x4A] LSR accumulator
     public void Acc2(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             LsrUpdateFlags(ctx, ctx.Regs.A);
         ctx.AdvanceState(States.Fetch);
     }
@@ -87,7 +87,7 @@ public class InstLSR : InstBase
     }
     public void Zpg4(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             LsrUpdateFlags(ctx, ctx.Regs.Temp);
         ctx.AdvanceState(States.InstLSRzpg5);
     }
@@ -105,7 +105,7 @@ public class InstLSR : InstBase
     }
     public void Zpgx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.IncEALWithX();
         ctx.AdvanceState(States.InstLSRzpgx4);
     }
@@ -116,7 +116,7 @@ public class InstLSR : InstBase
     }
     public void Zpgx5(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             LsrUpdateFlags(ctx, ctx.Regs.Temp);
         ctx.AdvanceState(States.InstLSRzpgx6);
     }
@@ -144,7 +144,7 @@ public class InstLSR : InstBase
     }
     public void Abs5(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             LsrUpdateFlags(ctx, ctx.Regs.Temp);
         ctx.AdvanceState(States.InstLSRabs6);
     }
@@ -167,7 +167,7 @@ public class InstLSR : InstBase
     }
     public void Absx4(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.IncEAWithX();
         ctx.AdvanceState(States.InstLSRabsx5);
     }
@@ -178,7 +178,7 @@ public class InstLSR : InstBase
     }
     public void Absx6(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             LsrUpdateFlags(ctx, ctx.Regs.Temp);
         ctx.AdvanceState(States.InstLSRabsx7);
     }

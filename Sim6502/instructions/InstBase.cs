@@ -8,13 +8,13 @@ public class InstBase
     // Logger stub (replace with your logging framework if needed)
     // private readonly Logger _logger;
 
-    protected static readonly byte LOW = Constants.LOW;
-    protected static readonly byte HIGH = Constants.HIGH;
-    protected static readonly byte WRITE = LOW;
-    protected static readonly byte READ = HIGH;
-    protected static readonly byte P1MIDDLESTEP = Constants.P1MIDDLESTEP;
-    protected static readonly byte P2MIDDLESTEP = Constants.P2MIDDLESTEP;
-    protected static readonly byte P2LASTSUBSTEP = Constants.P2LASTSUBSTEP;
+    protected static readonly byte Low = Constants.LOW;
+    protected static readonly byte High = Constants.HIGH;
+    protected static readonly byte Write = Low;
+    protected static readonly byte Read = High;
+    protected static readonly byte P1Middlestep = Constants.P1MIDDLESTEP;
+    protected static readonly byte P2Middlestep = Constants.P2MIDDLESTEP;
+    protected static readonly byte P2Lastsubstep = Constants.P2LASTSUBSTEP;
 
     protected InstBase(IT2Registry it2Registry, IStateRegistry stateRegistry)
     {
@@ -24,6 +24,7 @@ public class InstBase
     }
 
     protected virtual void RegisterT2State(IT2Registry registry) { }
+
     protected virtual void RegisterStates(IStateRegistry registry) { }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -31,11 +32,11 @@ public class InstBase
     /////////////////////////////////////////////////////////////////////////////
     protected void Imm2SetAddrBus(Context ctx)
     {
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             ctx.Pins.SetAddrBusPins(ctx.Regs.PC);
             ctx.Regs.PC.Inc();
-            ctx.Pins.SetRWB(READ);
+            ctx.Pins.SetRWB(Read);
         }
     }
 
@@ -43,14 +44,14 @@ public class InstBase
     {
         var pins = ctx.Pins;
         var regs = ctx.Regs;
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             var addr = regs.PC.Copy();
             regs.PC.Inc();
             pins.SetAddrBusPins(addr);
-            pins.SetRWB(READ);
+            pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = pins.GetDataBusPins();
             regs.EA.Lsb().UpdateValue(data);
@@ -64,14 +65,14 @@ public class InstBase
     {
         var pins = ctx.Pins;
         var regs = ctx.Regs;
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             var addr = regs.PC.Copy();
             regs.PC.Inc();
             pins.SetAddrBusPins(addr);
-            pins.SetRWB(READ);
+            pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = pins.GetDataBusPins();
             regs.EA.Msb().UpdateValue(data);
@@ -81,12 +82,12 @@ public class InstBase
 
     protected void FetchEA2LowIndirect(Context ctx)
     {
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
-            ctx.Pins.SetRWB(READ);
+            ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.EA2.Lsb().UpdateValue(data);
@@ -96,14 +97,14 @@ public class InstBase
 
     protected void FetchEA2HighIndirect(Context ctx)
     {
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             var eaPlus1 = ctx.Regs.EA.Copy();
             eaPlus1.Inc();
             ctx.Pins.SetAddrBusPins(eaPlus1);
-            ctx.Pins.SetRWB(READ);
+            ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.EA2.Msb().UpdateValue(data);
@@ -112,13 +113,13 @@ public class InstBase
 
     protected void ReadAndDiscard(Context ctx)
     {
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             var addr = ctx.Regs.PC;
             ctx.Pins.SetAddrBusPins(addr);
-            ctx.Pins.SetRWB(READ);
+            ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == P2Lastsubstep)
         {
             _ = ctx.Pins.GetDataBusPins();
         }
@@ -126,12 +127,12 @@ public class InstBase
 
     protected void LoadTempFromEffAddr(Context ctx)
     {
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
-            ctx.Pins.SetRWB(READ);
+            ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
@@ -140,13 +141,13 @@ public class InstBase
 
     protected void StoreTempToEffAddr(Context ctx)
     {
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
-            ctx.Pins.SetRWB(WRITE);
+            ctx.Pins.SetRWB(Write);
             ctx.Pins.SetDataBusMode(DataBusMode.Output);
         }
-        else if (ctx.GetSubStep() == P2MIDDLESTEP)
+        else if (ctx.GetSubStep() == P2Middlestep)
         {
             ctx.Pins.SetDataBusPins(ctx.Regs.Temp);
         }
@@ -154,12 +155,12 @@ public class InstBase
 
     protected void LoadTempFromPC(Context ctx)
     {
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             ctx.Pins.SetAddrBusPins(ctx.Regs.PC);
-            ctx.Pins.SetRWB(READ);
+            ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
@@ -170,13 +171,13 @@ public class InstBase
 
     protected void PrepareStackWrite(Context ctx)
     {
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             var sp = new UInt16(0x100).AddUnsigned(ctx.Regs.S);
             ctx.Pins.SetAddrBusPins(sp);
-            ctx.Pins.SetRWB(WRITE);
+            ctx.Pins.SetRWB(Write);
         }
-        if (ctx.GetSubStep() == P2MIDDLESTEP)
+        if (ctx.GetSubStep() == P2Middlestep)
         {
             ctx.Pins.SetDataBusMode(DataBusMode.Output);
         }
@@ -184,31 +185,31 @@ public class InstBase
 
     protected void PrepareStackRead(Context ctx)
     {
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             var sp = new UInt16(0x100).AddUnsigned(ctx.Regs.S);
             ctx.Pins.SetAddrBusPins(sp);
             ctx.Pins.SetDataBusMode(DataBusMode.Input);
-            ctx.Pins.SetRWB(READ);
+            ctx.Pins.SetRWB(Read);
         }
     }
 
     protected void PushOnStack(Context ctx, UInt8 value)
     {
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             var sp = new UInt16(0x100).AddUnsigned(ctx.Regs.S);
             ctx.Pins.SetAddrBusPins(sp);
             ctx.Pins.SetDataBusMode(DataBusMode.Output);
-            ctx.Pins.SetRWB(WRITE);
+            ctx.Pins.SetRWB(Write);
         }
-        else if (ctx.GetSubStep() == P2MIDDLESTEP)
+        else if (ctx.GetSubStep() == P2Middlestep)
         {
             ctx.Pins.SetDataBusPins(value);
-            var addr = ctx.Regs.S;
+            // var addr = ctx.Regs.S;
             // _logger.Debug($"JSR|BRK: push {value.ToInt():X2} to 0x1{addr.ToInt():X2}");
         }
-        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == P2Lastsubstep)
         {
             _ = ctx.Regs.S.Dec();
         }
@@ -216,19 +217,19 @@ public class InstBase
 
     protected void PullFromStack(Context ctx, UInt8 value)
     {
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             ctx.Regs.S.Inc();
             var sp = new UInt16(0x100).AddUnsigned(ctx.Regs.S);
             ctx.Pins.SetAddrBusPins(sp);
             ctx.Pins.SetDataBusMode(DataBusMode.Input);
-            ctx.Pins.SetRWB(READ);
+            ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             value.UpdateValue(data);
-            var addr = ctx.Regs.S;
+            // var addr = ctx.Regs.S;
             // _logger.Debug($"RTS|RTI: pull {value.ToInt():X2} from 0x1{addr.ToInt():X2}");
         }
     }

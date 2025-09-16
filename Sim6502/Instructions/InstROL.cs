@@ -70,7 +70,7 @@ public class InstROL : InstBase
     // [0x2A] ROL accumulator
     public void Acc2(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             RolUpdateFlags(ctx, ctx.Regs.A);
         ctx.AdvanceState(States.Fetch);
     }
@@ -88,7 +88,7 @@ public class InstROL : InstBase
     }
     public void Zpg4(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             RolUpdateFlags(ctx, ctx.Regs.Temp);
         ctx.AdvanceState(States.InstROLzpg5);
     }
@@ -106,7 +106,7 @@ public class InstROL : InstBase
     }
     public void Zpgx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.IncEALWithX();
         ctx.AdvanceState(States.InstROLzpgx4);
     }
@@ -117,7 +117,7 @@ public class InstROL : InstBase
     }
     public void Zpgx5(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             RolUpdateFlags(ctx, ctx.Regs.Temp);
         ctx.AdvanceState(States.InstROLzpgx6);
     }
@@ -145,7 +145,7 @@ public class InstROL : InstBase
     }
     public void Abs5(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             RolUpdateFlags(ctx, ctx.Regs.Temp);
         ctx.AdvanceState(States.InstROLabs6);
     }
@@ -168,7 +168,7 @@ public class InstROL : InstBase
     }
     public void Absx4(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.IncEAWithX();
         ctx.AdvanceState(States.InstROLabsx5);
     }
@@ -179,7 +179,7 @@ public class InstROL : InstBase
     }
     public void Absx6(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             RolUpdateFlags(ctx, ctx.Regs.Temp);
         ctx.AdvanceState(States.InstROLabsx7);
     }

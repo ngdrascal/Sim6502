@@ -22,47 +22,47 @@ public class InstLDA : InstBase
 
     protected override void RegisterStates(IStateRegistry stateRegistry)
     {
-        stateRegistry.Map(States.InstLDAimm2, ctx => Imm2(ctx));
-        stateRegistry.Map(States.InstLDAzpg2, ctx => Zpg2(ctx));
-        stateRegistry.Map(States.InstLDAzpg3, ctx => Zpg3(ctx));
-        stateRegistry.Map(States.InstLDAzpgx2, ctx => Zpgx2(ctx));
-        stateRegistry.Map(States.InstLDAzpgx3, ctx => Zpgx3(ctx));
-        stateRegistry.Map(States.InstLDAzpgx4, ctx => Zpgx4(ctx));
-        stateRegistry.Map(States.InstLDAabs2, ctx => Abs2(ctx));
-        stateRegistry.Map(States.InstLDAabs3, ctx => Abs3(ctx));
-        stateRegistry.Map(States.InstLDAabs4, ctx => Abs4(ctx));
-        stateRegistry.Map(States.InstLDAabsx2, ctx => Absx2(ctx));
-        stateRegistry.Map(States.InstLDAabsx3, ctx => Absx3(ctx));
-        stateRegistry.Map(States.InstLDAabsx4, ctx => Absx4(ctx));
-        stateRegistry.Map(States.InstLDAabsx5, ctx => Absx5(ctx));
-        stateRegistry.Map(States.InstLDAabsy2, ctx => Absy2(ctx));
-        stateRegistry.Map(States.InstLDAabsy3, ctx => Absy3(ctx));
-        stateRegistry.Map(States.InstLDAabsy4, ctx => Absy4(ctx));
-        stateRegistry.Map(States.InstLDAabsy5, ctx => Absy5(ctx));
-        stateRegistry.Map(States.InstLDAindx2, ctx => Indx2(ctx));
-        stateRegistry.Map(States.InstLDAindx3, ctx => Indx3(ctx));
-        stateRegistry.Map(States.InstLDAindx4, ctx => Indx4(ctx));
-        stateRegistry.Map(States.InstLDAindx5, ctx => Indx5(ctx));
-        stateRegistry.Map(States.InstLDAindx6, ctx => Indx6(ctx));
-        stateRegistry.Map(States.InstLDAindy2, ctx => Indy2(ctx));
-        stateRegistry.Map(States.InstLDAindy3, ctx => Indy3(ctx));
-        stateRegistry.Map(States.InstLDAindy4, ctx => Indy4(ctx));
-        stateRegistry.Map(States.InstLDAindy5, ctx => Indy5(ctx));
-        stateRegistry.Map(States.InstLDAindy6, ctx => Indy6(ctx));
-        stateRegistry.Map(States.InstLDAind2, ctx => Ind2(ctx));
-        stateRegistry.Map(States.InstLDAind3, ctx => Ind3(ctx));
-        stateRegistry.Map(States.InstLDAind4, ctx => Ind4(ctx));
-        stateRegistry.Map(States.InstLDAind5, ctx => Ind5(ctx));
+        stateRegistry.Map(States.InstLDAimm2, Imm2);
+        stateRegistry.Map(States.InstLDAzpg2, Zpg2);
+        stateRegistry.Map(States.InstLDAzpg3, Zpg3);
+        stateRegistry.Map(States.InstLDAzpgx2, Zpgx2);
+        stateRegistry.Map(States.InstLDAzpgx3, Zpgx3);
+        stateRegistry.Map(States.InstLDAzpgx4, Zpgx4);
+        stateRegistry.Map(States.InstLDAabs2, Abs2);
+        stateRegistry.Map(States.InstLDAabs3, Abs3);
+        stateRegistry.Map(States.InstLDAabs4, Abs4);
+        stateRegistry.Map(States.InstLDAabsx2, Absx2);
+        stateRegistry.Map(States.InstLDAabsx3, Absx3);
+        stateRegistry.Map(States.InstLDAabsx4, Absx4);
+        stateRegistry.Map(States.InstLDAabsx5, Absx5);
+        stateRegistry.Map(States.InstLDAabsy2, Absy2);
+        stateRegistry.Map(States.InstLDAabsy3, Absy3);
+        stateRegistry.Map(States.InstLDAabsy4, Absy4);
+        stateRegistry.Map(States.InstLDAabsy5, Absy5);
+        stateRegistry.Map(States.InstLDAindx2, Indx2);
+        stateRegistry.Map(States.InstLDAindx3, Indx3);
+        stateRegistry.Map(States.InstLDAindx4, Indx4);
+        stateRegistry.Map(States.InstLDAindx5, Indx5);
+        stateRegistry.Map(States.InstLDAindx6, Indx6);
+        stateRegistry.Map(States.InstLDAindy2, Indy2);
+        stateRegistry.Map(States.InstLDAindy3, Indy3);
+        stateRegistry.Map(States.InstLDAindy4, Indy4);
+        stateRegistry.Map(States.InstLDAindy5, Indy5);
+        stateRegistry.Map(States.InstLDAindy6, Indy6);
+        stateRegistry.Map(States.InstLDAind2, Ind2);
+        stateRegistry.Map(States.InstLDAind3, Ind3);
+        stateRegistry.Map(States.InstLDAind4, Ind4);
+        stateRegistry.Map(States.InstLDAind5, Ind5);
     }
 
     protected void LoadAFromEffAddr(Context ctx)
     {
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
-            ctx.Pins.SetRWB(READ);
+            ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.UpdateAUpdateFlags(data);
@@ -92,7 +92,7 @@ public class InstLDA : InstBase
     public void Imm2(Context ctx)
     {
         Imm2SetAddrBus(ctx);
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.UpdateAUpdateFlags(data);
@@ -121,7 +121,7 @@ public class InstLDA : InstBase
     }
     public void Zpgx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.IncEALWithX();
         ctx.AdvanceState(States.InstLDAzpgx4);
     }
@@ -162,16 +162,16 @@ public class InstLDA : InstBase
     public void Absx4(Context ctx)
     {
         var nextState = States.Fetch;
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             var beforePage = ctx.Regs.EA.Msb().Copy();
             ctx.Regs.IncEAWithX();
             var afterPage = ctx.Regs.EA.Msb().Copy();
             ctx.CrossedPageBoundary = !afterPage.Equals(beforePage);
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
-            ctx.Pins.SetRWB(READ);
+            ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             if (!ctx.CrossedPageBoundary)
@@ -201,16 +201,16 @@ public class InstLDA : InstBase
     public void Absy4(Context ctx)
     {
         var nextState = States.Fetch;
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             var beforePage = ctx.Regs.EA.Msb().Copy();
             ctx.Regs.IncEAWithY();
             var afterPage = ctx.Regs.EA.Msb().Copy();
             ctx.CrossedPageBoundary = !afterPage.Equals(beforePage);
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
-            ctx.Pins.SetRWB(READ);
+            ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             if (!ctx.CrossedPageBoundary)
@@ -234,7 +234,7 @@ public class InstLDA : InstBase
     }
     public void Indx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
         {
             ctx.Regs.EA.Lsb().AddWithWrapAround(ctx.Regs.X);
             ctx.Regs.EA.Msb().Zero();
@@ -249,7 +249,7 @@ public class InstLDA : InstBase
     public void Indx5(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstLDAindx6);
     }
@@ -273,23 +273,23 @@ public class InstLDA : InstBase
     public void Indy4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstLDAindy5);
     }
     public void Indy5(Context ctx)
     {
         var nextState = States.Fetch;
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             var beforePage = ctx.Regs.EA.Msb().Copy();
             ctx.Regs.IncEAWithY();
             var afterPage = ctx.Regs.EA.Msb().Copy();
             ctx.CrossedPageBoundary = !afterPage.Equals(beforePage);
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
-            ctx.Pins.SetRWB(READ);
+            ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             if (!ctx.CrossedPageBoundary)
@@ -319,7 +319,7 @@ public class InstLDA : InstBase
     public void Ind4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstLDAind5);
     }

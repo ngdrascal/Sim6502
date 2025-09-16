@@ -1,9 +1,21 @@
-﻿namespace Sim6502;
+﻿using Microsoft.Extensions.Logging;
+
+namespace Sim6502;
 
 internal class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Hello, World!");
+        var pins = new Pins();
+        var statusReg = new StatusRegister();
+        var regs = new Registers(statusReg);
+        var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Debug));
+        var ctx = new Context(pins, regs, loggerFactory);
+        var cpu = new W65c02sEngine(pins, regs, ctx, loggerFactory);
+        while (true)
+        {
+            cpu.Step();
+        }
+
     }
 }

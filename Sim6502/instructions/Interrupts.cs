@@ -28,12 +28,12 @@ public class Interrupts : InstBase
 
     private void LoadTempFromPcDontAdvancePc(Context ctx)
     {
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             ctx.Pins.SetAddrBusPins(ctx.Regs.PC);
-            ctx.Pins.SetRWB(READ);
+            ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
@@ -101,7 +101,7 @@ public class Interrupts : InstBase
         // push the status register
         PushOnStack(ctx, ctx.Regs.P.GetFlags());
 
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var p = ctx.Regs.P;
             if (ctx.NmiFlag || ctx.IrqFlag)
@@ -118,7 +118,7 @@ public class Interrupts : InstBase
     public void BrkImp6(Context ctx)
     {
         // read 0xFFFE into the PCL
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             ctx.Pins.SetAddrBusMode(AddrBusMode.Output);
             ctx.Pins.SetDataBusMode(DataBusMode.Input);
@@ -126,9 +126,9 @@ public class Interrupts : InstBase
                 ctx.Pins.SetAddrBusPins(new UInt16(0xFFFA));
             else
                 ctx.Pins.SetAddrBusPins(new UInt16(0xFFFE));
-            ctx.Pins.SetRWB(READ);
+            ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.PC.Lsb().UpdateValue(data);
@@ -140,15 +140,15 @@ public class Interrupts : InstBase
     public void BrkImp7(Context ctx)
     {
         // read 0xFFFF into the PCH
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             if (ctx.NmiFlag)
                 ctx.Pins.SetAddrBusPins(new UInt16(0xFFFB));
             else
                 ctx.Pins.SetAddrBusPins(new UInt16(0xFFFF));
-            ctx.Pins.SetRWB(READ);
+            ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.PC.Msb().UpdateValue(data);

@@ -35,12 +35,12 @@
 
         private void LoadXFromEffAddr(Context ctx)
         {
-            if (ctx.GetSubStep() == P1MIDDLESTEP)
+            if (ctx.GetSubStep() == P1Middlestep)
             {
                 ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
-                ctx.Pins.SetRWB(READ);
+                ctx.Pins.SetRWB(Read);
             }
-            else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+            else if (ctx.GetSubStep() == P2Lastsubstep)
             {
                 var x = ctx.Pins.GetDataBusPins();
                 ctx.Regs.SetXUpdateFlags(x);
@@ -66,7 +66,7 @@
         public void Imm2(Context ctx)
         {
             Imm2SetAddrBus(ctx);
-            if (ctx.GetSubStep() == P2LASTSUBSTEP)
+            if (ctx.GetSubStep() == P2Lastsubstep)
             {
                 var data = ctx.Pins.GetDataBusPins();
                 ctx.Regs.SetXUpdateFlags(data);
@@ -95,7 +95,7 @@
         }
         public void Zpgy3(Context ctx)
         {
-            if (ctx.GetSubStep() == P2LASTSUBSTEP)
+            if (ctx.GetSubStep() == P2Lastsubstep)
                 ctx.Regs.IncEALWithY();
             ctx.AdvanceState(States.InstLDXzpgy4);
         }
@@ -136,16 +136,16 @@
         public void Absy4(Context ctx)
         {
             var nextState = States.Fetch;
-            if (ctx.GetSubStep() == P1MIDDLESTEP)
+            if (ctx.GetSubStep() == P1Middlestep)
             {
                 var beforePage = ctx.Regs.EA.Msb().Copy();
                 ctx.Regs.IncEAWithY();
                 var afterPage = ctx.Regs.EA.Msb().Copy();
                 ctx.CrossedPageBoundary = !afterPage.Equals(beforePage);
                 ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
-                ctx.Pins.SetRWB(READ);
+                ctx.Pins.SetRWB(Read);
             }
-            else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+            else if (ctx.GetSubStep() == P2Lastsubstep)
             {
                 var data = ctx.Pins.GetDataBusPins();
                 if (!ctx.CrossedPageBoundary)

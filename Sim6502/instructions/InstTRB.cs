@@ -75,7 +75,7 @@ public class InstTRB : InstBase
 
     public void Zpg4(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             TestAndReset(ctx);
         ctx.AdvanceState(States.Fetch);
     }
@@ -110,7 +110,7 @@ public class InstTRB : InstBase
 
     public void Abs5(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             TestAndReset(ctx);
 
         ctx.AdvanceState(States.InstTRBabs6);

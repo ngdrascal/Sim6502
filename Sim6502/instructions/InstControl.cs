@@ -71,7 +71,7 @@ public class InstControl : InstBase
     {
         // fetch the high byte of the jump to address into the EA reg
         FetchEffAddrHigh(ctx);
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.PC.UpdateValue(ctx.Regs.EA);
         ctx.AdvanceState(States.Fetch);
     }
@@ -146,7 +146,7 @@ public class InstControl : InstBase
 
     public void JsrAbs6(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.PC.UpdateValue(ctx.Regs.EA);
         ctx.AdvanceState(States.Fetch);
     }
@@ -236,7 +236,7 @@ public class InstControl : InstBase
     {
         // NOTE: the address pushed on the stack was the address of the second operand and
         // not the address of the next instruction.  The increment points it to the next instruction.
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.PC.Inc();
         ctx.AdvanceState(States.Fetch);
     }

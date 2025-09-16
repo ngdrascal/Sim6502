@@ -103,7 +103,7 @@ public class W65c02sEngine : IT2Registry, IStateRegistry
         if (_ctx.Pins.GetPHI2() == _lastClock)
             return;
         _lastClock = _ctx.Pins.GetPHI2();
-        int subStep = _ctx.GetSubStep();
+        var subStep = _ctx.GetSubStep();
         if (subStep == 1)
         {
             if (_ctx.State == States.Fetch && _ctx.DbgOpCode != null)
@@ -134,6 +134,7 @@ public class W65c02sEngine : IT2Registry, IStateRegistry
             _ctx.Pins.SetPHI1O(LOW);
             _ctx.Pins.SetPHI2O(HIGH);
         }
+
         if (_ctx.State == States.Fetch)
             if (_ctx.NmiFlag || _ctx.IrqFlag)
                 _ctx.InitState(States.Interrupt1);

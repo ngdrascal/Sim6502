@@ -85,7 +85,7 @@ public class InstORA : InstBase
     public void Imm2(Context ctx)
     {
         Imm2SetAddrBus(ctx);
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             var result = ctx.Regs.A.Copy().Or(data);
@@ -104,7 +104,7 @@ public class InstORA : InstBase
     public void Zpg3(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             OrAWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }
@@ -117,14 +117,14 @@ public class InstORA : InstBase
     }
     public void Zpgx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.IncEALWithX();
         ctx.AdvanceState(States.InstORAzpgx4);
     }
     public void Zpgx4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             OrAWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }
@@ -143,7 +143,7 @@ public class InstORA : InstBase
     public void Abs4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             OrAWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }
@@ -162,16 +162,16 @@ public class InstORA : InstBase
     public void Absx4(Context ctx)
     {
         var nextState = States.Fetch;
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             var beforePage = ctx.Regs.EA.Msb().Copy();
             ctx.Regs.IncEAWithX();
             var afterPage = ctx.Regs.EA.Msb().Copy();
             ctx.CrossedPageBoundary = !afterPage.Equals(beforePage);
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
-            ctx.Pins.SetRWB(READ);
+            ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
@@ -186,7 +186,7 @@ public class InstORA : InstBase
     }
     public void Absx5(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
@@ -209,16 +209,16 @@ public class InstORA : InstBase
     public void Absy4(Context ctx)
     {
         var nextState = States.Fetch;
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             var beforePage = ctx.Regs.EA.Msb().Copy();
             ctx.Regs.IncEAWithY();
             var afterPage = ctx.Regs.EA.Msb().Copy();
             ctx.CrossedPageBoundary = !afterPage.Equals(beforePage);
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
-            ctx.Pins.SetRWB(READ);
+            ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
@@ -233,7 +233,7 @@ public class InstORA : InstBase
     }
     public void Absy5(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
@@ -250,7 +250,7 @@ public class InstORA : InstBase
     }
     public void Indx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
         {
             ctx.Regs.EA.Lsb().AddWithWrapAround(ctx.Regs.X);
             ctx.Regs.EA.Msb().Zero();
@@ -265,14 +265,14 @@ public class InstORA : InstBase
     public void Indx5(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstORAindx6);
     }
     public void Indx6(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             OrAWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }
@@ -291,23 +291,23 @@ public class InstORA : InstBase
     public void Indy4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstORAindy5);
     }
     public void Indy5(Context ctx)
     {
         var nextState = States.Fetch;
-        if (ctx.GetSubStep() == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1Middlestep)
         {
             var beforePage = ctx.Regs.EA.Msb().Copy();
             ctx.Regs.IncEAWithY();
             var afterPage = ctx.Regs.EA.Msb().Copy();
             ctx.CrossedPageBoundary = !afterPage.Equals(beforePage);
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
-            ctx.Pins.SetRWB(READ);
+            ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
@@ -321,7 +321,7 @@ public class InstORA : InstBase
     public void Indy6(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             OrAWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }
@@ -340,14 +340,14 @@ public class InstORA : InstBase
     public void Ind4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstORAind5);
     }
     public void Ind5(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             OrAWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }

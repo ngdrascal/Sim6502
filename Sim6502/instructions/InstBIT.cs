@@ -57,7 +57,7 @@ public class InstBIT : InstBase
     public void Imm2(Context ctx)
     {
         Imm2SetAddrBus(ctx);
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
@@ -85,7 +85,7 @@ public class InstBIT : InstBase
     public void Zpg3(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             AndAWithTempSetFlags(ctx);
         ctx.AdvanceState(States.Fetch);
     }
@@ -99,7 +99,7 @@ public class InstBIT : InstBase
 
     public void Zpgx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.IncEALWithX();
         ctx.AdvanceState(States.InstBITzpgx4);
     }
@@ -107,7 +107,7 @@ public class InstBIT : InstBase
     public void Zpgx4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             AndAWithTempSetFlags(ctx);
         ctx.AdvanceState(States.Fetch);
     }
@@ -128,7 +128,7 @@ public class InstBIT : InstBase
     public void Abs4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             AndAWithTempSetFlags(ctx);
         ctx.AdvanceState(States.Fetch);
     }
@@ -148,7 +148,7 @@ public class InstBIT : InstBase
 
     public void Absx4(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.IncEAWithX();
         ctx.AdvanceState(States.InstBITabsx5);
     }
@@ -156,7 +156,7 @@ public class InstBIT : InstBase
     public void Absx5(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             AndAWithTempSetFlags(ctx);
         ctx.AdvanceState(States.Fetch);
     }

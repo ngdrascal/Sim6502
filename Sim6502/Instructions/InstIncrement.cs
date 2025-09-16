@@ -80,7 +80,7 @@ public class InstIncrement : InstBase
     // [0x1A] INC accumulator
     public void IncAcc2(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             IncAndUpdateFlags(ctx, ctx.Regs.A);
         ctx.AdvanceState(States.Fetch);
     }
@@ -97,7 +97,7 @@ public class InstIncrement : InstBase
     }
     public void IncZpg4(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             IncTempAndUpdateFlags(ctx);
         ctx.AdvanceState(States.InstINCzpg5);
     }
@@ -115,7 +115,7 @@ public class InstIncrement : InstBase
     }
     public void IncZpgx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.IncEALWithX();
         ctx.AdvanceState(States.InstINCzpgx4);
     }
@@ -126,7 +126,7 @@ public class InstIncrement : InstBase
     }
     public void IncZpgx5(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             IncTempAndUpdateFlags(ctx);
         ctx.AdvanceState(States.InstINCzpgx6);
     }
@@ -154,7 +154,7 @@ public class InstIncrement : InstBase
     }
     public void IncAbs5(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             IncTempAndUpdateFlags(ctx);
         ctx.AdvanceState(States.InstINCabs6);
     }
@@ -177,7 +177,7 @@ public class InstIncrement : InstBase
     }
     public void IncAbsx4(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.IncEAWithX();
         ctx.AdvanceState(States.InstINCabsx5);
     }
@@ -188,7 +188,7 @@ public class InstIncrement : InstBase
     }
     public void IncAbsx6(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             IncTempAndUpdateFlags(ctx);
         ctx.AdvanceState(States.InstINCabsx7);
     }
@@ -210,7 +210,7 @@ public class InstIncrement : InstBase
     ///////////////////////////////////////////////////////////////////////////////
     public void InxImp2(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             IncAndUpdateFlags(ctx, ctx.Regs.X);
         ctx.AdvanceState(States.Fetch);
     }
@@ -227,7 +227,7 @@ public class InstIncrement : InstBase
     ///////////////////////////////////////////////////////////////////////////////   
     public void InyImp2(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == P2Lastsubstep)
             IncAndUpdateFlags(ctx, ctx.Regs.Y);
         ctx.AdvanceState(States.Fetch);
     }
