@@ -1,173 +1,164 @@
-namespace Sim6502.Instructions;
+﻿namespace Sim6502.Instructions;
 
-// AND - "AND" Memory with Accumulator
-// A AND M -> A
-// N V B D I Z C
-// + - - - - - + -
-//
-// addressing     assembler     opc   bytes  cycles
-// ------------------------------------------------
-// immediate      AND #oper     29      2      2
-// zeropage       AND oper      25      2      3
-// zeropage,X     AND oper,X    35      2      4
-// absolute       AND oper      2D      3      4
-// absolute,X     AND oper,X    3D      3      4*
-// absolute,Y     AND oper,Y    39      3      4*
-// (indirect,X)   AND (oper,X)  21      2      6
-// (indirect),Y   AND (oper),Y  31      2      5*
-// (indirect)     AND (oper)    32      2      5
-public class InstAND : InstBase
+public class InstORA : InstBase
 {
-    public InstAND(IT2Registry it2Registry, IStateRegistry stateRegistry) : base(it2Registry, stateRegistry) { }
+    public InstORA(IT2Registry t2Registry, IStateRegistry stateRegistry)
+        : base(t2Registry, stateRegistry)
+    {
+    }
 
     protected override void RegisterT2State(IT2Registry registry)
     {
-        registry.Map(OpCodes.ANDimm, States.InstANDimm2);
-        registry.Map(OpCodes.ANDzpg, States.InstANDzpg2);
-        registry.Map(OpCodes.ANDzpgx, States.InstANDzpgx2);
-        registry.Map(OpCodes.ANDabs, States.InstANDabs2);
-        registry.Map(OpCodes.ANDabsx, States.InstANDabsx2);
-        registry.Map(OpCodes.ANDabsy, States.InstANDabsy2);
-        registry.Map(OpCodes.ANDindx, States.InstANDindx2);
-        registry.Map(OpCodes.ANDindy, States.InstANDindy2);
-        registry.Map(OpCodes.ANDind, States.InstANDind2);
+        registry.Map(OpCodes.ORAimm, States.InstORAimm2);
+        registry.Map(OpCodes.ORAzpg, States.InstORAzpg2);
+        registry.Map(OpCodes.ORAzpgx, States.InstORAzpgx2);
+        registry.Map(OpCodes.ORAabs, States.InstORAabs2);
+        registry.Map(OpCodes.ORAabsx, States.InstORAabsx2);
+        registry.Map(OpCodes.ORAabsy, States.InstORAabsy2);
+        registry.Map(OpCodes.ORAindx, States.InstORAindx2);
+        registry.Map(OpCodes.ORAindy, States.InstORAindy2);
+        registry.Map(OpCodes.ORAind, States.InstORAind2);
     }
 
     protected override void RegisterStates(IStateRegistry stateRegistry)
     {
-        stateRegistry.Map(States.InstANDimm2, Imm2);
-
-        stateRegistry.Map(States.InstANDzpg2, Zpg2);
-        stateRegistry.Map(States.InstANDzpg3, Zpg3);
-
-        stateRegistry.Map(States.InstANDzpgx2, Zpgx2);
-        stateRegistry.Map(States.InstANDzpgx3, Zpgx3);
-        stateRegistry.Map(States.InstANDzpgx4, Zpgx4);
-
-        stateRegistry.Map(States.InstANDabs2, Abs2);
-        stateRegistry.Map(States.InstANDabs3, Abs3);
-        stateRegistry.Map(States.InstANDabs4, Abs4);
-
-        stateRegistry.Map(States.InstANDabsx2, Absx2);
-        stateRegistry.Map(States.InstANDabsx3, Absx3);
-        stateRegistry.Map(States.InstANDabsx4, Absx4);
-        stateRegistry.Map(States.InstANDabsx5, Absx5);
-
-        stateRegistry.Map(States.InstANDabsy2, Absy2);
-        stateRegistry.Map(States.InstANDabsy3, Absy3);
-        stateRegistry.Map(States.InstANDabsy4, Absy4);
-        stateRegistry.Map(States.InstANDabsy5, Absy5);
-
-        stateRegistry.Map(States.InstANDindx2, Indx2);
-        stateRegistry.Map(States.InstANDindx3, Indx3);
-        stateRegistry.Map(States.InstANDindx4, Indx4);
-        stateRegistry.Map(States.InstANDindx5, Indx5);
-        stateRegistry.Map(States.InstANDindx6, Indx6);
-
-        stateRegistry.Map(States.InstANDindy2, Indy2);
-        stateRegistry.Map(States.InstANDindy3, Indy3);
-        stateRegistry.Map(States.InstANDindy4, Indy4);
-        stateRegistry.Map(States.InstANDindy5, Indy5);
-        stateRegistry.Map(States.InstANDindy6, Indy6);
-
-        stateRegistry.Map(States.InstANDind2, Ind2);
-        stateRegistry.Map(States.InstANDind3, Ind3);
-        stateRegistry.Map(States.InstANDind4, Ind4);
-        stateRegistry.Map(States.InstANDind5, Ind5);
+        stateRegistry.Map(States.InstORAimm2, ctx => Imm2(ctx));
+        stateRegistry.Map(States.InstORAzpg2, ctx => Zpg2(ctx));
+        stateRegistry.Map(States.InstORAzpg3, ctx => Zpg3(ctx));
+        stateRegistry.Map(States.InstORAzpgx2, ctx => Zpgx2(ctx));
+        stateRegistry.Map(States.InstORAzpgx3, ctx => Zpgx3(ctx));
+        stateRegistry.Map(States.InstORAzpgx4, ctx => Zpgx4(ctx));
+        stateRegistry.Map(States.InstORAabs2, ctx => Abs2(ctx));
+        stateRegistry.Map(States.InstORAabs3, ctx => Abs3(ctx));
+        stateRegistry.Map(States.InstORAabs4, ctx => Abs4(ctx));
+        stateRegistry.Map(States.InstORAabsx2, ctx => Absx2(ctx));
+        stateRegistry.Map(States.InstORAabsx3, ctx => Absx3(ctx));
+        stateRegistry.Map(States.InstORAabsx4, ctx => Absx4(ctx));
+        stateRegistry.Map(States.InstORAabsx5, ctx => Absx5(ctx));
+        stateRegistry.Map(States.InstORAabsy2, ctx => Absy2(ctx));
+        stateRegistry.Map(States.InstORAabsy3, ctx => Absy3(ctx));
+        stateRegistry.Map(States.InstORAabsy4, ctx => Absy4(ctx));
+        stateRegistry.Map(States.InstORAabsy5, ctx => Absy5(ctx));
+        stateRegistry.Map(States.InstORAindx2, ctx => Indx2(ctx));
+        stateRegistry.Map(States.InstORAindx3, ctx => Indx3(ctx));
+        stateRegistry.Map(States.InstORAindx4, ctx => Indx4(ctx));
+        stateRegistry.Map(States.InstORAindx5, ctx => Indx5(ctx));
+        stateRegistry.Map(States.InstORAindx6, ctx => Indx6(ctx));
+        stateRegistry.Map(States.InstORAindy2, ctx => Indy2(ctx));
+        stateRegistry.Map(States.InstORAindy3, ctx => Indy3(ctx));
+        stateRegistry.Map(States.InstORAindy4, ctx => Indy4(ctx));
+        stateRegistry.Map(States.InstORAindy5, ctx => Indy5(ctx));
+        stateRegistry.Map(States.InstORAindy6, ctx => Indy6(ctx));
+        stateRegistry.Map(States.InstORAind2, ctx => Ind2(ctx));
+        stateRegistry.Map(States.InstORAind3, ctx => Ind3(ctx));
+        stateRegistry.Map(States.InstORAind4, ctx => Ind4(ctx));
+        stateRegistry.Map(States.InstORAind5, ctx => Ind5(ctx));
     }
 
-    protected void AndAWithTemp(Context ctx)
+    protected void OrAWithTemp(Context ctx)
     {
         var memValue = ctx.Regs.Temp;
-        var result = ctx.Regs.A.Copy().And(memValue);
+        var result = ctx.Regs.A.Copy().Or(memValue);
         ctx.Regs.UpdateAUpdateFlags(result);
     }
 
-    // [0x29] AND immediate
+    ///////////////////////////////////////////////////////////////////////////////
+    // ORA - "OR" Memory with Accumulator
+    // A OR M -> A
+    // N V B D I Z C
+    // + - - - - + -
+    //
+    // addressing     assembler     opc   bytes  cycles
+    // ------------------------------------------------
+    // immediate      ORA #oper     09      2   2
+    // zeropage       ORA oper      05      2   3
+    // zeropage,X     ORA oper,X    15      2   4
+    // absolute       ORA oper      0D      3   4
+    // absolute,X     ORA oper,X    1D      3   4*
+    // absolute,Y     ORA oper,Y    19      3   4*
+    // (indirect,X)   ORA (oper,X)  01      2   6
+    // (indirect),Y   ORA (oper),Y  11      2   5*
+    // (indirect)     ORA (oper)    12      2   5
+    ///////////////////////////////////////////////////////////////////////////////
+
+    // [0x09] ORA immediate
     public void Imm2(Context ctx)
     {
         Imm2SetAddrBus(ctx);
         if (ctx.GetSubStep() == P2LASTSUBSTEP)
         {
             var data = ctx.Pins.GetDataBusPins();
-            var result = ctx.Regs.A.Copy().And(data);
+            var result = ctx.Regs.A.Copy().Or(data);
             ctx.Regs.UpdateAUpdateFlags(result);
             ctx.DbgOperand1 = data;
         }
         ctx.AdvanceState(States.Fetch);
     }
 
-    // [0x25] AND zeropage
+    // [0x05] ORA zeropage
     public void Zpg2(Context ctx)
     {
         FetchEffAddrLow(ctx);
-        ctx.AdvanceState(States.InstANDzpg3);
+        ctx.AdvanceState(States.InstORAzpg3);
     }
-
     public void Zpg3(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LASTSUBSTEP)
-            AndAWithTemp(ctx);
+            OrAWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }
 
-    // [0x35] AND zeropage,X
+    // [0x15] ORA zeropage,X
     public void Zpgx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
-        ctx.AdvanceState(States.InstANDzpgx3);
+        ctx.AdvanceState(States.InstORAzpgx3);
     }
-
     public void Zpgx3(Context ctx)
     {
         if (ctx.GetSubStep() == P2LASTSUBSTEP)
             ctx.Regs.IncEALWithX();
-        ctx.AdvanceState(States.InstANDzpgx4);
+        ctx.AdvanceState(States.InstORAzpgx4);
     }
-
     public void Zpgx4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LASTSUBSTEP)
-            AndAWithTemp(ctx);
+            OrAWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }
 
-    // [0x2D] AND absolute
+    // [0x0D] ORA absolute
     public void Abs2(Context ctx)
     {
         FetchEffAddrLow(ctx);
-        ctx.AdvanceState(States.InstANDabs3);
+        ctx.AdvanceState(States.InstORAabs3);
     }
-
     public void Abs3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
-        ctx.AdvanceState(States.InstANDabs4);
+        ctx.AdvanceState(States.InstORAabs4);
     }
-
     public void Abs4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LASTSUBSTEP)
-            AndAWithTemp(ctx);
+            OrAWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }
 
-    // [0x3D] AND absolute,X
+    // [01D] ORA absolute,X
     public void Absx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
-        ctx.AdvanceState(States.InstANDabsx3);
+        ctx.AdvanceState(States.InstORAabsx3);
     }
-
     public void Absx3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
-        ctx.AdvanceState(States.InstANDabsx4);
+        ctx.AdvanceState(States.InstORAabsx4);
     }
-
     public void Absx4(Context ctx)
     {
         var nextState = States.Fetch;
@@ -186,40 +177,35 @@ public class InstAND : InstBase
             ctx.Regs.Temp.UpdateValue(data);
             if (!ctx.CrossedPageBoundary)
             {
-                AndAWithTemp(ctx);
+                OrAWithTemp(ctx);
             }
             else
-            {
-                nextState = States.InstANDabsx5;
-            }
+                nextState = States.InstORAabsx5;
         }
         ctx.AdvanceState(nextState);
     }
-
     public void Absx5(Context ctx)
     {
         if (ctx.GetSubStep() == P2LASTSUBSTEP)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
-            AndAWithTemp(ctx);
+            OrAWithTemp(ctx);
         }
         ctx.AdvanceState(States.Fetch);
     }
 
-    // [0x39] AND absolute,Y
+    // [0x19] ORA absolute,Y
     public void Absy2(Context ctx)
     {
         FetchEffAddrLow(ctx);
-        ctx.AdvanceState(States.InstANDabsy3);
+        ctx.AdvanceState(States.InstORAabsy3);
     }
-
     public void Absy3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
-        ctx.AdvanceState(States.InstANDabsy4);
+        ctx.AdvanceState(States.InstORAabsy4);
     }
-
     public void Absy4(Context ctx)
     {
         var nextState = States.Fetch;
@@ -238,34 +224,30 @@ public class InstAND : InstBase
             ctx.Regs.Temp.UpdateValue(data);
             if (!ctx.CrossedPageBoundary)
             {
-                AndAWithTemp(ctx);
+                OrAWithTemp(ctx);
             }
             else
-            {
-                nextState = States.InstANDabsy5;
-            }
+                nextState = States.InstORAabsy5;
         }
         ctx.AdvanceState(nextState);
     }
-
     public void Absy5(Context ctx)
     {
         if (ctx.GetSubStep() == P2LASTSUBSTEP)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
-            AndAWithTemp(ctx);
+            OrAWithTemp(ctx);
         }
         ctx.AdvanceState(States.Fetch);
     }
 
-    // [0x21] AND (indirect,X)
+    // [0x01] ORA (indirect,X)
     public void Indx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
-        ctx.AdvanceState(States.InstANDindx3);
+        ctx.AdvanceState(States.InstORAindx3);
     }
-
     public void Indx3(Context ctx)
     {
         if (ctx.GetSubStep() == P2LASTSUBSTEP)
@@ -273,52 +255,46 @@ public class InstAND : InstBase
             ctx.Regs.EA.Lsb().AddWithWrapAround(ctx.Regs.X);
             ctx.Regs.EA.Msb().Zero();
         }
-        ctx.AdvanceState(States.InstANDindx4);
+        ctx.AdvanceState(States.InstORAindx4);
     }
-
     public void Indx4(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
-        ctx.AdvanceState(States.InstANDindx5);
+        ctx.AdvanceState(States.InstORAindx5);
     }
-
     public void Indx5(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
         if (ctx.GetSubStep() == P2LASTSUBSTEP)
             ctx.Regs.CopyEA2ToEA();
-        ctx.AdvanceState(States.InstANDindx6);
+        ctx.AdvanceState(States.InstORAindx6);
     }
-
     public void Indx6(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LASTSUBSTEP)
-            AndAWithTemp(ctx);
+            OrAWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }
 
-    // [0x31] AND (indirect),Y
+    // [0x11] ORA (indirect),Y
     public void Indy2(Context ctx)
     {
         FetchEffAddrLow(ctx);
-        ctx.AdvanceState(States.InstANDindy3);
+        ctx.AdvanceState(States.InstORAindy3);
     }
-
     public void Indy3(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
-        ctx.AdvanceState(States.InstANDindy4);
+        ctx.AdvanceState(States.InstORAindy4);
     }
-
     public void Indy4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
         if (ctx.GetSubStep() == P2LASTSUBSTEP)
             ctx.Regs.CopyEA2ToEA();
-        ctx.AdvanceState(States.InstANDindy5);
+        ctx.AdvanceState(States.InstORAindy5);
     }
-
     public void Indy5(Context ctx)
     {
         var nextState = States.Fetch;
@@ -336,51 +312,43 @@ public class InstAND : InstBase
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
             if (!ctx.CrossedPageBoundary)
-            {
-                AndAWithTemp(ctx);
-            }
+                OrAWithTemp(ctx);
             else
-            {
-                nextState = States.InstANDindy6;
-            }
+                nextState = States.InstORAindy6;
         }
         ctx.AdvanceState(nextState);
     }
-
     public void Indy6(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LASTSUBSTEP)
-            AndAWithTemp(ctx);
+            OrAWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }
 
-    // [0x32] AND (indirect)
+    // [0x12] ORA (indirect)
     public void Ind2(Context ctx)
     {
         FetchEffAddrLow(ctx);
-        ctx.AdvanceState(States.InstANDind3);
+        ctx.AdvanceState(States.InstORAind3);
     }
-
     public void Ind3(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
-        ctx.AdvanceState(States.InstANDind4);
+        ctx.AdvanceState(States.InstORAind4);
     }
-
     public void Ind4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
         if (ctx.GetSubStep() == P2LASTSUBSTEP)
             ctx.Regs.CopyEA2ToEA();
-        ctx.AdvanceState(States.InstANDind5);
+        ctx.AdvanceState(States.InstORAind5);
     }
-
     public void Ind5(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LASTSUBSTEP)
-            AndAWithTemp(ctx);
+            OrAWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }
 }

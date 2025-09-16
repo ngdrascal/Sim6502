@@ -1,13 +1,12 @@
-// Converted from Pins.java
-// Represents the pin logic for W65c02s
-using System;
-using Us.Retrocpu.Shared;
-using Us.Retrocpu.W65c02s;
+using UInt8 = Sim6502.types.UInt8;
+using UInt16 = Sim6502.types.UInt16;
 
-public class Pins : PinsInternalIntf, PinsExternalIntf
+namespace Sim6502;
+
+public class Pins : IPinsInternal, IPinsExternal
 {
     private readonly byte[] _pinValues;
-    private AddrBusMode _addrBusMode = AddrBusMode.Highz;
+    private AddrBusMode _addrBusMode = AddrBusMode.HighZ;
     private DataBusMode _dataBusMode = DataBusMode.Input;
     private RdyPinMode _rdyPinMode = RdyPinMode.Input;
     private readonly UInt8 _dbgInstReg = new UInt8();
@@ -37,35 +36,35 @@ public class Pins : PinsInternalIntf, PinsExternalIntf
         _pinValues[pinNumber - 1] = value;
     }
 
-    public byte GetVPB() => ReadPin(PinMap.Vpb);
+    public byte GetVPB() => ReadPin(PinMap.VPB);
 
-    public void SetVPB(byte value) => WritePin(PinMap.Vpb, value);
+    public void SetVPB(byte value) => WritePin(PinMap.VPB, value);
 
     public RdyPinMode GetRdyPinMode() => _rdyPinMode;
 
-    public byte GetRDY() => ReadPin(PinMap.Rdy);
+    public byte GetRDY() => ReadPin(PinMap.RDY);
 
-    public void SetRDY(byte value) => WritePin(PinMap.Rdy, value);
+    public void SetRDY(byte value) => WritePin(PinMap.RDY, value);
 
-    public byte GetPHI1O() => ReadPin(PinMap.Phi1O);
+    public byte GetPHI1O() => ReadPin(PinMap.PHI1O);
 
-    public void SetPHI1O(byte value) => WritePin(PinMap.Phi1O, value);
+    public void SetPHI1O(byte value) => WritePin(PinMap.PHI1O, value);
 
-    public byte GetIRQB() => ReadPin(PinMap.Irqb);
+    public byte GetIRQB() => ReadPin(PinMap.IRQB);
 
-    public void SetIRQB(byte value) => WritePin(PinMap.Irqb, value);
+    public void SetIRQB(byte value) => WritePin(PinMap.IRQB, value);
 
-    public byte GetMLB() => ReadPin(PinMap.Mlb);
+    public byte GetMLB() => ReadPin(PinMap.MLB);
 
-    public void SetMLB(byte value) => WritePin(PinMap.Mlb, value);
+    public void SetMLB(byte value) => WritePin(PinMap.MLB, value);
 
-    public byte GetNMIB() => ReadPin(PinMap.Nmib);
+    public byte GetNMIB() => ReadPin(PinMap.NMIB);
 
-    public void SetNMIB(byte value) => WritePin(PinMap.Nmib, value);
+    public void SetNMIB(byte value) => WritePin(PinMap.NMIB, value);
 
-    public byte GetSYNC() => ReadPin(PinMap.Sync);
+    public byte GetSYNC() => ReadPin(PinMap.SYNC);
 
-    public void SetSYNC(byte value) => WritePin(PinMap.Sync, value);
+    public void SetSYNC(byte value) => WritePin(PinMap.SYNC, value);
 
     public AddrBusMode GetAddrBusMode() => _addrBusMode;
 
@@ -158,18 +157,18 @@ public class Pins : PinsInternalIntf, PinsExternalIntf
     public byte GetD0() => ReadPin(PinMap.D0);
     public void SetD0(byte value) => WritePin(PinMap.D0, value);
 
-    public byte GetRWB() => ReadPin(PinMap.Rwb);
-    public void SetRWB(byte value) => WritePin(PinMap.Rwb, value);
-    public byte GetBE() => ReadPin(PinMap.Be);
-    public void SetBE(byte value) => WritePin(PinMap.Be, value);
-    public byte GetPHI2() => ReadPin(PinMap.Phi2);
-    public void SetPHI2(byte value) => WritePin(PinMap.Phi2, value);
-    public byte GetSOB() => ReadPin(PinMap.Sob);
-    public void SetSOB(byte value) => WritePin(PinMap.Sob, value);
-    public byte GetPHI2O() => ReadPin(PinMap.Phi2O);
-    public void SetPHI2O(byte value) => WritePin(PinMap.Phi2O, value);
-    public byte GetRESB() => ReadPin(PinMap.Resb);
-    public void SetRESB(byte value) => WritePin(PinMap.Resb, value);
+    public byte GetRWB() => ReadPin(PinMap.RWB);
+    public void SetRWB(byte value) => WritePin(PinMap.RWB, value);
+    public byte GetBE() => ReadPin(PinMap.BE);
+    public void SetBE(byte value) => WritePin(PinMap.BE, value);
+    public byte GetPHI2() => ReadPin(PinMap.PHI2);
+    public void SetPHI2(byte value) => WritePin(PinMap.PHI2, value);
+    public byte GetSOB() => ReadPin(PinMap.SOB);
+    public void SetSOB(byte value) => WritePin(PinMap.SOB, value);
+    public byte GetPHI2O() => ReadPin(PinMap.PHI2O);
+    public void SetPHI2O(byte value) => WritePin(PinMap.PHI2O, value);
+    public byte GetRESB() => ReadPin(PinMap.RESB);
+    public void SetRESB(byte value) => WritePin(PinMap.RESB, value);
 
     public byte GetDBGSTATE() => _dbgState;
     public void SetDBGSTATE(byte value) => _dbgState = value;

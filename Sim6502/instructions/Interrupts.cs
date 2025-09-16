@@ -1,57 +1,159 @@
-using Us.Retrocpu.Shared;
-using Us.Retrocpu.W65c02s;
-using Us.Retrocpu.W65c02s.Types;
+using UInt16 = Sim6502.types.UInt16;
 
-namespace Us.Retrocpu.W65c02s.Instructions
+namespace Sim6502.Instructions;
+
+public class Interrupts : InstBase
 {
-    /// <summary>
-    /// Implements interrupt handling for W65c02s (BRK, IRQ, NMI, RESET).
-    /// </summary>
-    public class Interrupts : InstBase
+    public Interrupts(IT2Registry t2Registry, IStateRegistry stateRegistry)
+        : base(t2Registry, stateRegistry)
     {
-        public Interrupts(T2RegistryIntf t2Registry, StateRegistryIntf stateRegistry)
-            : base(t2Registry, stateRegistry)
+    }
+
+    protected override void RegisterT2State(IT2Registry registry)
+    {
+        registry.Map(OpCodes.BRKimp, States.InstBRKimp2);
+    }
+
+    protected override void RegisterStates(IStateRegistry stateRegistry)
+    {
+        stateRegistry.Map(States.Interrupt1, ctx => Interrupt1(ctx));
+
+        stateRegistry.Map(States.InstBRKimp2, ctx => BrkImp2(ctx));
+        stateRegistry.Map(States.InstBRKimp3, ctx => BrkImp3(ctx));
+        stateRegistry.Map(States.InstBRKimp4, ctx => BrkImp4(ctx));
+        stateRegistry.Map(States.InstBRKimp5, ctx => BrkImp5(ctx));
+        stateRegistry.Map(States.InstBRKimp6, ctx => BrkImp6(ctx));
+        stateRegistry.Map(States.InstBRKimp7, ctx => BrkImp7(ctx));
+    }
+
+    private void LoadTempFromPcDontAdvancePc(Context ctx)
+    {
+        if (ctx.GetSubStep() == P1MIDDLESTEP)
         {
+            ctx.Pins.SetAddrBusPins(ctx.Regs.PC);
+            ctx.Pins.SetRWB(READ);
+        }
+        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        {
+            var data = ctx.Pins.GetDataBusPins();
+            ctx.Regs.Temp.UpdateValue(data);
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Interrupt (both NMI and IRQ)
+    /////////////////////////////////////////////////////////////////////////////
+    public void Interrupt1(Context ctx)
+    {
+        // NOTE: The BRK instruction, the non-maskable and maskable interrupts
+        //       share some code (steps 2 - 7).  This state is a replacement for
+        //       the FETCH state.  It differs by discarding the read op-code
+        //       and NOT increment the program counter.  This differentiates the
+        //       interrupts (NMI and IRQ) from the break instruction.
+
+        // load operand into the temp reg., then ignore it, don't advance the PC
+        LoadTempFromPcDontAdvancePc(ctx);
+
+        ctx.AdvanceState(States.InstBRKimp2);
+    }
+
+    /////////////////////////////////////////////////////////////////////////////
+    // BRK - Break command
+    // push PC+2, push SR
+    // N V B D I Z C
+    // - - 1 0 1 - -
+    //
+    // addressing     assembler     opc   bytes  cycles
+    // ------------------------------------------------
+    // implied        BRK           00      1      7
+    /////////////////////////////////////////////////////////////////////////////
+    public void BrkImp2(Context ctx)
+    {
+        // if handling a hardware interrupt
+        if (ctx.NmiFlag || ctx.IrqFlag)
+            // load operand into the temp reg., then ignore it, don't advance the PC
+            LoadTempFromPcDontAdvancePc(ctx);
+        else
+            // load operand into the temp reg., then ignore it
+            LoadTempFromPC(ctx);
+
+        ctx.AdvanceState(States.InstBRKimp3);
+    }
+
+    public void BrkImp3(Context ctx)
+    {
+        // push PCH
+        PushOnStack(ctx, ctx.Regs.PC.Msb());
+
+        ctx.AdvanceState(States.InstBRKimp4);
+    }
+
+    public void BrkImp4(Context ctx)
+    {
+        // push PCL
+        PushOnStack(ctx, ctx.Regs.PC.Lsb());
+
+        ctx.AdvanceState(States.InstBRKimp5);
+    }
+
+    public void BrkImp5(Context ctx)
+    {
+        // push the status register
+        PushOnStack(ctx, ctx.Regs.P.GetFlags());
+
+        if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        {
+            var p = ctx.Regs.P;
+            if (ctx.NmiFlag || ctx.IrqFlag)
+                p.ClearBreak();
+            else
+                p.SetBreak();
+            p.ClearDecimal();
+            p.SetIRQDisabled();
         }
 
-        protected override void RegisterT2State(T2RegistryIntf registry)
+        ctx.AdvanceState(States.InstBRKimp6);
+    }
+
+    public void BrkImp6(Context ctx)
+    {
+        // read 0xFFFE into the PCL
+        if (ctx.GetSubStep() == P1MIDDLESTEP)
         {
-            registry.Map(OpCodes.BRK, States.InstBRK2);
-            registry.Map(OpCodes.IRQ, States.InstIRQ2);
-            registry.Map(OpCodes.NMI, States.InstNMI2);
-            registry.Map(OpCodes.RESET, States.InstRESET2);
+            ctx.Pins.SetAddrBusMode(AddrBusMode.Output);
+            ctx.Pins.SetDataBusMode(DataBusMode.Input);
+            if (ctx.NmiFlag)
+                ctx.Pins.SetAddrBusPins(new UInt16(0xFFFA));
+            else
+                ctx.Pins.SetAddrBusPins(new UInt16(0xFFFE));
+            ctx.Pins.SetRWB(READ);
+        }
+        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        {
+            var data = ctx.Pins.GetDataBusPins();
+            ctx.Regs.PC.Lsb().UpdateValue(data);
         }
 
-        protected override void RegisterStates(StateRegistryIntf stateRegistry)
+        ctx.AdvanceState(States.InstBRKimp7);
+    }
+
+    public void BrkImp7(Context ctx)
+    {
+        // read 0xFFFF into the PCH
+        if (ctx.GetSubStep() == P1MIDDLESTEP)
         {
-            stateRegistry.Map(States.InstBRK2, ctx => Brk2(ctx));
-            stateRegistry.Map(States.InstIRQ2, ctx => Irq2(ctx));
-            stateRegistry.Map(States.InstNMI2, ctx => Nmi2(ctx));
-            stateRegistry.Map(States.InstRESET2, ctx => Reset2(ctx));
+            if (ctx.NmiFlag)
+                ctx.Pins.SetAddrBusPins(new UInt16(0xFFFB));
+            else
+                ctx.Pins.SetAddrBusPins(new UInt16(0xFFFF));
+            ctx.Pins.SetRWB(READ);
+        }
+        else if (ctx.GetSubStep() == P2LASTSUBSTEP)
+        {
+            var data = ctx.Pins.GetDataBusPins();
+            ctx.Regs.PC.Msb().UpdateValue(data);
         }
 
-        private void Brk2(Context ctx)
-        {
-            // Handle BRK interrupt
-            ctx.GetRegs().GetInterrupt().UpdateValue(true);
-        }
-
-        private void Irq2(Context ctx)
-        {
-            // Handle IRQ interrupt
-            ctx.GetRegs().GetInterrupt().UpdateValue(true);
-        }
-
-        private void Nmi2(Context ctx)
-        {
-            // Handle NMI interrupt
-            ctx.GetRegs().GetInterrupt().UpdateValue(true);
-        }
-
-        private void Reset2(Context ctx)
-        {
-            // Handle RESET interrupt
-            ctx.GetRegs().GetReset().UpdateValue(true);
-        }
+        ctx.AdvanceState(States.Fetch);
     }
 }

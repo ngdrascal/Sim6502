@@ -1,9 +1,10 @@
-// Converted from PinsInternalIntf.java
-// Internal pin interface for W65c02s
-using Us.Retrocpu.Shared;
-using Us.Retrocpu.W65c02s;
+// ReSharper disable InconsistentNaming
+using UInt8 = Sim6502.types.UInt8;
+using UInt16 = Sim6502.types.UInt16;
 
-public interface PinsInternalIntf
+namespace Sim6502;
+
+public interface IPinsInternal
 {
     void SetVPB(byte value);
 

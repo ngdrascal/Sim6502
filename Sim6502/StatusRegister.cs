@@ -1,6 +1,8 @@
-// Converted from StatusRegister.java
 // Represents the status register for W65c02s
-using Us.Retrocpu.Shared;
+
+using Sim6502.types;
+
+namespace Sim6502;
 
 public class StatusRegister
 {
@@ -75,31 +77,31 @@ public class StatusRegister
         _c.UpdateValue(value.IsBitSet(0));
     }
 
-    public BitFlag GetCarry() => _c;
+    public BitFlag Carry => _c;
     public void SetCarry() => _c.Set();
     public void ClearCarry() => _c.Clear();
 
-    public BitFlag GetZero() => _z;
+    public BitFlag Zero => _z;
     public void SetZero() => _z.Set();
     public void ClearZero() => _z.Clear();
 
-    public BitFlag GetIRQDisabled() => _i;
+    public BitFlag IRQDisabled => _i;
     public void SetIRQDisabled() => _i.Set();
     public void ClearIRQDisabled() => _i.Clear();
 
-    public BitFlag GetDecimal() => _d;
+    public BitFlag Decimal => _d;
     public void SetDecimal() => _d.Set();
     public void ClearDecimal() => _d.Clear();
 
-    public BitFlag GetBreak() => _b;
+    public BitFlag Break => _b;
     public void SetBreak() => _b.Set();
     public void ClearBreak() => _b.Clear();
 
-    public BitFlag GetOverflow() => _v;
+    public BitFlag Overflow => _v;
     public void SetOverflow() => _v.Set();
     public void ClearOverflow() => _v.Clear();
 
-    public BitFlag GetNegative() => _n;
+    public BitFlag Negative => _n;
     public void SetNegative() => _n.Set();
     public void ClearNegative() => _n.Clear();
 }

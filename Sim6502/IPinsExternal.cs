@@ -1,9 +1,8 @@
-// Converted from PinsExternalIntf.java
-// External pin interface for W65c02s
-using Us.Retrocpu.Shared;
-using Us.Retrocpu.W65c02s;
+using UInt8 = Sim6502.types.UInt8;
 
-public interface PinsExternalIntf
+namespace Sim6502;
+
+public interface IPinsExternal
 {
     DataBusMode GetDataBusMode();
 

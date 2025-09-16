@@ -1,7 +1,7 @@
-// Converted from Registers.java
-// Represents the registers for W65c02s
-using Us.Retrocpu.Shared;
-using Us.Retrocpu.W65c02s;
+using UInt8 = Sim6502.types.UInt8;
+using UInt16 = Sim6502.types.UInt16;
+
+namespace Sim6502;
 
 public class Registers
 {
@@ -24,17 +24,17 @@ public class Registers
         _y = new UInt8(0);
         _pc = new UInt16(0);
         _s = new UInt8(0xFD);
-        _inst = OpCodes.Nop.ToByte();
+        _inst = OpCodes.NOP.ToUInt8();
         _ea = new UInt16(0);
         _ea2 = new UInt16(0);
         _temp = new UInt8(0);
     }
 
-    public UInt8 GetA() => _a;
+    public UInt8 A => _a;
 
     public void UpdateAUpdateFlags(UInt8 value)
     {
-        GetA().UpdateValue(value);
+        A.UpdateValue(value);
         if (value.EqualsZero())
         {
             _p.SetZero();
@@ -52,11 +52,11 @@ public class Registers
         }
     }
 
-    public UInt8 GetX() => _x;
+    public UInt8 X => _x;
 
     public void SetXUpdateFlags(UInt8 value)
     {
-        GetX().UpdateValue(value);
+        X.UpdateValue(value);
         if (value.EqualsZero())
         {
             _p.SetZero();
@@ -74,11 +74,11 @@ public class Registers
         }
     }
 
-    public UInt8 GetY() => _y;
+    public UInt8 Y => _y;
 
     public void SetYUpdateFlags(UInt8 value)
     {
-        GetY().UpdateValue(value);
+        Y.UpdateValue(value);
         if (value.EqualsZero())
         {
             _p.SetZero();
@@ -96,27 +96,27 @@ public class Registers
         }
     }
 
-    public UInt16 GetPC() => _pc;
+    public UInt16 PC => _pc;
 
-    public UInt8 GetS() => _s;
+    public UInt8 S => _s;
 
-    public StatusRegister GetP() => _p;
+    public StatusRegister P => _p;
 
-    public UInt8 GetInst() => _inst;
+    public UInt8 Inst => _inst;
 
     public void IncEALWithX() => _ea.Lsb().AddWithWrapAround(_x);
 
     public void IncEALWithY() => _ea.Lsb().AddWithWrapAround(_y);
 
-    public UInt16 GetEA() => _ea;
+    public UInt16 EA => _ea;
 
     public void IncEAWithX() => _ea.AddUnsigned(_x);
 
     public void IncEAWithY() => _ea.AddUnsigned(_y);
 
-    public UInt16 GetEA2() => _ea2;
+    public UInt16 EA2 => _ea2;
 
     public void CopyEA2ToEA() => _ea.UpdateValue(_ea2);
 
-    public UInt8 GetTemp() => _temp;
+    public UInt8 Temp => _temp;
 }

@@ -1,20 +1,21 @@
-// Converted from W65c02sEngine.java
-// Main engine for W65c02s
-using Us.Retrocpu.Shared;
-using Us.Retrocpu.W65c02s;
+using Microsoft.Extensions.Logging;
+using Sim6502.Instructions;
+using UInt8 = Sim6502.types.UInt8;
+using UInt16 = Sim6502.types.UInt16;
 
-public class W65c02sEngine : T2RegistryIntf, StateRegistryIntf
+namespace Sim6502;
+
+public class W65c02sEngine : IT2Registry, IStateRegistry
 {
-    // ...fields and constants...
-    private readonly Context _ctx;
-    private readonly States[] _t2Map;
-    private readonly InstMethodIntf[] _stateMethodMap;
     private readonly byte LOW = Constants.LOW;
     private readonly byte HIGH = Constants.HIGH;
     private readonly byte READ = Constants.HIGH;
     private readonly byte P1MIDDLESTEP = Constants.P1MIDDLESTEP;
     private readonly byte LASTSUBSTEP = Constants.P2LASTSUBSTEP;
 
+    private readonly Context _ctx;
+    private readonly States[] _t2Map;
+    private readonly Action<Context>[] _stateMethodMap;
     private byte _lastClock = Constants.HIGH;
     private long _instCount = 0;
     private long _cycleCount = 0;
@@ -22,64 +23,97 @@ public class W65c02sEngine : T2RegistryIntf, StateRegistryIntf
     private byte _lastNmiState = 1;
     private bool _nmiAsserted = false;
     private bool _irqAsserted = false;
-
-    // Logger stubs (replace with your logging framework if needed)
-    // private readonly Logger _instLogger;
-    // private readonly Logger _stateLogger;
+    private readonly ILogger _instLogger;
+    private readonly ILogger _stateLogger;
     private string _debugRegisters;
 
-    public W65c02sEngine(PinsInternalIntf pins, Registers regs, Context ctx)
+    public W65c02sEngine(IPinsInternal pins, Registers regs, Context ctx, ILoggerFactory loggerFactory)
     {
         _ctx = ctx;
-        _ctx.InitState(States.WarmUp0);
-        _ctx.ForwardToLastSubStep();
+        ctx.InitState(States.WarmUp0);
+        ctx.ForwardToLastSubStep();
         _t2Map = new States[256];
-        _stateMethodMap = new InstMethodIntf[Enum.GetValues(typeof(States)).Length];
+        _stateMethodMap = new Action<Context>[Enum.GetValues(typeof(States)).Length];
         InitStateMethodMap(_stateMethodMap);
-        // Instantiate instruction classes (replace with actual implementations)
-        // new InstLDA(this, this);
-        // ... instantiate other instructions ...
-        // new Interrupts(this, this);
+        _instLogger = loggerFactory.CreateLogger("W65c02s.inst_");
+        _stateLogger = loggerFactory.CreateLogger("W65c02s.state");
+        // Instantiate all instruction classes
+        new InstLDA(this, this);
+        new InstLDX(this, this);
+        new InstLDY(this, this);
+        new InstSTA(this, this);
+        new InstSTX(this, this);
+        new InstSTY(this, this);
+        new InstSTZ(this, this);
+        new InstTransfer(this, this);
+        new InstStack(this, this);
+        new InstASL(this, this);
+        new InstLSR(this, this);
+        new InstROL(this, this);
+        new InstROR(this, this);
+        new InstAND(this, this);
+        new InstORA(this, this);
+        new InstEOR(this, this);
+        new InstBIT(this, this);
+        new InstTRB(this, this);
+        new InstTSB(this, this);
+        new InstFlags(this, this);
+        new InstBranch(this, this);
+        new InstControl(this, this);
+        new InstDecrement(this, this);
+        new InstIncrement(this, this);
+        new InstADC(this, this);
+        new InstSBC(this, this);
+        new InstCMP(this, this);
+        new InstCPX(this, this);
+        new InstCPY(this, this);
+        new InstSTP(this, this);
+        new InstWAI(this, this);
+        new InstNOP(this, this);
+        new Interrupts(this, this);
     }
 
-    public long GetInstCount() => _instCount;
-    public long GetCycleCount() => _cycleCount;
+    public long InstCount => _instCount;
+    public long CycleCount => _cycleCount;
 
-    public void Map(OpCodes opCode, States state) => _t2Map[(int)opCode] = state;
-    public void Map(States state, InstMethodIntf method) => _stateMethodMap[(int)state] = method;
-
-    private void InitStateMethodMap(InstMethodIntf[] map)
+    public void Map(OpCodes opCode, States state)
     {
-        map[(int)States.WarmUp0] = (ctx) => WarmUp0(ctx);
-        map[(int)States.WarmUp1] = (ctx) => WarmUp1(ctx);
-        map[(int)States.WarmUp2] = (ctx) => WarmUp2(ctx);
-        map[(int)States.Boot1] = (ctx) => Boot1(ctx);
-        map[(int)States.Boot2] = (ctx) => Boot2(ctx);
-        map[(int)States.NotReady] = (ctx) => NotReady(ctx);
-        map[(int)States.Stop] = (ctx) => Stop(ctx);
-        map[(int)States.Fetch] = (ctx) => Fetch(ctx);
+        _t2Map[opCode.ToInt()] = state;
+    }
+
+    public void Map(States state, Action<Context> method)
+    {
+        _stateMethodMap[(int)state] = method;
+    }
+
+    private void InitStateMethodMap(Action<Context>[] map)
+    {
+        map[(int)States.WarmUp0] = ctx => WarmUp0(ctx);
+        map[(int)States.WarmUp1] = ctx => WarmUp1(ctx);
+        map[(int)States.WarmUp2] = ctx => WarmUp2(ctx);
+        map[(int)States.Boot1] = ctx => Boot1(ctx);
+        map[(int)States.Boot2] = ctx => Boot2(ctx);
+        map[(int)States.NotReady] = ctx => NotReady(ctx);
+        map[(int)States.Stop] = ctx => Stop(ctx);
+        map[(int)States.Fetch] = ctx => Fetch(ctx);
     }
 
     public void Step()
     {
-        if (_ctx.Pins.PHI2 == _lastClock)
+        if (_ctx.Pins.GetPHI2() == _lastClock)
             return;
-
-        _lastClock = _ctx.Pins.PHI2;
-        int subStep = _ctx.SubStep;
-
+        _lastClock = _ctx.Pins.GetPHI2();
+        int subStep = _ctx.GetSubStep();
         if (subStep == 1)
         {
             if (_ctx.State == States.Fetch && _ctx.DbgOpCode != null)
-            {
-                // _instLogger.Debug($"{Dissasembler.Dissasemble(_ctx),-24} {_debugRegisters}");
-            }
-            // _stateLogger.Debug("----------------------------------------");
-            if (_ctx.Pins.RDY == LOW)
+                _instLogger.LogDebug($"{Dissasembler.Dissasemble(_ctx),-24} {_debugRegisters}");
+            _stateLogger.LogDebug("----------------------------------------");
+            if (_ctx.Pins.GetRDY() == LOW)
             {
                 if (_ctx.State != States.NotReady)
                 {
-                    _ctx.SetReadyState(_ctx.State);
+                    _ctx.ReadyState = _ctx.State;
                     _ctx.InitState(States.NotReady);
                 }
             }
@@ -97,25 +131,20 @@ public class W65c02sEngine : T2RegistryIntf, StateRegistryIntf
         }
         else if (subStep == Constants.P1LASTSTEP)
         {
-            _ctx.Pins.PHI1O = LOW;
-            _ctx.Pins.PHI2O = HIGH;
+            _ctx.Pins.SetPHI1O(LOW);
+            _ctx.Pins.SetPHI2O(HIGH);
         }
-
         if (_ctx.State == States.Fetch)
-        {
             if (_ctx.NmiFlag || _ctx.IrqFlag)
                 _ctx.InitState(States.Interrupt1);
-        }
-
-        int stateOrd = (int)_ctx.State;
-        InstMethodIntf method = _stateMethodMap[stateOrd];
-        // _stateLogger.Trace($"Executing state: {_ctx.State}, substep: {_ctx.SubStep}");
-        method.Execute(_ctx);
-
+        var stateOrd = (int)_ctx.State;
+        var method = _stateMethodMap[stateOrd];
+        _stateLogger.LogTrace($"Executing state: {_ctx.State}, substep: {subStep}");
+        method.BeginInvoke(_ctx, null, null);
         if (subStep == LASTSUBSTEP)
         {
-            _ctx.Pins.PHI1O = HIGH;
-            _ctx.Pins.PHI2O = LOW;
+            _ctx.Pins.SetPHI1O(HIGH);
+            _ctx.Pins.SetPHI1O(LOW);
             CheckForReset(_ctx);
             CheckForNmi(_ctx);
             CheckForIrq(_ctx);
@@ -123,14 +152,14 @@ public class W65c02sEngine : T2RegistryIntf, StateRegistryIntf
             _debugRegisters = $"A:{regs.A.ToInt():X2} P:{regs.P} X:{regs.X.ToInt():X2} Y:{regs.Y.ToInt():X2} S:{regs.S.ToInt():X2} PC:{regs.PC.ToInt():X4}";
         }
         _ctx.IncSubStep();
-        _ctx.Pins.DBGSUBSTEP = (byte)_ctx.SubStep;
+        _ctx.Pins.SetDBGSUBSTEP((byte)_ctx.GetSubStep());
     }
 
     private void CheckForReset(Context ctx)
     {
-        if (ctx.Pins.RESB == 0)
+        if (ctx.Pins.GetPHI2() == 0)
             _rstClockCount++;
-        else if (ctx.Pins.RESB == 1 && _rstClockCount >= 2)
+        else if (ctx.Pins.GetPHI2() == 1 && _rstClockCount >= 2)
             ctx.AdvanceState(States.Boot1);
         else
             _rstClockCount = 0;
@@ -138,7 +167,7 @@ public class W65c02sEngine : T2RegistryIntf, StateRegistryIntf
 
     private void CheckForNmi(Context ctx)
     {
-        byte currentNmiState = ctx.Pins.NMIB;
+        byte currentNmiState = ctx.Pins.GetPHI2();
         if (_lastNmiState == HIGH && currentNmiState == LOW)
             _nmiAsserted = true;
         _lastNmiState = currentNmiState;
@@ -146,12 +175,12 @@ public class W65c02sEngine : T2RegistryIntf, StateRegistryIntf
 
     private void CheckForIrq(Context ctx)
     {
-        _irqAsserted = ctx.Regs.P.IRQDisabled.IsCleared() && ctx.Pins.IRQB == 0;
+        _irqAsserted = ctx.Regs.P.IRQDisabled.IsCleared() && ctx.Pins.GetPHI2() == 0;
     }
 
     private void WarmUp0(Context ctx)
     {
-        if (ctx.Pins.PHI2 == HIGH)
+        if (ctx.Pins.GetPHI2() == HIGH)
         {
             ctx.ForwardToLastSubStep();
             ctx.InitState(States.WarmUp1);
@@ -165,21 +194,21 @@ public class W65c02sEngine : T2RegistryIntf, StateRegistryIntf
 
     private void WarmUp2(Context ctx)
     {
-        if (ctx.SubStep == LASTSUBSTEP)
+        if (ctx.GetSubStep() == LASTSUBSTEP)
             ResetFlags(ctx);
         ctx.AdvanceState(States.Boot1);
     }
 
     private void ResetPins(Context ctx)
     {
-        ctx.Pins.VPB = HIGH;
-        ctx.Pins.PHI1O = HIGH;
-        ctx.Pins.MLB = HIGH;
-        ctx.Pins.SYNC = LOW;
-        ctx.Pins.AddrBusMode = AddrBusMode.Output;
-        ctx.Pins.AddrBusPins = new UInt16(0xFFFF);
-        ctx.Pins.DataBusMode = DataBusMode.Input;
-        ctx.Pins.RWB = READ;
+        ctx.Pins.SetPHI1O(HIGH);
+        ctx.Pins.SetPHI1O(HIGH);
+        ctx.Pins.SetPHI1O(HIGH);
+        ctx.Pins.SetPHI1O(LOW);
+        ctx.Pins.SetAddrBusMode(AddrBusMode.Output);
+        ctx.Pins.SetAddrBusPins(new UInt16(0xFFFF));
+        ctx.Pins.SetDataBusMode(DataBusMode.Input);
+        ctx.Pins.SetRWB(READ);
     }
 
     private void ResetFlags(Context ctx)
@@ -189,21 +218,21 @@ public class W65c02sEngine : T2RegistryIntf, StateRegistryIntf
 
     private void Boot1(Context ctx)
     {
-        if (ctx.SubStep == 1)
+        if (ctx.GetSubStep() == 1)
         {
             ResetPins(ctx);
             _rstClockCount = 0;
         }
-        else if (ctx.SubStep == P1MIDDLESTEP)
+        else if (ctx.GetSubStep() == P1MIDDLESTEP)
         {
-            ctx.Pins.AddrBusMode = AddrBusMode.Output;
-            ctx.Pins.DataBusMode = DataBusMode.Input;
-            ctx.Pins.AddrBusPins = new UInt16(0xFFFC);
-            ctx.Pins.RWB = READ;
+            ctx.Pins.SetAddrBusMode(AddrBusMode.Output);
+            ctx.Pins.SetDataBusMode(DataBusMode.Input);
+            ctx.Pins.SetAddrBusPins(new UInt16(0xFFFC));
+            ctx.Pins.SetRWB(READ);
         }
-        else if (ctx.SubStep == LASTSUBSTEP)
+        else if (ctx.GetSubStep() == LASTSUBSTEP)
         {
-            UInt8 data = ctx.Pins.DataBusPins;
+            var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.PC.Lsb().UpdateValue(data);
         }
         ctx.AdvanceState(States.Boot2);
@@ -211,14 +240,14 @@ public class W65c02sEngine : T2RegistryIntf, StateRegistryIntf
 
     private void Boot2(Context ctx)
     {
-        if (ctx.SubStep == P1MIDDLESTEP)
+        if (ctx.GetSubStep() == P1MIDDLESTEP)
         {
-            ctx.Pins.AddrBusPins = new UInt16(0xFFFD);
-            ctx.Pins.RWB = READ;
+            ctx.Pins.SetAddrBusPins(new UInt16(0xFFFD));
+            ctx.Pins.SetRWB(READ);
         }
-        else if (ctx.SubStep == LASTSUBSTEP)
+        else if (ctx.GetSubStep() == LASTSUBSTEP)
         {
-            UInt8 data = ctx.Pins.DataBusPins;
+            var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.PC.Msb().UpdateValue(data);
         }
         ctx.AdvanceState(States.Fetch);
@@ -226,27 +255,27 @@ public class W65c02sEngine : T2RegistryIntf, StateRegistryIntf
 
     private void Fetch(Context ctx)
     {
-        if (ctx.SubStep == 1)
+        if (ctx.GetSubStep() == 1)
         {
-            ctx.Pins.SYNC = HIGH;
-            ctx.Pins.RWB = READ;
-            ctx.Pins.DataBusMode = DataBusMode.Input;
+            ctx.Pins.SetPHI1O(HIGH);
+            ctx.Pins.SetRWB(READ);
+            ctx.Pins.SetDataBusMode(DataBusMode.Input);
         }
-        else if (ctx.SubStep == P1MIDDLESTEP)
+        else if (ctx.GetSubStep() == P1MIDDLESTEP)
         {
-            UInt16 pc = ctx.Regs.PC.Copy();
+            var pc = ctx.Regs.PC.Copy();
             ctx.DbgPC = pc;
-            ctx.Pins.AddrBusPins = pc;
+            ctx.Pins.SetAddrBusPins(pc);
             ctx.Regs.PC.Inc();
-            ctx.Pins.RWB = READ;
+            ctx.Pins.SetRWB(READ);
         }
-        else if (ctx.SubStep == LASTSUBSTEP)
+        else if (ctx.GetSubStep() == LASTSUBSTEP)
         {
-            ctx.Regs.Inst.UpdateValue(ctx.Pins.DataBusPins);
-            ctx.Pins.SetDbgInst(ctx.Regs.Inst);
-            ctx.Pins.SYNC = LOW;
+            ctx.Regs.Inst.UpdateValue(ctx.Pins.GetDataBusPins());
+            ctx.Pins.SetDBGINST(ctx.Regs.Inst);
+            ctx.Pins.SetPHI1O(LOW);
             _instCount++;
-            OpCodes opCode = OpCodes.FromValue(ctx.Regs.Inst);
+            var opCode = OpCodesExtensions.FromValue(ctx.Regs.Inst);
             ctx.DbgOpCode = opCode;
         }
         ctx.AdvanceState(_t2Map[ctx.Regs.Inst.ToInt()]);
@@ -254,7 +283,7 @@ public class W65c02sEngine : T2RegistryIntf, StateRegistryIntf
 
     private void NotReady(Context ctx)
     {
-        if (ctx.Pins.RDY == HIGH)
+        if (ctx.Pins.GetPHI2() == HIGH)
             ctx.AdvanceState(ctx.ReadyState);
     }
 
