@@ -5,7 +5,7 @@ using UInt8 = Sim6502.types.UInt8;
 
 namespace Sim6502.Tests;
 
-public class UnitTest1
+public class UnitTestBase
 {
     protected readonly BitFlag Low = new(false);
     protected readonly BitFlag High = new(true);
@@ -17,7 +17,7 @@ public class UnitTest1
     protected readonly W65c02sEngine Cpu;
     protected byte Phi2;
 
-    public UnitTest1()
+    public UnitTestBase()
     {
         Pins = new Pins();
         var statusReg = new StatusRegister();
