@@ -15,16 +15,16 @@ public class InstTRB : InstBase
 
     protected override void RegisterStates(IStateRegistry registry)
     {
-        registry.Map(States.InstTRBzpg2, ctx => Zpg2(ctx));
-        registry.Map(States.InstTRBzpg3, ctx => Zpg3(ctx));
-        registry.Map(States.InstTRBzpg4, ctx => Zpg4(ctx));
-        registry.Map(States.InstTRBzpg5, ctx => Zpg5(ctx));
+        registry.Map(States.InstTRBzpg2, Zpg2);
+        registry.Map(States.InstTRBzpg3, Zpg3);
+        registry.Map(States.InstTRBzpg4, Zpg4);
+        registry.Map(States.InstTRBzpg5, Zpg5);
 
-        registry.Map(States.InstTRBabs2, ctx => Abs2(ctx));
-        registry.Map(States.InstTRBabs3, ctx => Abs3(ctx));
-        registry.Map(States.InstTRBabs4, ctx => Abs4(ctx));
-        registry.Map(States.InstTRBabs4, ctx => Abs5(ctx));
-        registry.Map(States.InstTRBabs4, ctx => Abs6(ctx));
+        registry.Map(States.InstTRBabs2, Abs2);
+        registry.Map(States.InstTRBabs3, Abs3);
+        registry.Map(States.InstTRBabs4, Abs4);
+        registry.Map(States.InstTRBabs5, Abs5);
+        registry.Map(States.InstTRBabs6, Abs6);
     }
 
     protected void TestAndReset(Context ctx)
@@ -77,7 +77,7 @@ public class InstTRB : InstBase
     {
         if (ctx.GetSubStep() == P2Lastsubstep)
             TestAndReset(ctx);
-        ctx.AdvanceState(States.Fetch);
+        ctx.AdvanceState(States.InstTRBzpg5);
     }
 
     public void Zpg5(Context ctx)

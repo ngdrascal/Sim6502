@@ -5,7 +5,7 @@ namespace Sim6502;
 /// <summary>
 /// Disassembler for W65c02s instructions. Converts opcode and operands to human-readable assembly.
 /// </summary>
-public static class Dissasembler
+public static class Disasembler
 {
     /// <summary>
     /// Disassembles the current instruction in the context.
@@ -13,7 +13,7 @@ public static class Dissasembler
     /// <param name="ctx">CPU context containing opcode and operands.</param>
     /// <returns>Disassembled instruction string.</returns>
 
-    public static string Dissasemble(Context ctx)
+    public static string Disasemble(Context ctx)
     {
         string opCodeStr = ctx.DbgOpCode.ToString().Substring(0, 3);
         string operandStr = string.Empty;

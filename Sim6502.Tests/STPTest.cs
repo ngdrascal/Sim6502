@@ -42,11 +42,11 @@ public class STPTests : UnitTestBase
         ExecuteClockCycles(1); // STPimp2
         ExecuteClockCycles(1); // STPimp3
 
-        Pins.SetRESB((byte)0); // Assert reset
+        Pins.SetRESB(0);       // Assert reset
         ExecuteClockCycles(2); // hold low for 2 or more clock cycles
 
         Pins.SetDataBusPins(new UInt8(0x21));
-        Pins.SetRESB((byte)1); // De-assert reset
+        Pins.SetRESB(1);       // De-assert reset
         ExecuteClockCycles(2); // Boot1
 
         Pins.SetDataBusPins(new UInt8(0x43));

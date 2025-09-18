@@ -16,14 +16,14 @@ public class Interrupts : InstBase
 
     protected override void RegisterStates(IStateRegistry stateRegistry)
     {
-        stateRegistry.Map(States.Interrupt1, ctx => Interrupt1(ctx));
+        stateRegistry.Map(States.Interrupt1, Interrupt1);
 
-        stateRegistry.Map(States.InstBRKimp2, ctx => BrkImp2(ctx));
-        stateRegistry.Map(States.InstBRKimp3, ctx => BrkImp3(ctx));
-        stateRegistry.Map(States.InstBRKimp4, ctx => BrkImp4(ctx));
-        stateRegistry.Map(States.InstBRKimp5, ctx => BrkImp5(ctx));
-        stateRegistry.Map(States.InstBRKimp6, ctx => BrkImp6(ctx));
-        stateRegistry.Map(States.InstBRKimp7, ctx => BrkImp7(ctx));
+        stateRegistry.Map(States.InstBRKimp2, BrkImp2);
+        stateRegistry.Map(States.InstBRKimp3, BrkImp3);
+        stateRegistry.Map(States.InstBRKimp4, BrkImp4);
+        stateRegistry.Map(States.InstBRKimp5, BrkImp5);
+        stateRegistry.Map(States.InstBRKimp6, BrkImp6);
+        stateRegistry.Map(States.InstBRKimp7, BrkImp7);
     }
 
     private void LoadTempFromPcDontAdvancePc(Context ctx)

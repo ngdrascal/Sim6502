@@ -22,54 +22,54 @@ public class InstSBC : InstBase
 
     protected override void RegisterStates(IStateRegistry stateRegistry)
     {
-        stateRegistry.Map(States.InstSBCimm2, ctx => Imm2(ctx));
-        stateRegistry.Map(States.InstSBCimm3, ctx => Imm3(ctx));
+        stateRegistry.Map(States.InstSBCimm2, Imm2);
+        stateRegistry.Map(States.InstSBCimm3, Imm3);
 
-        stateRegistry.Map(States.InstSBCzpg2, ctx => Zpg2(ctx));
-        stateRegistry.Map(States.InstSBCzpg3, ctx => Zpg3(ctx));
-        stateRegistry.Map(States.InstSBCzpg4, ctx => Zpg4(ctx));
+        stateRegistry.Map(States.InstSBCzpg2, Zpg2);
+        stateRegistry.Map(States.InstSBCzpg3, Zpg3);
+        stateRegistry.Map(States.InstSBCzpg4, Zpg4);
 
-        stateRegistry.Map(States.InstSBCzpgx2, ctx => Zpgx2(ctx));
-        stateRegistry.Map(States.InstSBCzpgx3, ctx => Zpgx3(ctx));
-        stateRegistry.Map(States.InstSBCzpgx4, ctx => Zpgx4(ctx));
-        stateRegistry.Map(States.InstSBCzpgx5, ctx => Zpgx5(ctx));
+        stateRegistry.Map(States.InstSBCzpgx2, Zpgx2);
+        stateRegistry.Map(States.InstSBCzpgx3, Zpgx3);
+        stateRegistry.Map(States.InstSBCzpgx4, Zpgx4);
+        stateRegistry.Map(States.InstSBCzpgx5, Zpgx5);
 
-        stateRegistry.Map(States.InstSBCabs2, ctx => Abs2(ctx));
-        stateRegistry.Map(States.InstSBCabs3, ctx => Abs3(ctx));
-        stateRegistry.Map(States.InstSBCabs4, ctx => Abs4(ctx));
-        stateRegistry.Map(States.InstSBCabs5, ctx => Abs5(ctx));
+        stateRegistry.Map(States.InstSBCabs2, Abs2);
+        stateRegistry.Map(States.InstSBCabs3, Abs3);
+        stateRegistry.Map(States.InstSBCabs4, Abs4);
+        stateRegistry.Map(States.InstSBCabs5, Abs5);
 
-        stateRegistry.Map(States.InstSBCabsx2, ctx => Absx2(ctx));
-        stateRegistry.Map(States.InstSBCabsx3, ctx => Absx3(ctx));
-        stateRegistry.Map(States.InstSBCabsx4, ctx => Absx4(ctx));
-        stateRegistry.Map(States.InstSBCabsx5, ctx => Absx5(ctx));
-        stateRegistry.Map(States.InstSBCabsx6, ctx => Absx6(ctx));
+        stateRegistry.Map(States.InstSBCabsx2, Absx2);
+        stateRegistry.Map(States.InstSBCabsx3, Absx3);
+        stateRegistry.Map(States.InstSBCabsx4, Absx4);
+        stateRegistry.Map(States.InstSBCabsx5, Absx5);
+        stateRegistry.Map(States.InstSBCabsx6, Absx6);
 
-        stateRegistry.Map(States.InstSBCabsy2, ctx => Absy2(ctx));
-        stateRegistry.Map(States.InstSBCabsy3, ctx => Absy3(ctx));
-        stateRegistry.Map(States.InstSBCabsy4, ctx => Absy4(ctx));
-        stateRegistry.Map(States.InstSBCabsy5, ctx => Absy5(ctx));
-        stateRegistry.Map(States.InstSBCabsy6, ctx => Absy6(ctx));
+        stateRegistry.Map(States.InstSBCabsy2, Absy2);
+        stateRegistry.Map(States.InstSBCabsy3, Absy3);
+        stateRegistry.Map(States.InstSBCabsy4, Absy4);
+        stateRegistry.Map(States.InstSBCabsy5, Absy5);
+        stateRegistry.Map(States.InstSBCabsy6, Absy6);
 
-        stateRegistry.Map(States.InstSBCindx2, ctx => Indx2(ctx));
-        stateRegistry.Map(States.InstSBCindx3, ctx => Indx3(ctx));
-        stateRegistry.Map(States.InstSBCindx4, ctx => Indx4(ctx));
-        stateRegistry.Map(States.InstSBCindx5, ctx => Indx5(ctx));
-        stateRegistry.Map(States.InstSBCindx6, ctx => Indx6(ctx));
-        stateRegistry.Map(States.InstSBCindx7, ctx => Indx7(ctx));
+        stateRegistry.Map(States.InstSBCindx2, Indx2);
+        stateRegistry.Map(States.InstSBCindx3, Indx3);
+        stateRegistry.Map(States.InstSBCindx4, Indx4);
+        stateRegistry.Map(States.InstSBCindx5, Indx5);
+        stateRegistry.Map(States.InstSBCindx6, Indx6);
+        stateRegistry.Map(States.InstSBCindx7, Indx7);
 
-        stateRegistry.Map(States.InstSBCindy2, ctx => Indy2(ctx));
-        stateRegistry.Map(States.InstSBCindy3, ctx => Indy3(ctx));
-        stateRegistry.Map(States.InstSBCindy4, ctx => Indy4(ctx));
-        stateRegistry.Map(States.InstSBCindy5, ctx => Indy5(ctx));
-        stateRegistry.Map(States.InstSBCindy6, ctx => Indy6(ctx));
-        stateRegistry.Map(States.InstSBCindy7, ctx => Indy7(ctx));
+        stateRegistry.Map(States.InstSBCindy2, Indy2);
+        stateRegistry.Map(States.InstSBCindy3, Indy3);
+        stateRegistry.Map(States.InstSBCindy4, Indy4);
+        stateRegistry.Map(States.InstSBCindy5, Indy5);
+        stateRegistry.Map(States.InstSBCindy6, Indy6);
+        stateRegistry.Map(States.InstSBCindy7, Indy7);
 
-        stateRegistry.Map(States.InstSBCind2, ctx => Ind2(ctx));
-        stateRegistry.Map(States.InstSBCind3, ctx => Ind3(ctx));
-        stateRegistry.Map(States.InstSBCind4, ctx => Ind4(ctx));
-        stateRegistry.Map(States.InstSBCind5, ctx => Ind5(ctx));
-        stateRegistry.Map(States.InstSBCind6, ctx => Ind6(ctx));
+        stateRegistry.Map(States.InstSBCind2, Ind2);
+        stateRegistry.Map(States.InstSBCind3, Ind3);
+        stateRegistry.Map(States.InstSBCind4, Ind4);
+        stateRegistry.Map(States.InstSBCind5, Ind5);
+        stateRegistry.Map(States.InstSBCind6, Ind6);
     }
 
     private void SbcThenUpdateFlags(Context ctx)
@@ -109,7 +109,7 @@ public class InstSBC : InstBase
     // -------------------------------------------------------------------------
     // [0xE9] SBC immediate
     // -------------------------------------------------------------------------
-    public void Imm2(Context ctx)
+    private void Imm2(Context ctx)
     {
         Imm2SetAddrBus(ctx);
         if (ctx.GetSubStep() == P2Lastsubstep)
@@ -119,13 +119,14 @@ public class InstSBC : InstBase
             SbcThenUpdateFlags(ctx);
             ctx.DbgOperand1 = data;
         }
+
         if (ctx.Regs.P.Decimal.IsSet())
             ctx.AdvanceState(States.InstSBCimm3);
         else
             ctx.AdvanceState(States.Fetch);
     }
 
-    public void Imm3(Context ctx)
+    private void Imm3(Context ctx)
     {
         // internal operation, nothing to simulate
         ctx.AdvanceState(States.Fetch);
@@ -134,24 +135,26 @@ public class InstSBC : InstBase
     // -------------------------------------------------------------------------
     // [0xE5] SBC zeropage
     // -------------------------------------------------------------------------
-    public void Zpg2(Context ctx)
+    private void Zpg2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstSBCzpg3);
     }
 
-    public void Zpg3(Context ctx)
+    private void Zpg3(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2Lastsubstep)
             SbcThenUpdateFlags(ctx);
+
         if (ctx.Regs.P.Decimal.IsSet())
             ctx.AdvanceState(States.InstSBCzpg4);
         else
             ctx.AdvanceState(States.Fetch);
     }
 
-    public void Zpg4(Context ctx)
+    private void Zpg4(Context ctx)
     {
         // internal operation, nothing to simulate
         ctx.AdvanceState(States.Fetch);
@@ -160,31 +163,34 @@ public class InstSBC : InstBase
     // -------------------------------------------------------------------------
     // [0xF5] SBC zeropage,X
     // -------------------------------------------------------------------------
-    public void Zpgx2(Context ctx)
+    private void Zpgx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstSBCzpgx3);
     }
 
-    public void Zpgx3(Context ctx)
+    private void Zpgx3(Context ctx)
     {
         if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.IncEALWithX();
+
         ctx.AdvanceState(States.InstSBCzpgx4);
     }
 
-    public void Zpgx4(Context ctx)
+    private void Zpgx4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2Lastsubstep)
             SbcThenUpdateFlags(ctx);
+
         if (ctx.Regs.P.Decimal.IsSet())
             ctx.AdvanceState(States.InstSBCzpgx5);
         else
             ctx.AdvanceState(States.Fetch);
     }
 
-    public void Zpgx5(Context ctx)
+    private void Zpgx5(Context ctx)
     {
         // internal operation, nothing to simulate
         ctx.AdvanceState(States.Fetch);
@@ -193,30 +199,33 @@ public class InstSBC : InstBase
     // -------------------------------------------------------------------------
     // [0xED] SBC absolute
     // -------------------------------------------------------------------------
-    public void Abs2(Context ctx)
+    private void Abs2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstSBCabs3);
     }
 
-    public void Abs3(Context ctx)
+    private void Abs3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
+
         ctx.AdvanceState(States.InstSBCabs4);
     }
 
-    public void Abs4(Context ctx)
+    private void Abs4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2Lastsubstep)
             SbcThenUpdateFlags(ctx);
+
         if (ctx.Regs.P.Decimal.IsSet())
             ctx.AdvanceState(States.InstSBCabs5);
         else
             ctx.AdvanceState(States.Fetch);
     }
 
-    public void Abs5(Context ctx)
+    private void Abs5(Context ctx)
     {
         // internal operation, nothing to simulate
         ctx.AdvanceState(States.Fetch);
@@ -225,19 +234,21 @@ public class InstSBC : InstBase
     // -------------------------------------------------------------------------
     // [0xFD] SBC absolute,X
     // -------------------------------------------------------------------------
-    public void Absx2(Context ctx)
+    private void Absx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstSBCabsx3);
     }
 
-    public void Absx3(Context ctx)
+    private void Absx3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
+
         ctx.AdvanceState(States.InstSBCabsx4);
     }
 
-    public void Absx4(Context ctx)
+    private void Absx4(Context ctx)
     {
         var nextState = States.Fetch;
         if (ctx.GetSubStep() == P1Middlestep)
@@ -262,10 +273,11 @@ public class InstSBC : InstBase
             else
                 nextState = States.InstSBCabsx5;
         }
+
         ctx.AdvanceState(nextState);
     }
 
-    public void Absx5(Context ctx)
+    private void Absx5(Context ctx)
     {
         if (ctx.GetSubStep() == P2Lastsubstep)
         {
@@ -273,13 +285,14 @@ public class InstSBC : InstBase
             ctx.Regs.Temp.UpdateValue(data);
             SbcThenUpdateFlags(ctx);
         }
+
         if (ctx.Regs.P.Decimal.IsSet())
             ctx.AdvanceState(States.InstSBCabsx6);
         else
             ctx.AdvanceState(States.Fetch);
     }
 
-    public void Absx6(Context ctx)
+    private void Absx6(Context ctx)
     {
         // internal operation, nothing to simulate
         ctx.AdvanceState(States.Fetch);
@@ -288,19 +301,21 @@ public class InstSBC : InstBase
     // -------------------------------------------------------------------------
     // [0xF9] SBC absolute,Y
     // -------------------------------------------------------------------------
-    public void Absy2(Context ctx)
+    private void Absy2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstSBCabsy3);
     }
 
-    public void Absy3(Context ctx)
+    private void Absy3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
+
         ctx.AdvanceState(States.InstSBCabsy4);
     }
 
-    public void Absy4(Context ctx)
+    private void Absy4(Context ctx)
     {
         var nextState = States.Fetch;
         if (ctx.GetSubStep() == P1Middlestep)
@@ -325,10 +340,11 @@ public class InstSBC : InstBase
             else
                 nextState = States.InstSBCabsy5;
         }
+
         ctx.AdvanceState(nextState);
     }
 
-    public void Absy5(Context ctx)
+    private void Absy5(Context ctx)
     {
         if (ctx.GetSubStep() == P2Lastsubstep)
         {
@@ -336,13 +352,14 @@ public class InstSBC : InstBase
             ctx.Regs.Temp.UpdateValue(data);
             SbcThenUpdateFlags(ctx);
         }
+
         if (ctx.Regs.P.Decimal.IsSet())
             ctx.AdvanceState(States.InstSBCabsy6);
         else
             ctx.AdvanceState(States.Fetch);
     }
 
-    public void Absy6(Context ctx)
+    private void Absy6(Context ctx)
     {
         // internal operation, nothing to simulate
         ctx.AdvanceState(States.Fetch);
@@ -351,48 +368,53 @@ public class InstSBC : InstBase
     // -------------------------------------------------------------------------
     // [0xE1] SBC (indirect,X)
     // -------------------------------------------------------------------------
-    public void Indx2(Context ctx)
+    private void Indx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+        
         ctx.AdvanceState(States.InstSBCindx3);
     }
 
-    public void Indx3(Context ctx)
+    private void Indx3(Context ctx)
     {
         if (ctx.GetSubStep() == P2Lastsubstep)
         {
             ctx.Regs.EA.Lsb().AddWithWrapAround(ctx.Regs.X);
             ctx.Regs.EA.Msb().Zero();
         }
+        
         ctx.AdvanceState(States.InstSBCindx4);
     }
 
-    public void Indx4(Context ctx)
+    private void Indx4(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
+
         ctx.AdvanceState(States.InstSBCindx5);
     }
 
-    public void Indx5(Context ctx)
+    private void Indx5(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
         if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.CopyEA2ToEA();
+
         ctx.AdvanceState(States.InstSBCindx6);
     }
 
-    public void Indx6(Context ctx)
+    private void Indx6(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2Lastsubstep)
             SbcThenUpdateFlags(ctx);
+
         if (ctx.Regs.P.Decimal.IsSet())
             ctx.AdvanceState(States.InstSBCindx7);
         else
             ctx.AdvanceState(States.Fetch);
     }
 
-    public void Indx7(Context ctx)
+    private void Indx7(Context ctx)
     {
         // internal operation, nothing to simulate
         ctx.AdvanceState(States.Fetch);
@@ -401,27 +423,30 @@ public class InstSBC : InstBase
     // -------------------------------------------------------------------------
     // [0xF1] SBC (indirect),Y
     // -------------------------------------------------------------------------
-    public void Indy2(Context ctx)
+    private void Indy2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstSBCindy3);
     }
 
-    public void Indy3(Context ctx)
+    private void Indy3(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
+
         ctx.AdvanceState(States.InstSBCindy4);
     }
 
-    public void Indy4(Context ctx)
+    private void Indy4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
         if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.CopyEA2ToEA();
+
         ctx.AdvanceState(States.InstSBCindy5);
     }
 
-    public void Indy5(Context ctx)
+    private void Indy5(Context ctx)
     {
         var nextState = States.Fetch;
         if (ctx.GetSubStep() == P1Middlestep)
@@ -446,18 +471,20 @@ public class InstSBC : InstBase
             else
                 nextState = States.InstSBCindy6;
         }
+
         ctx.AdvanceState(nextState);
     }
 
-    public void Indy6(Context ctx)
+    private void Indy6(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2Lastsubstep)
             SbcThenUpdateFlags(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
-    public void Indy7(Context ctx)
+    private void Indy7(Context ctx)
     {
         // internal operation, nothing to simulate
         ctx.AdvanceState(States.Fetch);
@@ -466,38 +493,42 @@ public class InstSBC : InstBase
     // -------------------------------------------------------------------------
     // [0xF2] SBC (indirect)
     // -------------------------------------------------------------------------
-    public void Ind2(Context ctx)
+    private void Ind2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+        
         ctx.AdvanceState(States.InstSBCind3);
     }
 
-    public void Ind3(Context ctx)
+    private void Ind3(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
+        
         ctx.AdvanceState(States.InstSBCind4);
     }
 
-    public void Ind4(Context ctx)
+    private void Ind4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
         if (ctx.GetSubStep() == P2Lastsubstep)
             ctx.Regs.CopyEA2ToEA();
+        
         ctx.AdvanceState(States.InstSBCind5);
     }
 
-    public void Ind5(Context ctx)
+    private void Ind5(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2Lastsubstep)
             SbcThenUpdateFlags(ctx);
+
         if (ctx.Regs.P.Decimal.IsSet())
             ctx.AdvanceState(States.InstSBCind6);
         else
             ctx.AdvanceState(States.Fetch);
     }
 
-    public void Ind6(Context ctx)
+    private void Ind6(Context ctx)
     {
         // internal operation, nothing to simulate
         ctx.AdvanceState(States.Fetch);

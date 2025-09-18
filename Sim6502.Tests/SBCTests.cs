@@ -846,21 +846,21 @@ public class SBCTests : UnitTestBase
                             MathResult expected)
     {
         // ARRANGE:
-        var cFlagOpCode = cFlag == High ? OpCodes.SECimp.ToByte() : OpCodes.CLCimp.ToByte();
-        var dFlagOpCode = dFlag == High ? OpCodes.SEDimp.ToByte() : OpCodes.CLDimp.ToByte();
+        var cFlagOpCode = Equals(cFlag, High) ? OpCodes.SECimp.ToByte() : OpCodes.CLCimp.ToByte();
+        var dFlagOpCode = Equals(dFlag, High) ? OpCodes.SEDimp.ToByte() : OpCodes.CLDimp.ToByte();
 
         byte[] program = {
-            //                                0000:        .ORG $0000
-            (byte) 0xA2, (byte) 0xFF, //      0000:        LDX #$FF    ; set the stack pointer
-            (byte) 0x9A, //                   0002:        TXS
-            (byte) 0xA9, (byte) 0x00, //      0003:        LDA #$00    ; clear the flags
-            (byte) 0x48, //                   0005:        PHA
-            (byte) 0x28, //                   0006:        PLP
-            (byte) dFlagOpCode, //            0007:        SED|CLD     ; set|clear decimal flag
-            (byte) cFlagOpCode, //            0008:        SEC         ; set|clear the carry flag
-            (byte) 0xA9, (byte) acc, //       0009:        LDA #$00    ; A = acc
-            (byte) 0xE9, (byte) operand, //   000B:        SBC #$01    ; A = A - operand
-            (byte) 0x00, //                   000D:        BRK
+                                //  0000:        .ORG $0000
+             0xA2,  0xFF,       //  0000:        LDX #$FF    ; set the stack pointer
+             0x9A,              //  0002:        TXS
+             0xA9,  0x00,       //  0003:        LDA #$00    ; clear the flags
+             0x48,              //  0005:        PHA
+             0x28,              //  0006:        PLP
+             dFlagOpCode,       //  0007:        SED|CLD     ; set|clear decimal flag
+             cFlagOpCode,       //  0008:        SEC         ; set|clear the carry flag
+             0xA9,  acc,        //  0009:        LDA #$00    ; A = acc
+             0xE9,  operand,    //  000B:        SBC #$01    ; A = A - operand
+             0x00,              //  000D:        BRK
         };
 
         // ACT:
@@ -877,8 +877,8 @@ public class SBCTests : UnitTestBase
     [Fact]
     public void TestSBCIntegration()
     {
-        byte accumulator = (byte)0x00;
-        byte operand = (byte)0xA1;
+        const byte accumulator = 0x00;
+        const byte operand = 0xA1;
         var cFlag = High;
         var dFlag = High;
 

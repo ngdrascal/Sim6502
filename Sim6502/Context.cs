@@ -17,7 +17,7 @@ public class Context
     private States _readyState;
 
     private UInt16 _dbgPC;
-    private OpCodes _dbgOpCode;
+    private OpCodes? _dbgOpCode;
     private UInt8 _dbgOperand1;
     private UInt8 _dbgOperand2;
     private readonly ILogger _stateLogger;
@@ -94,7 +94,7 @@ public class Context
         set => _dbgPC = value;
     }
 
-    public OpCodes DbgOpCode
+    public OpCodes? DbgOpCode
     {
         get => _dbgOpCode;
         set => _dbgOpCode = value;

@@ -80,7 +80,7 @@ public class InterruptTests : UnitTestBase
         Pins.SetDataBusPins(interruptedOpCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetNMIB((byte)0);
+        Pins.SetNMIB(0);
 
         Pins.SetDataBusPins(operand);
         ExecuteClockCycles(1); // InstLDAzpg2 - fetch the second byte of the op-code (zpg-value)
@@ -131,7 +131,7 @@ public class InterruptTests : UnitTestBase
         Pins.SetDataBusPins(interruptedOpCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetIRQB((byte)0);
+        Pins.SetIRQB(0);
 
         Pins.SetDataBusPins(operand);
         ExecuteClockCycles(1); // InstLDAzpg2 - fetch the second byte of the op-code (zpg-value)

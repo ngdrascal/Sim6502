@@ -14,7 +14,7 @@ public class UnitTestBase
     protected readonly Pins Pins;
     protected readonly Registers Regs;
     protected readonly Context Ctx;
-    protected readonly W65c02sEngine Cpu;
+    protected readonly W65C02SEngine Cpu;
     protected byte Phi2;
 
     public UnitTestBase()
@@ -22,9 +22,22 @@ public class UnitTestBase
         Pins = new Pins();
         var statusReg = new StatusRegister();
         Regs = new Registers(statusReg);
-        var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Debug));
+        var loggerFactory = // LoggerFactory.Create(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Debug));
+
+        LoggerFactory.Create(builder =>
+        {
+            builder
+                .AddSimpleConsole(options =>
+                {
+                    options.SingleLine = true;
+                    options.IncludeScopes = false;
+                })
+                .SetMinimumLevel((LogLevel.Trace));
+        });
+
+
         Ctx = new Context(Pins, Regs, loggerFactory);
-        Cpu = new W65c02sEngine(Pins, Regs, Ctx, loggerFactory);
+        Cpu = new W65C02SEngine(Ctx, loggerFactory);
 
         Phi2 = (byte)Low.ToInt();
 
@@ -38,16 +51,16 @@ public class UnitTestBase
         Pins.SetRDY((byte)High.ToInt());
     }
 
-    [Fact]
-    public void TestDummy()
-    {
-        // ARRANGE:
-
-        // ACT:
-
-        // ASSERT:
-        Assert.True(true, "dummy");
-    }
+    // [Fact]
+    // public void TestDummy()
+    // {
+    //     // ARRANGE:
+    //
+    //     // ACT:
+    //
+    //     // ASSERT:
+    //     Assert.True(true, "dummy");
+    // }
 
     protected void BootToAddress(UInt16 addr)
     {

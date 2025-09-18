@@ -18,7 +18,7 @@ public class InstSTP : InstBase
     protected override void RegisterStates(IStateRegistry stateRegistry)
     {
         stateRegistry.Map(States.InstSTPimp2, Imp2);
-        stateRegistry.Map(States.InstSTPimp2, imp3);
+        stateRegistry.Map(States.InstSTPimp2, Imp3);
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -37,7 +37,7 @@ public class InstSTP : InstBase
         ctx.AdvanceState(States.InstSTPimp3);
     }
 
-    private void imp3(Context ctx)
+    private void Imp3(Context ctx)
     {
         ctx.AdvanceState(States.Stop);
     }
