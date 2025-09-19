@@ -57,12 +57,12 @@ public class InstLDA : InstBase
 
     protected void LoadAFromEffAddr(Context ctx)
     {
-        if (ctx.GetSubStep() == P1Middlestep)
+        if (ctx.GetSubStep() == P1MiddleStep)
         {
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
             ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2Lastsubstep)
+        else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.UpdateAUpdateFlags(data);
@@ -92,7 +92,7 @@ public class InstLDA : InstBase
     public void Imm2(Context ctx)
     {
         Imm2SetAddrBus(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.UpdateAUpdateFlags(data);
@@ -121,7 +121,7 @@ public class InstLDA : InstBase
     }
     public void Zpgx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.IncEALWithX();
         ctx.AdvanceState(States.InstLDAzpgx4);
     }
@@ -162,7 +162,7 @@ public class InstLDA : InstBase
     public void Absx4(Context ctx)
     {
         var nextState = States.Fetch;
-        if (ctx.GetSubStep() == P1Middlestep)
+        if (ctx.GetSubStep() == P1MiddleStep)
         {
             var beforePage = ctx.Regs.EA.Msb().Copy();
             ctx.Regs.IncEAWithX();
@@ -171,7 +171,7 @@ public class InstLDA : InstBase
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
             ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2Lastsubstep)
+        else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             if (!ctx.CrossedPageBoundary)
@@ -201,7 +201,7 @@ public class InstLDA : InstBase
     public void Absy4(Context ctx)
     {
         var nextState = States.Fetch;
-        if (ctx.GetSubStep() == P1Middlestep)
+        if (ctx.GetSubStep() == P1MiddleStep)
         {
             var beforePage = ctx.Regs.EA.Msb().Copy();
             ctx.Regs.IncEAWithY();
@@ -210,7 +210,7 @@ public class InstLDA : InstBase
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
             ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2Lastsubstep)
+        else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             if (!ctx.CrossedPageBoundary)
@@ -234,7 +234,7 @@ public class InstLDA : InstBase
     }
     public void Indx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
         {
             ctx.Regs.EA.Lsb().AddWithWrapAround(ctx.Regs.X);
             ctx.Regs.EA.Msb().Zero();
@@ -249,7 +249,7 @@ public class InstLDA : InstBase
     public void Indx5(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstLDAindx6);
     }
@@ -273,14 +273,14 @@ public class InstLDA : InstBase
     public void Indy4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstLDAindy5);
     }
     public void Indy5(Context ctx)
     {
         var nextState = States.Fetch;
-        if (ctx.GetSubStep() == P1Middlestep)
+        if (ctx.GetSubStep() == P1MiddleStep)
         {
             var beforePage = ctx.Regs.EA.Msb().Copy();
             ctx.Regs.IncEAWithY();
@@ -289,7 +289,7 @@ public class InstLDA : InstBase
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
             ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2Lastsubstep)
+        else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             if (!ctx.CrossedPageBoundary)
@@ -319,7 +319,7 @@ public class InstLDA : InstBase
     public void Ind4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstLDAind5);
     }

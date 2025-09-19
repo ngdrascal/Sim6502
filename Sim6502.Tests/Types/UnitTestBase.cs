@@ -83,7 +83,7 @@ public class UnitTestBase
     {
         for (int i = 0; i < count; i++)
         {
-            ExecuteMicroSteps(Constants.P2LASTSUBSTEP);
+            ExecuteMicroSteps(Constants.P2LastSubstep);
         }
     }
 
@@ -118,7 +118,7 @@ public class UnitTestBase
             ExecuteMicroSteps(1);
 
             var addr = Pins.GetAddrBusPins().ToInt();
-            if (Ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+            if (Ctx.GetSubStep() == Constants.P2LastSubstep)
             {
                 if (Pins.GetRWB() == read)
                 {

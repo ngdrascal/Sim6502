@@ -81,7 +81,7 @@ public class InstBIT : InstBase
     {
         Imm2SetAddrBus(ctx);
 
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
@@ -113,7 +113,7 @@ public class InstBIT : InstBase
     private void Zpg3(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             AndAWithTempSetFlags(ctx);
 
         ctx.AdvanceState(States.Fetch);
@@ -130,7 +130,7 @@ public class InstBIT : InstBase
 
     private void Zpgx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.IncEALWithX();
 
         ctx.AdvanceState(States.InstBITzpgx4);
@@ -139,7 +139,7 @@ public class InstBIT : InstBase
     private void Zpgx4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             AndAWithTempSetFlags(ctx);
 
         ctx.AdvanceState(States.Fetch);
@@ -163,7 +163,7 @@ public class InstBIT : InstBase
     private void Abs4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             AndAWithTempSetFlags(ctx);
 
         ctx.AdvanceState(States.Fetch);
@@ -188,7 +188,7 @@ public class InstBIT : InstBase
     {
         var nextState = States.Fetch;
 
-        if (ctx.GetSubStep() == P1Middlestep)
+        if (ctx.GetSubStep() == P1MiddleStep)
         {
             var beforePage = ctx.Regs.EA.Msb().Copy();
             ctx.Regs.IncEAWithX();
@@ -198,7 +198,7 @@ public class InstBIT : InstBase
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
             ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2Lastsubstep)
+        else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
@@ -218,7 +218,7 @@ public class InstBIT : InstBase
 
     private void Absx5(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);

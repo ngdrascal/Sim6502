@@ -35,12 +35,12 @@
 
         private void LoadXFromEffAddr(Context ctx)
         {
-            if (ctx.GetSubStep() == P1Middlestep)
+            if (ctx.GetSubStep() == P1MiddleStep)
             {
                 ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
                 ctx.Pins.SetRWB(Read);
             }
-            else if (ctx.GetSubStep() == P2Lastsubstep)
+            else if (ctx.GetSubStep() == P2LastSubstep)
             {
                 var x = ctx.Pins.GetDataBusPins();
                 ctx.Regs.SetXUpdateFlags(x);
@@ -66,7 +66,7 @@
         public void Imm2(Context ctx)
         {
             Imm2SetAddrBus(ctx);
-            if (ctx.GetSubStep() == P2Lastsubstep)
+            if (ctx.GetSubStep() == P2LastSubstep)
             {
                 var data = ctx.Pins.GetDataBusPins();
                 ctx.Regs.SetXUpdateFlags(data);
@@ -95,7 +95,7 @@
         }
         public void Zpgy3(Context ctx)
         {
-            if (ctx.GetSubStep() == P2Lastsubstep)
+            if (ctx.GetSubStep() == P2LastSubstep)
                 ctx.Regs.IncEALWithY();
             ctx.AdvanceState(States.InstLDXzpgy4);
         }
@@ -136,7 +136,7 @@
         public void Absy4(Context ctx)
         {
             var nextState = States.Fetch;
-            if (ctx.GetSubStep() == P1Middlestep)
+            if (ctx.GetSubStep() == P1MiddleStep)
             {
                 var beforePage = ctx.Regs.EA.Msb().Copy();
                 ctx.Regs.IncEAWithY();
@@ -145,7 +145,7 @@
                 ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
                 ctx.Pins.SetRWB(Read);
             }
-            else if (ctx.GetSubStep() == P2Lastsubstep)
+            else if (ctx.GetSubStep() == P2LastSubstep)
             {
                 var data = ctx.Pins.GetDataBusPins();
                 if (!ctx.CrossedPageBoundary)

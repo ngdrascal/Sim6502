@@ -68,7 +68,7 @@ public class InstTSB : InstBase
 
     public void Zpg4(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
             TestAndSet(ctx);
         ctx.AdvanceState(States.InstTSBzpg5);
     }
@@ -102,7 +102,7 @@ public class InstTSB : InstBase
 
     public void Abs5(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
             TestAndSet(ctx);
         ctx.AdvanceState(States.InstTSBabs6);
     }

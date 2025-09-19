@@ -79,7 +79,7 @@ public class InstBranch : InstBase
 
     private void Branch3(Context ctx, States nextState)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
         {
             var regs = ctx.Regs;
             var beforePage = regs.PC.Msb().Copy();
@@ -99,7 +99,7 @@ public class InstBranch : InstBase
 
     public void Branch4(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Pins.SetAddrBusPins(ctx.Regs.PC);
         ctx.AdvanceState(States.Fetch);
     }

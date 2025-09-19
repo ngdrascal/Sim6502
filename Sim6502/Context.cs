@@ -49,15 +49,15 @@ public class Context
     public void IncSubStep()
     {
         _subStep++;
-        if (_subStep > Constants.P2LASTSUBSTEP)
+        if (_subStep > Constants.P2LastSubstep)
             _subStep = 1;
     }
 
-    public void ForwardToLastSubStep() => _subStep = Constants.P2LASTSUBSTEP;
+    public void ForwardToLastSubStep() => _subStep = Constants.P2LastSubstep;
 
     public void AdvanceState(States nextState)
     {
-        if (_subStep == Constants.P2LASTSUBSTEP)
+        if (_subStep == Constants.P2LastSubstep)
         {
             InitState(nextState);
             _stateLogger?.LogDebug($"advanceState(): {nextState}");

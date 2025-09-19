@@ -65,7 +65,7 @@ public class InstTRB : InstBase
     public void Zpg3(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
         {
             var result = ctx.Regs.A.And(ctx.Regs.Temp);
             ctx.Regs.P.Zero.UpdateValue(result.EqualsZero());
@@ -75,7 +75,7 @@ public class InstTRB : InstBase
 
     public void Zpg4(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             TestAndReset(ctx);
         ctx.AdvanceState(States.InstTRBzpg5);
     }
@@ -110,7 +110,7 @@ public class InstTRB : InstBase
 
     public void Abs5(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             TestAndReset(ctx);
 
         ctx.AdvanceState(States.InstTRBabs6);

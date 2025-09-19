@@ -75,7 +75,7 @@ public class InstCMP : InstBase
     public void Imm2(Context ctx)
     {
         Imm2SetAddrBus(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
@@ -95,7 +95,7 @@ public class InstCMP : InstBase
     public void Zpg3(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             CmpWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }
@@ -109,7 +109,7 @@ public class InstCMP : InstBase
 
     public void Zpgx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.IncEALWithX();
         ctx.AdvanceState(States.InstCMPzpgx4);
     }
@@ -117,7 +117,7 @@ public class InstCMP : InstBase
     public void Zpgx4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             CmpWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }
@@ -138,7 +138,7 @@ public class InstCMP : InstBase
     public void Abs4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             CmpWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }
@@ -159,7 +159,7 @@ public class InstCMP : InstBase
     public void Absx4(Context ctx)
     {
         var nextState = States.Fetch;
-        if (ctx.GetSubStep() == P1Middlestep)
+        if (ctx.GetSubStep() == P1MiddleStep)
         {
             var beforePage = ctx.Regs.EA.Msb().Copy();
             ctx.Regs.IncEAWithX();
@@ -168,7 +168,7 @@ public class InstCMP : InstBase
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
             ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2Lastsubstep)
+        else if (ctx.GetSubStep() == P2LastSubstep)
         {
             if (!ctx.CrossedPageBoundary)
             {
@@ -186,7 +186,7 @@ public class InstCMP : InstBase
     public void Absx5(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             CmpWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }
@@ -207,7 +207,7 @@ public class InstCMP : InstBase
     public void Absy4(Context ctx)
     {
         var nextState = States.Fetch;
-        if (ctx.GetSubStep() == P1Middlestep)
+        if (ctx.GetSubStep() == P1MiddleStep)
         {
             var beforePage = ctx.Regs.EA.Msb().Copy();
             ctx.Regs.IncEAWithY();
@@ -216,7 +216,7 @@ public class InstCMP : InstBase
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
             ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2Lastsubstep)
+        else if (ctx.GetSubStep() == P2LastSubstep)
         {
             if (!ctx.CrossedPageBoundary)
             {
@@ -247,7 +247,7 @@ public class InstCMP : InstBase
 
     public void Indx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
         {
             ctx.Regs.EA.Lsb().AddWithWrapAround(ctx.Regs.X);
             ctx.Regs.EA.Msb().Zero();
@@ -264,7 +264,7 @@ public class InstCMP : InstBase
     public void Indx5(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstCMPindx6);
     }
@@ -272,7 +272,7 @@ public class InstCMP : InstBase
     public void Indx6(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             CmpWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }
@@ -293,7 +293,7 @@ public class InstCMP : InstBase
     public void Indy4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstCMPindy5);
     }
@@ -301,7 +301,7 @@ public class InstCMP : InstBase
     public void Indy5(Context ctx)
     {
         var nextState = States.Fetch;
-        if (ctx.GetSubStep() == P1Middlestep)
+        if (ctx.GetSubStep() == P1MiddleStep)
         {
             var beforePage = ctx.Regs.EA.Msb().Copy();
             ctx.Regs.IncEAWithY();
@@ -310,7 +310,7 @@ public class InstCMP : InstBase
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
             ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2Lastsubstep)
+        else if (ctx.GetSubStep() == P2LastSubstep)
         {
             if (!ctx.CrossedPageBoundary)
             {
@@ -328,7 +328,7 @@ public class InstCMP : InstBase
     public void Indy6(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             CmpWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }
@@ -349,7 +349,7 @@ public class InstCMP : InstBase
     public void Ind4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstCMPind5);
     }
@@ -357,7 +357,7 @@ public class InstCMP : InstBase
     public void Ind5(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             CmpWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }

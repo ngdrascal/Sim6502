@@ -67,7 +67,7 @@ public class InstASL : InstBase
     // [0xA0] ASL accumulator
     public void Acc2(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             AslUpdateFlags(ctx, ctx.Regs.A);
         ctx.AdvanceState(States.Fetch);
     }
@@ -87,7 +87,7 @@ public class InstASL : InstBase
 
     public void Zpg4(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             AslUpdateFlags(ctx, ctx.Regs.Temp);
         ctx.AdvanceState(States.InstASLzpg5);
     }
@@ -107,7 +107,7 @@ public class InstASL : InstBase
 
     public void Zpgx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.IncEALWithX();
         ctx.AdvanceState(States.InstASLzpgx4);
     }
@@ -120,7 +120,7 @@ public class InstASL : InstBase
 
     public void Zpgx5(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             AslUpdateFlags(ctx, ctx.Regs.Temp);
         ctx.AdvanceState(States.InstASLzpgx6);
     }
@@ -152,7 +152,7 @@ public class InstASL : InstBase
 
     public void Abs5(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             AslUpdateFlags(ctx, ctx.Regs.Temp);
         ctx.AdvanceState(States.InstASLabs6);
     }
@@ -178,7 +178,7 @@ public class InstASL : InstBase
 
     public void Absx4(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.IncEAWithX();
         ctx.AdvanceState(States.InstASLabsx5);
     }
@@ -191,7 +191,7 @@ public class InstASL : InstBase
 
     public void Absx6(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             AslUpdateFlags(ctx, ctx.Regs.Temp);
         ctx.AdvanceState(States.InstASLabsx7);
     }

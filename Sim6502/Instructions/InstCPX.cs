@@ -52,7 +52,7 @@ public class InstCPX : InstBase
     public void Imm2(Context ctx)
     {
         Imm2SetAddrBus(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
@@ -71,7 +71,7 @@ public class InstCPX : InstBase
     public void Zpg3(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             CpxWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }
@@ -90,7 +90,7 @@ public class InstCPX : InstBase
     public void Abs4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             CpxWithTemp(ctx);
         ctx.AdvanceState(States.Fetch);
     }

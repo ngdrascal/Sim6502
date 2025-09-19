@@ -62,13 +62,13 @@ public class InstSTA : InstBase
 
     protected void StoreAToEffAddr(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P1MIDDLESTEP)
+        if (ctx.GetSubStep() == Constants.P1MiddleStep)
         {
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
             ctx.Pins.SetRWB(Constants.Write);
             ctx.Pins.SetDataBusMode(DataBusMode.Output);
         }
-        else if (ctx.GetSubStep() == Constants.P2MIDDLESTEP)
+        else if (ctx.GetSubStep() == Constants.P2MiddleStep)
         {
             ctx.Pins.SetDataBusPins(ctx.Regs.A);
         }
@@ -118,7 +118,7 @@ public class InstSTA : InstBase
 
     public void Zpgx3(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.IncEALWithX();
 
         ctx.AdvanceState(States.InstSTAzpgx4);
@@ -168,7 +168,7 @@ public class InstSTA : InstBase
 
     public void Absx4(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
         {
             ctx.Regs.IncEALWithX();
         }
@@ -199,7 +199,7 @@ public class InstSTA : InstBase
 
     public void Absy4(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
         {
             ctx.Regs.IncEAWithY();
         }
@@ -224,7 +224,7 @@ public class InstSTA : InstBase
 
     public void Indx3(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.IncEALWithX();
 
         ctx.AdvanceState(States.InstSTAindx4);
@@ -240,7 +240,7 @@ public class InstSTA : InstBase
     {
         FetchEA2HighIndirect(ctx);
 
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
 
         ctx.AdvanceState(States.InstSTAindx6);
@@ -270,7 +270,7 @@ public class InstSTA : InstBase
     public void Indy4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
 
         ctx.AdvanceState(States.InstSTAindy5);
@@ -278,7 +278,7 @@ public class InstSTA : InstBase
 
     public void Indy5(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P1MIDDLESTEP)
+        if (ctx.GetSubStep() == Constants.P1MiddleStep)
             ctx.Regs.IncEAWithY();
 
         ctx.AdvanceState(States.InstSTAindy6);
@@ -309,7 +309,7 @@ public class InstSTA : InstBase
     {
         FetchEA2HighIndirect(ctx);
 
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
 
         ctx.AdvanceState(States.InstSTAind5);

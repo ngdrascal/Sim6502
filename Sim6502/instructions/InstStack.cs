@@ -60,12 +60,12 @@ public class InstStack : InstBase
     public void InstPHAimp3(Context ctx)
     {
         PrepareStackWrite(ctx);
-        if (ctx.GetSubStep() == Constants.P2MIDDLESTEP)
+        if (ctx.GetSubStep() == Constants.P2MiddleStep)
         {
             var value = ctx.Regs.A;
             ctx.Pins.SetDataBusPins(value);
         }
-        else if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == Constants.P2LastSubstep)
         {
             ctx.Regs.S.Dec();
         }
@@ -82,12 +82,12 @@ public class InstStack : InstBase
     public void InstPHPimp3(Context ctx)
     {
         PrepareStackWrite(ctx);
-        if (ctx.GetSubStep() == Constants.P2MIDDLESTEP)
+        if (ctx.GetSubStep() == Constants.P2MiddleStep)
         {
             var data = ctx.Regs.P.ToUInt8();
             ctx.Pins.SetDataBusPins(data);
         }
-        else if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == Constants.P2LastSubstep)
         {
             ctx.Regs.S.Dec();
         }
@@ -104,12 +104,12 @@ public class InstStack : InstBase
     public void InstPHXimp3(Context ctx)
     {
         PrepareStackWrite(ctx);
-        if (ctx.GetSubStep() == Constants.P2MIDDLESTEP)
+        if (ctx.GetSubStep() == Constants.P2MiddleStep)
         {
             var data = ctx.Regs.X;
             ctx.Pins.SetDataBusPins(data);
         }
-        else if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == Constants.P2LastSubstep)
         {
             ctx.Regs.S.Dec();
         }
@@ -126,12 +126,12 @@ public class InstStack : InstBase
     public void InstPHYimp3(Context ctx)
     {
         PrepareStackWrite(ctx);
-        if (ctx.GetSubStep() == Constants.P2MIDDLESTEP)
+        if (ctx.GetSubStep() == Constants.P2MiddleStep)
         {
             var data = ctx.Regs.Y;
             ctx.Pins.SetDataBusPins(data);
         }
-        else if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        else if (ctx.GetSubStep() == Constants.P2LastSubstep)
         {
             ctx.Regs.S.Dec();
         }
@@ -147,7 +147,7 @@ public class InstStack : InstBase
 
     public void InstPLAimp3(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
         {
             ctx.Regs.S.Inc();
         }
@@ -157,7 +157,7 @@ public class InstStack : InstBase
     public void InstPLAimp4(Context ctx)
     {
         PrepareStackRead(ctx);
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.UpdateAUpdateFlags(data);
@@ -174,7 +174,7 @@ public class InstStack : InstBase
 
     public void InstPLPimp3(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
         {
             ctx.Regs.S.Inc();
         }
@@ -184,7 +184,7 @@ public class InstStack : InstBase
     public void InstPLPimp4(Context ctx)
     {
         PrepareStackRead(ctx);
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.P.SetFlags(data);
@@ -201,7 +201,7 @@ public class InstStack : InstBase
 
     public void InstPLXimp3(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
         {
             ctx.Regs.S.Inc();
         }
@@ -211,7 +211,7 @@ public class InstStack : InstBase
     public void InstPLXimp4(Context ctx)
     {
         PrepareStackRead(ctx);
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.SetXUpdateFlags(data);
@@ -228,7 +228,7 @@ public class InstStack : InstBase
 
     public void InstPLYimp3(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
         {
             ctx.Regs.S.Inc();
         }
@@ -238,7 +238,7 @@ public class InstStack : InstBase
     public void InstPLYimp4(Context ctx)
     {
         PrepareStackRead(ctx);
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.SetYUpdateFlags(data);

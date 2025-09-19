@@ -8,13 +8,13 @@ public class InstBase2
     // Logger stub (replace with your logging framework if needed)
     // private readonly Logger _logger;
 
-    protected static readonly byte Low = Constants.LOW;
-    protected static readonly byte High = Constants.HIGH;
+    protected static readonly byte Low = Constants.Low;
+    protected static readonly byte High = Constants.High;
     protected static readonly byte Write = Low;
     protected static readonly byte Read = High;
-    protected static readonly byte P1Middlestep = Constants.P1MIDDLESTEP;
-    protected static readonly byte P2Middlestep = Constants.P2MIDDLESTEP;
-    protected static readonly byte P2Lastsubstep = Constants.P2LASTSUBSTEP;
+    protected static readonly byte P1Middlestep = Constants.P1MiddleStep;
+    protected static readonly byte P2Middlestep = Constants.P2MiddleStep;
+    protected static readonly byte P2Lastsubstep = Constants.P2LastSubstep;
 
     protected InstBase2()
     {

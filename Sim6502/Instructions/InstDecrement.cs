@@ -80,7 +80,7 @@ public class InstDecrement : InstBase
     // [0x3A] DEC accumulator
     public void DecAcc2(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             DecAndUpdateFlags(ctx, ctx.Regs.A);
         ctx.AdvanceState(States.Fetch);
     }
@@ -98,7 +98,7 @@ public class InstDecrement : InstBase
     }
     public void DecZpg4(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             DecTempAndUpdateFlags(ctx);
         ctx.AdvanceState(States.InstDECzpg5);
     }
@@ -116,7 +116,7 @@ public class InstDecrement : InstBase
     }
     public void DecZpgx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.IncEALWithX();
         ctx.AdvanceState(States.InstDECzpgx4);
     }
@@ -127,7 +127,7 @@ public class InstDecrement : InstBase
     }
     public void DecZpgx5(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             DecTempAndUpdateFlags(ctx);
         ctx.AdvanceState(States.InstDECzpgx6);
     }
@@ -155,7 +155,7 @@ public class InstDecrement : InstBase
     }
     public void DecAbs5(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             DecTempAndUpdateFlags(ctx);
         ctx.AdvanceState(States.InstDECabs6);
     }
@@ -178,7 +178,7 @@ public class InstDecrement : InstBase
     }
     public void DecAbsx4(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.IncEAWithX();
         ctx.AdvanceState(States.InstDECabsx5);
     }
@@ -189,7 +189,7 @@ public class InstDecrement : InstBase
     }
     public void DecAbsx6(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             DecTempAndUpdateFlags(ctx);
         ctx.AdvanceState(States.InstDECabsx7);
     }
@@ -211,7 +211,7 @@ public class InstDecrement : InstBase
     ///////////////////////////////////////////////////////////////////////////////
     public void DexImp2(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             DecAndUpdateFlags(ctx, ctx.Regs.X);
         ctx.AdvanceState(States.Fetch);
     }
@@ -228,7 +228,7 @@ public class InstDecrement : InstBase
     ///////////////////////////////////////////////////////////////////////////////   
     public void DeyImp2(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             DecAndUpdateFlags(ctx, ctx.Regs.Y);
         ctx.AdvanceState(States.Fetch);
     }

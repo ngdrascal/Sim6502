@@ -7,11 +7,11 @@ namespace Sim6502;
 
 public class W65C02SEngine : IT2Registry, IStateRegistry
 {
-    private const byte Low = Constants.LOW;
-    private const byte High = Constants.HIGH;
-    private const byte Read = Constants.HIGH;
-    private const byte P1MiddleStep = Constants.P1MIDDLESTEP;
-    private const byte LastSubstep = Constants.P2LASTSUBSTEP;
+    private const byte Low = Constants.Low;
+    private const byte High = Constants.High;
+    private const byte Read = Constants.High;
+    private const byte P1MiddleStep = Constants.P1MiddleStep;
+    private const byte LastSubstep = Constants.P2LastSubstep;
 
     private readonly Context _ctx;
 
@@ -19,7 +19,7 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
 
     private readonly Action<Context>[] _stateMethodMap;
 
-    private byte _lastClock = Constants.HIGH;
+    private byte _lastClock = Constants.High;
 
     private long _instCount;
     private long _cycleCount;
@@ -158,7 +158,7 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
 
             _cycleCount++;
         }
-        else if (subStep == Constants.P1LASTSTEP)
+        else if (subStep == Constants.P1LastStep)
         {
             _ctx.Pins.SetPHI1O(Low);
             _ctx.Pins.SetPHI2O(High);

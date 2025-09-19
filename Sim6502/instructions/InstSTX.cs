@@ -30,13 +30,13 @@ public class InstSTX : InstBase
 
     protected void StoreXToEffAddr(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P1MIDDLESTEP)
+        if (ctx.GetSubStep() == Constants.P1MiddleStep)
         {
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
             ctx.Pins.SetRWB(Constants.Write);
             ctx.Pins.SetDataBusMode(DataBusMode.Output);
         }
-        else if (ctx.GetSubStep() == Constants.P2MIDDLESTEP)
+        else if (ctx.GetSubStep() == Constants.P2MiddleStep)
         {
             ctx.Pins.SetDataBusPins(ctx.Regs.X);
         }
@@ -81,7 +81,7 @@ public class InstSTX : InstBase
 
     public void Zpgy3(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.IncEALWithY();
 
         ctx.AdvanceState(States.InstSTXzpgy4);

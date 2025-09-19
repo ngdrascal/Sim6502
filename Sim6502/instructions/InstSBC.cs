@@ -112,7 +112,7 @@ public class InstSBC : InstBase
     private void Imm2(Context ctx)
     {
         Imm2SetAddrBus(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
@@ -145,7 +145,7 @@ public class InstSBC : InstBase
     private void Zpg3(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             SbcThenUpdateFlags(ctx);
 
         if (ctx.Regs.P.Decimal.IsSet())
@@ -172,7 +172,7 @@ public class InstSBC : InstBase
 
     private void Zpgx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.IncEALWithX();
 
         ctx.AdvanceState(States.InstSBCzpgx4);
@@ -181,7 +181,7 @@ public class InstSBC : InstBase
     private void Zpgx4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             SbcThenUpdateFlags(ctx);
 
         if (ctx.Regs.P.Decimal.IsSet())
@@ -216,7 +216,7 @@ public class InstSBC : InstBase
     private void Abs4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             SbcThenUpdateFlags(ctx);
 
         if (ctx.Regs.P.Decimal.IsSet())
@@ -251,7 +251,7 @@ public class InstSBC : InstBase
     private void Absx4(Context ctx)
     {
         var nextState = States.Fetch;
-        if (ctx.GetSubStep() == P1Middlestep)
+        if (ctx.GetSubStep() == P1MiddleStep)
         {
             var beforePage = ctx.Regs.EA.Msb().Copy();
             ctx.Regs.IncEAWithX();
@@ -260,7 +260,7 @@ public class InstSBC : InstBase
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
             ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2Lastsubstep)
+        else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
@@ -279,7 +279,7 @@ public class InstSBC : InstBase
 
     private void Absx5(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
@@ -318,7 +318,7 @@ public class InstSBC : InstBase
     private void Absy4(Context ctx)
     {
         var nextState = States.Fetch;
-        if (ctx.GetSubStep() == P1Middlestep)
+        if (ctx.GetSubStep() == P1MiddleStep)
         {
             var beforePage = ctx.Regs.EA.Msb().Copy();
             ctx.Regs.IncEAWithY();
@@ -327,7 +327,7 @@ public class InstSBC : InstBase
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
             ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2Lastsubstep)
+        else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
@@ -346,7 +346,7 @@ public class InstSBC : InstBase
 
     private void Absy5(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
@@ -377,7 +377,7 @@ public class InstSBC : InstBase
 
     private void Indx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
         {
             ctx.Regs.EA.Lsb().AddWithWrapAround(ctx.Regs.X);
             ctx.Regs.EA.Msb().Zero();
@@ -396,7 +396,7 @@ public class InstSBC : InstBase
     private void Indx5(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
 
         ctx.AdvanceState(States.InstSBCindx6);
@@ -405,7 +405,7 @@ public class InstSBC : InstBase
     private void Indx6(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             SbcThenUpdateFlags(ctx);
 
         if (ctx.Regs.P.Decimal.IsSet())
@@ -440,7 +440,7 @@ public class InstSBC : InstBase
     private void Indy4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
 
         ctx.AdvanceState(States.InstSBCindy5);
@@ -449,7 +449,7 @@ public class InstSBC : InstBase
     private void Indy5(Context ctx)
     {
         var nextState = States.Fetch;
-        if (ctx.GetSubStep() == P1Middlestep)
+        if (ctx.GetSubStep() == P1MiddleStep)
         {
             var beforePage = ctx.Regs.EA.Msb().Copy();
             ctx.Regs.IncEAWithY();
@@ -458,7 +458,7 @@ public class InstSBC : InstBase
             ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
             ctx.Pins.SetRWB(Read);
         }
-        else if (ctx.GetSubStep() == P2Lastsubstep)
+        else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.GetDataBusPins();
             ctx.Regs.Temp.UpdateValue(data);
@@ -478,7 +478,7 @@ public class InstSBC : InstBase
     private void Indy6(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             SbcThenUpdateFlags(ctx);
 
         ctx.AdvanceState(States.Fetch);
@@ -510,7 +510,7 @@ public class InstSBC : InstBase
     private void Ind4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
         
         ctx.AdvanceState(States.InstSBCind5);
@@ -519,7 +519,7 @@ public class InstSBC : InstBase
     private void Ind5(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == P2Lastsubstep)
+        if (ctx.GetSubStep() == P2LastSubstep)
             SbcThenUpdateFlags(ctx);
 
         if (ctx.Regs.P.Decimal.IsSet())

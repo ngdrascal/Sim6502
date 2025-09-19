@@ -39,7 +39,7 @@ public class InstTransfer : InstBase
     /////////////////////////////////////////////////////////////////////////////
     public void InstTAXimp2(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.SetXUpdateFlags(ctx.Regs.A);
         ctx.AdvanceState(States.Fetch);
     }
@@ -56,7 +56,7 @@ public class InstTransfer : InstBase
     /////////////////////////////////////////////////////////////////////////////
     public void InstTAYimp2(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.SetYUpdateFlags(ctx.Regs.A);
         ctx.AdvanceState(States.Fetch);
     }
@@ -73,7 +73,7 @@ public class InstTransfer : InstBase
     /////////////////////////////////////////////////////////////////////////////
     public void InstTSXimp2(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.SetXUpdateFlags(ctx.Regs.S);
         ctx.AdvanceState(States.Fetch);
     }
@@ -90,7 +90,7 @@ public class InstTransfer : InstBase
     /////////////////////////////////////////////////////////////////////////////
     public void InstTXAimp2(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.UpdateAUpdateFlags(ctx.Regs.X);
         ctx.AdvanceState(States.Fetch);
     }
@@ -107,7 +107,7 @@ public class InstTransfer : InstBase
     /////////////////////////////////////////////////////////////////////////////
     public void InstTXSimp2(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.S.UpdateValue(ctx.Regs.X);
         ctx.AdvanceState(States.Fetch);
     }
@@ -124,7 +124,7 @@ public class InstTransfer : InstBase
     /////////////////////////////////////////////////////////////////////////////
     public void InstTYAimp2(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P2LASTSUBSTEP)
+        if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.UpdateAUpdateFlags(ctx.Regs.Y);
         ctx.AdvanceState(States.Fetch);
     }
