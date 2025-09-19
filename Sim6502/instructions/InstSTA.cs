@@ -1,13 +1,8 @@
 namespace Sim6502.Instructions;
 
-public class InstSTA : InstBase
+public class InstSTA : InstBase2, IInstruction
 {
-    public InstSTA(IT2Registry t2Registry, IStateRegistry stateRegistry)
-        : base(t2Registry, stateRegistry)
-    {
-    }
-
-    protected override void RegisterT2State(IT2Registry registry)
+    public IInstruction RegisterT2State(IT2Registry registry)
     {
         registry.Map(OpCodes.STAzpg, States.InstSTAzpg2);
         registry.Map(OpCodes.STAzpgx, States.InstSTAzpgx2);
@@ -17,47 +12,44 @@ public class InstSTA : InstBase
         registry.Map(OpCodes.STAindx, States.InstSTAindx2);
         registry.Map(OpCodes.STAindy, States.InstSTAindy2);
         registry.Map(OpCodes.STAind, States.InstSTAind2);
+
+        return this;
     }
 
-    protected override void RegisterStates(IStateRegistry stateRegistry)
+    public IInstruction RegisterStates(IStateRegistry stateRegistry)
     {
-        stateRegistry.Map(States.InstSTAzpg2, ctx => Zpg2(ctx));
-        stateRegistry.Map(States.InstSTAzpg3, ctx => Zpg3(ctx));
+        stateRegistry.Map(States.InstSTAzpg2, Zpg2);
+        stateRegistry.Map(States.InstSTAzpg3, Zpg3);
+        stateRegistry.Map(States.InstSTAzpgx2, Zpgx2);
+        stateRegistry.Map(States.InstSTAzpgx3, Zpgx3);
+        stateRegistry.Map(States.InstSTAzpgx4, Zpgx4);
+        stateRegistry.Map(States.InstSTAabs2, Abs2);
+        stateRegistry.Map(States.InstSTAabs3, Abs3);
+        stateRegistry.Map(States.InstSTAabs4, Abs4);
+        stateRegistry.Map(States.InstSTAabsx2, Absx2);
+        stateRegistry.Map(States.InstSTAabsx3, Absx3);
+        stateRegistry.Map(States.InstSTAabsx4, Absx4);
+        stateRegistry.Map(States.InstSTAabsx5, Absx5);
+        stateRegistry.Map(States.InstSTAabsy2, Absy2);
+        stateRegistry.Map(States.InstSTAabsy3, Absy3);
+        stateRegistry.Map(States.InstSTAabsy4, Absy4);
+        stateRegistry.Map(States.InstSTAabsy5, Absy5);
+        stateRegistry.Map(States.InstSTAindx2, Indx2);
+        stateRegistry.Map(States.InstSTAindx3, Indx3);
+        stateRegistry.Map(States.InstSTAindx4, Indx4);
+        stateRegistry.Map(States.InstSTAindx5, Indx5);
+        stateRegistry.Map(States.InstSTAindx6, Indx6);
+        stateRegistry.Map(States.InstSTAindy2, Indy2);
+        stateRegistry.Map(States.InstSTAindy3, Indy3);
+        stateRegistry.Map(States.InstSTAindy4, Indy4);
+        stateRegistry.Map(States.InstSTAindy5, Indy5);
+        stateRegistry.Map(States.InstSTAindy6, Indy6);
+        stateRegistry.Map(States.InstSTAind2, Ind2);
+        stateRegistry.Map(States.InstSTAind3, Ind3);
+        stateRegistry.Map(States.InstSTAind4, Ind4);
+        stateRegistry.Map(States.InstSTAind5, Ind5);
 
-        stateRegistry.Map(States.InstSTAzpgx2, ctx => Zpgx2(ctx));
-        stateRegistry.Map(States.InstSTAzpgx3, ctx => Zpgx3(ctx));
-        stateRegistry.Map(States.InstSTAzpgx4, ctx => Zpgx4(ctx));
-
-        stateRegistry.Map(States.InstSTAabs2, ctx => Abs2(ctx));
-        stateRegistry.Map(States.InstSTAabs3, ctx => Abs3(ctx));
-        stateRegistry.Map(States.InstSTAabs4, ctx => Abs4(ctx));
-
-        stateRegistry.Map(States.InstSTAabsx2, ctx => Absx2(ctx));
-        stateRegistry.Map(States.InstSTAabsx3, ctx => Absx3(ctx));
-        stateRegistry.Map(States.InstSTAabsx4, ctx => Absx4(ctx));
-        stateRegistry.Map(States.InstSTAabsx5, ctx => Absx5(ctx));
-
-        stateRegistry.Map(States.InstSTAabsy2, ctx => Absy2(ctx));
-        stateRegistry.Map(States.InstSTAabsy3, ctx => Absy3(ctx));
-        stateRegistry.Map(States.InstSTAabsy4, ctx => Absy4(ctx));
-        stateRegistry.Map(States.InstSTAabsy5, ctx => Absy5(ctx));
-
-        stateRegistry.Map(States.InstSTAindx2, ctx => Indx2(ctx));
-        stateRegistry.Map(States.InstSTAindx3, ctx => Indx3(ctx));
-        stateRegistry.Map(States.InstSTAindx4, ctx => Indx4(ctx));
-        stateRegistry.Map(States.InstSTAindx5, ctx => Indx5(ctx));
-        stateRegistry.Map(States.InstSTAindx6, ctx => Indx6(ctx));
-
-        stateRegistry.Map(States.InstSTAindy2, ctx => Indy2(ctx));
-        stateRegistry.Map(States.InstSTAindy3, ctx => Indy3(ctx));
-        stateRegistry.Map(States.InstSTAindy4, ctx => Indy4(ctx));
-        stateRegistry.Map(States.InstSTAindy5, ctx => Indy5(ctx));
-        stateRegistry.Map(States.InstSTAindy6, ctx => Indy6(ctx));
-
-        stateRegistry.Map(States.InstSTAind2, ctx => Ind2(ctx));
-        stateRegistry.Map(States.InstSTAind3, ctx => Ind3(ctx));
-        stateRegistry.Map(States.InstSTAind4, ctx => Ind4(ctx));
-        stateRegistry.Map(States.InstSTAind5, ctx => Ind5(ctx));
+        return this;
     }
 
     protected void StoreAToEffAddr(Context ctx)
@@ -95,28 +87,31 @@ public class InstSTA : InstBase
     // -------------------------------------------------------------------------
     // [0x85] STA zeropage
     // -------------------------------------------------------------------------
-    public void Zpg2(Context ctx)
+    private void Zpg2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstSTAzpg3);
     }
 
-    public void Zpg3(Context ctx)
+    private void Zpg3(Context ctx)
     {
         StoreAToEffAddr(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
     // -------------------------------------------------------------------------
     // [0x95] STA zeropage,X
     // -------------------------------------------------------------------------
-    public void Zpgx2(Context ctx)
+    private void Zpgx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstSTAzpgx3);
     }
 
-    public void Zpgx3(Context ctx)
+    private void Zpgx3(Context ctx)
     {
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.IncEALWithX();
@@ -124,49 +119,55 @@ public class InstSTA : InstBase
         ctx.AdvanceState(States.InstSTAzpgx4);
     }
 
-    public void Zpgx4(Context ctx)
+    private void Zpgx4(Context ctx)
     {
         StoreAToEffAddr(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
     // -------------------------------------------------------------------------
     // [0x8D] STA absolute
     // -------------------------------------------------------------------------
-    public void Abs2(Context ctx)
+    private void Abs2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstSTAabs3);
     }
 
-    public void Abs3(Context ctx)
+    private void Abs3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
+
         ctx.AdvanceState(States.InstSTAabs4);
     }
 
-    public void Abs4(Context ctx)
+    private void Abs4(Context ctx)
     {
         StoreAToEffAddr(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
     // -------------------------------------------------------------------------
     // [0x9D] STA absolute,X
     // -------------------------------------------------------------------------
-    public void Absx2(Context ctx)
+    private void Absx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstSTAabsx3);
     }
 
-    public void Absx3(Context ctx)
+    private void Absx3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
+
         ctx.AdvanceState(States.InstSTAabsx4);
     }
 
-    public void Absx4(Context ctx)
+    private void Absx4(Context ctx)
     {
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
         {
@@ -176,28 +177,31 @@ public class InstSTA : InstBase
         ctx.AdvanceState(States.InstSTAabsx5);
     }
 
-    public void Absx5(Context ctx)
+    private void Absx5(Context ctx)
     {
         StoreAToEffAddr(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
     // -------------------------------------------------------------------------
     // [0x99] STA absolute,Y
     // -------------------------------------------------------------------------
-    public void Absy2(Context ctx)
+    private void Absy2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstSTAabsy3);
     }
 
-    public void Absy3(Context ctx)
+    private void Absy3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
+
         ctx.AdvanceState(States.InstSTAabsy4);
     }
 
-    public void Absy4(Context ctx)
+    private void Absy4(Context ctx)
     {
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
         {
@@ -207,7 +211,7 @@ public class InstSTA : InstBase
         ctx.AdvanceState(States.InstSTAabsy5);
     }
 
-    public void Absy5(Context ctx)
+    private void Absy5(Context ctx)
     {
         StoreAToEffAddr(ctx);
         ctx.AdvanceState(States.Fetch);
@@ -216,13 +220,14 @@ public class InstSTA : InstBase
     // -------------------------------------------------------------------------
     // [0x81] STA (indirect,X)
     // -------------------------------------------------------------------------
-    public void Indx2(Context ctx)
+    private void Indx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstSTAindx3);
     }
 
-    public void Indx3(Context ctx)
+    private void Indx3(Context ctx)
     {
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.IncEALWithX();
@@ -230,53 +235,55 @@ public class InstSTA : InstBase
         ctx.AdvanceState(States.InstSTAindx4);
     }
 
-    public void Indx4(Context ctx)
+    private void Indx4(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
+
         ctx.AdvanceState(States.InstSTAindx5);
     }
 
-    public void Indx5(Context ctx)
+    private void Indx5(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
-
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
 
         ctx.AdvanceState(States.InstSTAindx6);
     }
 
-    public void Indx6(Context ctx)
+    private void Indx6(Context ctx)
     {
         StoreAToEffAddr(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
     // -------------------------------------------------------------------------
     // [0x91] STA (indirect),Y
     // -------------------------------------------------------------------------
-    public void Indy2(Context ctx)
+    private void Indy2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstSTAindy3);
     }
 
-    public void Indy3(Context ctx)
+    private void Indy3(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
+
         ctx.AdvanceState(States.InstSTAindy4);
     }
 
-    public void Indy4(Context ctx)
+    private void Indy4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
-
         ctx.AdvanceState(States.InstSTAindy5);
     }
 
-    public void Indy5(Context ctx)
+    private void Indy5(Context ctx)
     {
         if (ctx.GetSubStep() == Constants.P1MiddleStep)
             ctx.Regs.IncEAWithY();
@@ -284,40 +291,43 @@ public class InstSTA : InstBase
         ctx.AdvanceState(States.InstSTAindy6);
     }
 
-    public void Indy6(Context ctx)
+    private void Indy6(Context ctx)
     {
         StoreAToEffAddr(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
     // -------------------------------------------------------------------------
     // [0x92] STA (indirect)
     // -------------------------------------------------------------------------
-    public void Ind2(Context ctx)
+    private void Ind2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstSTAind3);
     }
 
-    public void Ind3(Context ctx)
+    private void Ind3(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
+
         ctx.AdvanceState(States.InstSTAind4);
     }
 
-    public void Ind4(Context ctx)
+    private void Ind4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
-
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
 
         ctx.AdvanceState(States.InstSTAind5);
     }
 
-    public void Ind5(Context ctx)
+    private void Ind5(Context ctx)
     {
         StoreAToEffAddr(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 }

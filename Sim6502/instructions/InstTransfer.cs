@@ -1,13 +1,8 @@
 namespace Sim6502.Instructions;
 
-public class InstTransfer : InstBase
+public class InstTransfer : InstBase2, IInstruction
 {
-    public InstTransfer(IT2Registry t2Registry, IStateRegistry stateRegistry)
-        : base(t2Registry, stateRegistry)
-    {
-    }
-
-    protected override void RegisterT2State(IT2Registry registry)
+    public IInstruction RegisterT2State(IT2Registry registry)
     {
         registry.Map(OpCodes.TAXimp, States.InstTAXimp2);
         registry.Map(OpCodes.TAYimp, States.InstTAYimp2);
@@ -15,16 +10,20 @@ public class InstTransfer : InstBase
         registry.Map(OpCodes.TXAimp, States.InstTXAimp2);
         registry.Map(OpCodes.TXSimp, States.InstTXSimp2);
         registry.Map(OpCodes.TYAimp, States.InstTYAimp2);
+
+        return this;
     }
 
-    protected override void RegisterStates(IStateRegistry registry)
+    public IInstruction RegisterStates(IStateRegistry registry)
     {
-        registry.Map(States.InstTAXimp2, ctx => InstTAXimp2(ctx));
-        registry.Map(States.InstTAYimp2, ctx => InstTAYimp2(ctx));
-        registry.Map(States.InstTSXimp2, ctx => InstTSXimp2(ctx));
-        registry.Map(States.InstTXAimp2, ctx => InstTXAimp2(ctx));
-        registry.Map(States.InstTXSimp2, ctx => InstTXSimp2(ctx));
-        registry.Map(States.InstTYAimp2, ctx => InstTYAimp2(ctx));
+        registry.Map(States.InstTAXimp2, InstTAXimp2);
+        registry.Map(States.InstTAYimp2, InstTAYimp2);
+        registry.Map(States.InstTSXimp2, InstTSXimp2);
+        registry.Map(States.InstTXAimp2, InstTXAimp2);
+        registry.Map(States.InstTXSimp2, InstTXSimp2);
+        registry.Map(States.InstTYAimp2, InstTYAimp2);
+
+        return this;
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -37,10 +36,11 @@ public class InstTransfer : InstBase
     // ------------------------------------------------
     // implied        TAX           AA      1      2
     /////////////////////////////////////////////////////////////////////////////
-    public void InstTAXimp2(Context ctx)
+    private void InstTAXimp2(Context ctx)
     {
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.SetXUpdateFlags(ctx.Regs.A);
+
         ctx.AdvanceState(States.Fetch);
     }
 
@@ -54,10 +54,11 @@ public class InstTransfer : InstBase
     // ------------------------------------------------
     // implied        TAY           A8      1      2
     /////////////////////////////////////////////////////////////////////////////
-    public void InstTAYimp2(Context ctx)
+    private void InstTAYimp2(Context ctx)
     {
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.SetYUpdateFlags(ctx.Regs.A);
+
         ctx.AdvanceState(States.Fetch);
     }
 
@@ -71,10 +72,11 @@ public class InstTransfer : InstBase
     // ------------------------------------------------
     // implied        TSX           BA      1      2
     /////////////////////////////////////////////////////////////////////////////
-    public void InstTSXimp2(Context ctx)
+    private void InstTSXimp2(Context ctx)
     {
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.SetXUpdateFlags(ctx.Regs.S);
+
         ctx.AdvanceState(States.Fetch);
     }
 
@@ -88,10 +90,11 @@ public class InstTransfer : InstBase
     // ------------------------------------------------
     // implied        TXA           8A      1      2
     /////////////////////////////////////////////////////////////////////////////
-    public void InstTXAimp2(Context ctx)
+    private void InstTXAimp2(Context ctx)
     {
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.UpdateAUpdateFlags(ctx.Regs.X);
+
         ctx.AdvanceState(States.Fetch);
     }
 
@@ -105,10 +108,11 @@ public class InstTransfer : InstBase
     // ------------------------------------------------
     // implied        TXS           9A      1      2
     /////////////////////////////////////////////////////////////////////////////
-    public void InstTXSimp2(Context ctx)
+    private void InstTXSimp2(Context ctx)
     {
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.S.UpdateValue(ctx.Regs.X);
+
         ctx.AdvanceState(States.Fetch);
     }
 
@@ -122,10 +126,11 @@ public class InstTransfer : InstBase
     // ------------------------------------------------
     // implied        TSX           BA      1      2
     /////////////////////////////////////////////////////////////////////////////
-    public void InstTYAimp2(Context ctx)
+    private void InstTYAimp2(Context ctx)
     {
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.UpdateAUpdateFlags(ctx.Regs.Y);
+
         ctx.AdvanceState(States.Fetch);
     }
 }

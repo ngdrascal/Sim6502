@@ -2,45 +2,47 @@
 
 namespace Sim6502.Instructions;
 
-public class InstROR : InstBase
+public class InstROR : InstBase2, IInstruction
 {
-    public InstROR(IT2Registry t2Registry, IStateRegistry stateRegistry)
-        : base(t2Registry, stateRegistry)
-    {
-    }
-
-    protected override void RegisterT2State(IT2Registry registry)
+    public IInstruction RegisterT2State(IT2Registry registry)
     {
         registry.Map(OpCodes.RORacc, States.InstRORacc2);
         registry.Map(OpCodes.RORzpg, States.InstRORzpg2);
         registry.Map(OpCodes.RORzpgx, States.InstRORzpgx2);
         registry.Map(OpCodes.RORabs, States.InstRORabs2);
         registry.Map(OpCodes.RORabsx, States.InstRORabsx2);
+
+        return this;
     }
 
-    protected override void RegisterStates(IStateRegistry stateRegistry)
+    public IInstruction RegisterStates(IStateRegistry stateRegistry)
     {
-        stateRegistry.Map(States.InstRORacc2, ctx => Acc2(ctx));
-        stateRegistry.Map(States.InstRORzpg2, ctx => Zpg2(ctx));
-        stateRegistry.Map(States.InstRORzpg3, ctx => Zpg3(ctx));
-        stateRegistry.Map(States.InstRORzpg4, ctx => Zpg4(ctx));
-        stateRegistry.Map(States.InstRORzpg5, ctx => Zpg5(ctx));
-        stateRegistry.Map(States.InstRORzpgx2, ctx => Zpgx2(ctx));
-        stateRegistry.Map(States.InstRORzpgx3, ctx => Zpgx3(ctx));
-        stateRegistry.Map(States.InstRORzpgx4, ctx => Zpgx4(ctx));
-        stateRegistry.Map(States.InstRORzpgx5, ctx => Zpgx5(ctx));
-        stateRegistry.Map(States.InstRORzpgx6, ctx => Zpgx6(ctx));
-        stateRegistry.Map(States.InstRORabs2, ctx => Abs2(ctx));
-        stateRegistry.Map(States.InstRORabs3, ctx => Abs3(ctx));
-        stateRegistry.Map(States.InstRORabs4, ctx => Abs4(ctx));
-        stateRegistry.Map(States.InstRORabs5, ctx => Abs5(ctx));
-        stateRegistry.Map(States.InstRORabs6, ctx => Abs6(ctx));
-        stateRegistry.Map(States.InstRORabsx2, ctx => Absx2(ctx));
-        stateRegistry.Map(States.InstRORabsx3, ctx => Absx3(ctx));
-        stateRegistry.Map(States.InstRORabsx4, ctx => Absx4(ctx));
-        stateRegistry.Map(States.InstRORabsx5, ctx => Absx5(ctx));
-        stateRegistry.Map(States.InstRORabsx6, ctx => Absx6(ctx));
-        stateRegistry.Map(States.InstRORabsx7, ctx => Absx7(ctx));
+        stateRegistry.Map(States.InstRORacc2, Acc2);
+        stateRegistry.Map(States.InstRORzpg2, Zpg2);
+        stateRegistry.Map(States.InstRORzpg3, Zpg3);
+        stateRegistry.Map(States.InstRORzpg4, Zpg4);
+        stateRegistry.Map(States.InstRORzpg5, Zpg5);
+
+        stateRegistry.Map(States.InstRORzpgx2, Zpgx2);
+        stateRegistry.Map(States.InstRORzpgx3, Zpgx3);
+        stateRegistry.Map(States.InstRORzpgx4, Zpgx4);
+        stateRegistry.Map(States.InstRORzpgx5, Zpgx5);
+        stateRegistry.Map(States.InstRORzpgx6, Zpgx6);
+
+        stateRegistry.Map(States.InstRORabs2, Abs2);
+        stateRegistry.Map(States.InstRORabs3, Abs3);
+        stateRegistry.Map(States.InstRORabs4, Abs4);
+        stateRegistry.Map(States.InstRORabs5, Abs5);
+        stateRegistry.Map(States.InstRORabs6, Abs6);
+
+        stateRegistry.Map(States.InstRORabsx2, Absx2);
+        stateRegistry.Map(States.InstRORabsx3, Absx3);
+        stateRegistry.Map(States.InstRORabsx4, Absx4);
+        stateRegistry.Map(States.InstRORabsx5, Absx5);
+        stateRegistry.Map(States.InstRORabsx6, Absx6);
+        stateRegistry.Map(States.InstRORabsx7, Absx7);
+
+        return this;
     }
 
     private void RorUpdateFlags(Context ctx, UInt8 value)
@@ -67,125 +69,172 @@ public class InstROR : InstBase
     // absolute,X     ROR oper,X    7E      3      7  
     /////////////////////////////////////////////////////////////////////////////// 
 
+    // -------------------------------------------------------------------------
     // [0x6A] ROR accumulator
-    public void Acc2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Acc2(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
             RorUpdateFlags(ctx, ctx.Regs.A);
+
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x66] ROR zeropage
-    public void Zpg2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Zpg2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstRORzpg3);
     }
-    public void Zpg3(Context ctx)
+
+    private void Zpg3(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
+
         ctx.AdvanceState(States.InstRORzpg4);
     }
-    public void Zpg4(Context ctx)
+
+    private void Zpg4(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
             RorUpdateFlags(ctx, ctx.Regs.Temp);
+
         ctx.AdvanceState(States.InstRORzpg5);
     }
-    public void Zpg5(Context ctx)
+
+    private void Zpg5(Context ctx)
     {
         StoreTempToEffAddr(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x76] ROR zeropage,X 
-    public void Zpgx2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Zpgx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstRORzpgx3);
     }
-    public void Zpgx3(Context ctx)
+
+    private void Zpgx3(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.IncEALWithX();
+
         ctx.AdvanceState(States.InstRORzpgx4);
     }
-    public void Zpgx4(Context ctx)
+
+    private void Zpgx4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
+
         ctx.AdvanceState(States.InstRORzpgx5);
     }
-    public void Zpgx5(Context ctx)
+
+    private void Zpgx5(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
             RorUpdateFlags(ctx, ctx.Regs.Temp);
+
         ctx.AdvanceState(States.InstRORzpgx6);
     }
-    public void Zpgx6(Context ctx)
+
+    private void Zpgx6(Context ctx)
     {
         StoreTempToEffAddr(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x6E] ROR absolute 
-    public void Abs2(Context ctx)
+    // ------------------------------------------------------------------------- 
+    private void Abs2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstRORabs3);
     }
-    public void Abs3(Context ctx)
+
+    private void Abs3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
+
         ctx.AdvanceState(States.InstRORabs4);
     }
-    public void Abs4(Context ctx)
+
+    private void Abs4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
+
         ctx.AdvanceState(States.InstRORabs5);
     }
-    public void Abs5(Context ctx)
+
+    private void Abs5(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
             RorUpdateFlags(ctx, ctx.Regs.Temp);
+
         ctx.AdvanceState(States.InstRORabs6);
     }
-    public void Abs6(Context ctx)
+
+    private void Abs6(Context ctx)
     {
         StoreTempToEffAddr(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x7E] ROR absolute,X
-    public void Absx2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Absx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstRORabsx3);
     }
-    public void Absx3(Context ctx)
+
+    private void Absx3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
+
         ctx.AdvanceState(States.InstRORabsx4);
     }
-    public void Absx4(Context ctx)
+
+    private void Absx4(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.IncEAWithX();
+
         ctx.AdvanceState(States.InstRORabsx5);
     }
-    public void Absx5(Context ctx)
+
+    private void Absx5(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
+
         ctx.AdvanceState(States.InstRORabsx6);
     }
-    public void Absx6(Context ctx)
+
+    private void Absx6(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
             RorUpdateFlags(ctx, ctx.Regs.Temp);
+
         ctx.AdvanceState(States.InstRORabsx7);
     }
-    public void Absx7(Context ctx)
+
+    private void Absx7(Context ctx)
     {
         StoreTempToEffAddr(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 }

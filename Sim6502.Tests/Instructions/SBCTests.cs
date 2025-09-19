@@ -884,9 +884,9 @@ public class SBCTests : UnitTestBase
         const byte operand = 0xA1;
         var cFlag = High;
         var dFlag = High;
-
+    
         var expected = new MathResult(new UInt8(0xF9), "Nvzc");
-
+    
         ExecuteSBC(accumulator, operand, cFlag, dFlag, expected);
     }
 }

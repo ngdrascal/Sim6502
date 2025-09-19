@@ -1,13 +1,8 @@
 namespace Sim6502.Instructions;
 
-public class InstSBC : InstBase
+public class InstSBC : InstBase2, IInstruction
 {
-    public InstSBC(IT2Registry t2Registry, IStateRegistry stateRegistry)
-        : base(t2Registry, stateRegistry)
-    {
-    }
-
-    protected override void RegisterT2State(IT2Registry registry)
+    public IInstruction RegisterT2State(IT2Registry registry)
     {
         registry.Map(OpCodes.SBCimm, States.InstSBCimm2);
         registry.Map(OpCodes.SBCzpg, States.InstSBCzpg2);
@@ -18,9 +13,10 @@ public class InstSBC : InstBase
         registry.Map(OpCodes.SBCindx, States.InstSBCindx2);
         registry.Map(OpCodes.SBCindy, States.InstSBCindy2);
         registry.Map(OpCodes.SBCind, States.InstSBCind2);
+        return this;
     }
 
-    protected override void RegisterStates(IStateRegistry stateRegistry)
+    public IInstruction RegisterStates(IStateRegistry stateRegistry)
     {
         stateRegistry.Map(States.InstSBCimm2, Imm2);
         stateRegistry.Map(States.InstSBCimm3, Imm3);
@@ -70,6 +66,7 @@ public class InstSBC : InstBase
         stateRegistry.Map(States.InstSBCind4, Ind4);
         stateRegistry.Map(States.InstSBCind5, Ind5);
         stateRegistry.Map(States.InstSBCind6, Ind6);
+        return this;
     }
 
     private void SbcThenUpdateFlags(Context ctx)

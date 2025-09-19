@@ -3,22 +3,21 @@ namespace Sim6502.Instructions;
 /// <summary>
 /// Implements STP (Stop the processor) instruction for W65c02s.
 /// </summary>
-public class InstSTP : InstBase
+public class InstSTP : InstBase2, IInstruction
 {
-    public InstSTP(IT2Registry it2Registry, IStateRegistry stateRegistry)
-        : base(it2Registry, stateRegistry)
-    {
-    }
-
-    protected override void RegisterT2State(IT2Registry registry)
+    public IInstruction RegisterT2State(IT2Registry registry)
     {
         registry.Map(OpCodes.STPimp, States.InstSTPimp2);
+
+        return this;
     }
 
-    protected override void RegisterStates(IStateRegistry stateRegistry)
+    public IInstruction RegisterStates(IStateRegistry stateRegistry)
     {
         stateRegistry.Map(States.InstSTPimp2, Imp2);
-        stateRegistry.Map(States.InstSTPimp2, Imp3);
+        stateRegistry.Map(States.InstSTPimp3, Imp3);
+
+        return this;
     }
 
     /////////////////////////////////////////////////////////////////////////////

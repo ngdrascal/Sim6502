@@ -2,19 +2,16 @@ using UInt16 = Sim6502.types.UInt16;
 
 namespace Sim6502.Instructions;
 
-public class Interrupts : InstBase
+public class Interrupts : InstBase2, IInstruction
 {
-    public Interrupts(IT2Registry t2Registry, IStateRegistry stateRegistry)
-        : base(t2Registry, stateRegistry)
-    {
-    }
-
-    protected override void RegisterT2State(IT2Registry registry)
+    public IInstruction RegisterT2State(IT2Registry registry)
     {
         registry.Map(OpCodes.BRKimp, States.InstBRKimp2);
+
+        return this;
     }
 
-    protected override void RegisterStates(IStateRegistry stateRegistry)
+    public IInstruction RegisterStates(IStateRegistry stateRegistry)
     {
         stateRegistry.Map(States.Interrupt1, Interrupt1);
 
@@ -24,6 +21,8 @@ public class Interrupts : InstBase
         stateRegistry.Map(States.InstBRKimp5, BrkImp5);
         stateRegistry.Map(States.InstBRKimp6, BrkImp6);
         stateRegistry.Map(States.InstBRKimp7, BrkImp7);
+
+        return this;
     }
 
     private void LoadTempFromPcDontAdvancePc(Context ctx)
@@ -43,7 +42,7 @@ public class Interrupts : InstBase
     /////////////////////////////////////////////////////////////////////////////
     // Interrupt (both NMI and IRQ)
     /////////////////////////////////////////////////////////////////////////////
-    public void Interrupt1(Context ctx)
+    private void Interrupt1(Context ctx)
     {
         // NOTE: The BRK instruction, the non-maskable and maskable interrupts
         //       share some code (steps 2 - 7).  This state is a replacement for
@@ -67,7 +66,7 @@ public class Interrupts : InstBase
     // ------------------------------------------------
     // implied        BRK           00      1      7
     /////////////////////////////////////////////////////////////////////////////
-    public void BrkImp2(Context ctx)
+    private void BrkImp2(Context ctx)
     {
         // if handling a hardware interrupt
         if (ctx.NmiFlag || ctx.IrqFlag)
@@ -80,7 +79,7 @@ public class Interrupts : InstBase
         ctx.AdvanceState(States.InstBRKimp3);
     }
 
-    public void BrkImp3(Context ctx)
+    private void BrkImp3(Context ctx)
     {
         // push PCH
         PushOnStack(ctx, ctx.Regs.PC.Msb());
@@ -88,7 +87,7 @@ public class Interrupts : InstBase
         ctx.AdvanceState(States.InstBRKimp4);
     }
 
-    public void BrkImp4(Context ctx)
+    private void BrkImp4(Context ctx)
     {
         // push PCL
         PushOnStack(ctx, ctx.Regs.PC.Lsb());
@@ -96,7 +95,7 @@ public class Interrupts : InstBase
         ctx.AdvanceState(States.InstBRKimp5);
     }
 
-    public void BrkImp5(Context ctx)
+    private void BrkImp5(Context ctx)
     {
         // push the status register
         PushOnStack(ctx, ctx.Regs.P.GetFlags());
@@ -115,7 +114,7 @@ public class Interrupts : InstBase
         ctx.AdvanceState(States.InstBRKimp6);
     }
 
-    public void BrkImp6(Context ctx)
+    private void BrkImp6(Context ctx)
     {
         // read 0xFFFE into the PCL
         if (ctx.GetSubStep() == P1MiddleStep)
@@ -137,7 +136,7 @@ public class Interrupts : InstBase
         ctx.AdvanceState(States.InstBRKimp7);
     }
 
-    public void BrkImp7(Context ctx)
+    private void BrkImp7(Context ctx)
     {
         // read 0xFFFF into the PCH
         if (ctx.GetSubStep() == P1MiddleStep)

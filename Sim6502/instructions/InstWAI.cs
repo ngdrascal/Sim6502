@@ -1,21 +1,20 @@
 namespace Sim6502.Instructions;
 
-public class InstWAI : InstBase
+public class InstWAI : InstBase2, IInstruction
 {
-    public InstWAI(IT2Registry t2Registry, IStateRegistry stateRegistry)
-        : base(t2Registry, stateRegistry)
-    {
-    }
-
-    protected override void RegisterT2State(IT2Registry registry)
+    public IInstruction RegisterT2State(IT2Registry registry)
     {
         registry.Map(OpCodes.WAIimp, States.InstWAIimp2);
+
+        return this;
     }
 
-    protected override void RegisterStates(IStateRegistry registry)
+    public IInstruction RegisterStates(IStateRegistry registry)
     {
-        registry.Map(States.InstWAIimp2, ctx => Imp2(ctx));
-        registry.Map(States.InstWAIimp3, ctx => Imp3(ctx));
+        registry.Map(States.InstWAIimp2, Imp2);
+        registry.Map(States.InstWAIimp3, Imp3);
+
+        return this;
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -29,12 +28,12 @@ public class InstWAI : InstBase
     // implied        WAI           CB      1      3 
     /////////////////////////////////////////////////////////////////////////////
 
-    public void Imp2(Context ctx)
+    private void Imp2(Context ctx)
     {
         ctx.AdvanceState(States.InstWAIimp3);
     }
 
-    public void Imp3(Context ctx)
+    private void Imp3(Context ctx)
     {
         ctx.AdvanceState(States.WaitForInterrupt);
     }

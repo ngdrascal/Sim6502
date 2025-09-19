@@ -1,34 +1,33 @@
 namespace Sim6502.Instructions;
 
-public class InstSTX : InstBase
+public class InstSTX : InstBase2, IInstruction
 {
-    public InstSTX(IT2Registry t2Registry, IStateRegistry stateRegistry)
-        : base(t2Registry, stateRegistry)
-    {
-    }
-
-    protected override void RegisterT2State(IT2Registry registry)
+    public IInstruction RegisterT2State(IT2Registry registry)
     {
         registry.Map(OpCodes.STXzpg, States.InstSTXzpg2);
         registry.Map(OpCodes.STXzpgy, States.InstSTXzpgy2);
         registry.Map(OpCodes.STXabs, States.InstSTXabs2);
+
+        return this;
     }
 
-    protected override void RegisterStates(IStateRegistry registry)
+    public IInstruction RegisterStates(IStateRegistry registry)
     {
-        registry.Map(States.InstSTXzpg2, ctx => Zpg2(ctx));
-        registry.Map(States.InstSTXzpg3, ctx => Zpg3(ctx));
+        registry.Map(States.InstSTXzpg2, Zpg2);
+        registry.Map(States.InstSTXzpg3, Zpg3);
 
-        registry.Map(States.InstSTXzpgy2, ctx => Zpgy2(ctx));
-        registry.Map(States.InstSTXzpgy3, ctx => Zpgy3(ctx));
-        registry.Map(States.InstSTXzpgy4, ctx => Zpgy4(ctx));
+        registry.Map(States.InstSTXzpgy2, Zpgy2);
+        registry.Map(States.InstSTXzpgy3, Zpgy3);
+        registry.Map(States.InstSTXzpgy4, Zpgy4);
 
-        registry.Map(States.InstSTXabs2, ctx => Abs2(ctx));
-        registry.Map(States.InstSTXabs3, ctx => Abs3(ctx));
-        registry.Map(States.InstSTXabs4, ctx => Abs4(ctx));
+        registry.Map(States.InstSTXabs2, Abs2);
+        registry.Map(States.InstSTXabs3, Abs3);
+        registry.Map(States.InstSTXabs4, Abs4);
+
+        return this;
     }
 
-    protected void StoreXToEffAddr(Context ctx)
+    private void StoreXToEffAddr(Context ctx)
     {
         if (ctx.GetSubStep() == Constants.P1MiddleStep)
         {
@@ -58,28 +57,31 @@ public class InstSTX : InstBase
     // ------------------------------------------------------------------------- 
     // [0x86] STX zeropage
     // ------------------------------------------------------------------------- 
-    public void Zpg2(Context ctx)
+    private void Zpg2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstSTXzpg3);
     }
 
-    public void Zpg3(Context ctx)
+    private void Zpg3(Context ctx)
     {
         StoreXToEffAddr(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
     // ------------------------------------------------------------------------- 
     // [0x96] STX zeropage,Y
     // ------------------------------------------------------------------------- 
-    public void Zpgy2(Context ctx)
+    private void Zpgy2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstSTXzpgy3);
     }
 
-    public void Zpgy3(Context ctx)
+    private void Zpgy3(Context ctx)
     {
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.IncEALWithY();
@@ -87,30 +89,34 @@ public class InstSTX : InstBase
         ctx.AdvanceState(States.InstSTXzpgy4);
     }
 
-    public void Zpgy4(Context ctx)
+    private void Zpgy4(Context ctx)
     {
         StoreXToEffAddr(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
     // ------------------------------------------------------------------------- 
     // [0x8E] STX absolute
     // ------------------------------------------------------------------------- 
-    public void Abs2(Context ctx)
+    private void Abs2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstSTXabs3);
     }
 
-    public void Abs3(Context ctx)
+    private void Abs3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
+
         ctx.AdvanceState(States.InstSTXabs4);
     }
 
-    public void Abs4(Context ctx)
+    private void Abs4(Context ctx)
     {
         StoreXToEffAddr(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 }

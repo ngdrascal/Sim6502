@@ -72,23 +72,21 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         _ = new InstLDY().RegisterT2State(this).RegisterStates(this);
         _ = new InstLSR().RegisterT2State(this).RegisterStates(this);
         _ = new InstNOP().RegisterT2State(this).RegisterStates(this);
-
-        _ = new InstSTA(this, this);
-        _ = new InstSTX(this, this);
-        _ = new InstSTY(this, this);
-        _ = new InstSTZ(this, this);
-        _ = new InstTransfer(this, this);
-        _ = new InstStack(this, this);
-        _ = new InstROL(this, this);
-        _ = new InstROR(this, this);
-        _ = new InstORA(this, this);
-        _ = new InstTRB(this, this);
-        _ = new InstTSB(this, this);
-
-        _ = new InstSBC(this, this);
-        _ = new InstSTP(this, this);
-        _ = new InstWAI(this, this);
-        _ = new Interrupts(this, this);
+        _ = new InstORA().RegisterT2State(this).RegisterStates(this);
+        _ = new InstROL().RegisterT2State(this).RegisterStates(this);
+        _ = new InstROR().RegisterT2State(this).RegisterStates(this);
+        _ = new InstSBC().RegisterT2State(this).RegisterStates(this);
+        _ = new InstSTA().RegisterT2State(this).RegisterStates(this);
+        _ = new InstStack().RegisterT2State(this).RegisterStates(this);
+        _ = new InstSTP().RegisterT2State(this).RegisterStates(this);
+        _ = new InstSTX().RegisterT2State(this).RegisterStates(this);
+        _ = new InstSTY().RegisterT2State(this).RegisterStates(this);
+        _ = new InstSTZ().RegisterT2State(this).RegisterStates(this);
+        _ = new InstTransfer().RegisterT2State(this).RegisterStates(this);
+        _ = new InstTRB().RegisterT2State(this).RegisterStates(this);
+        _ = new InstTSB().RegisterT2State(this).RegisterStates(this);
+        _ = new InstWAI().RegisterT2State(this).RegisterStates(this);
+        _ = new Interrupts().RegisterT2State(this).RegisterStates(this);
     }
 
     public long InstCount => _instCount;
