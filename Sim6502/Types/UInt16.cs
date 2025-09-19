@@ -105,8 +105,8 @@ public class UInt16
 
     public UInt16 AddSigned(UInt8 amount)
     {
-        int left = ToInt();
-        int right = (byte)amount.ToInt();
+        var left = ToInt();
+        var right = (sbyte)amount.ToInt();
         UpdateValue(left + right);
         return this;
     }
