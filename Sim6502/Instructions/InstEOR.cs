@@ -1,13 +1,8 @@
 ﻿namespace Sim6502.Instructions;
 
-public class InstEOR : InstBase
+public class InstEOR : InstBase2, IInstruction
 {
-    public InstEOR(IT2Registry t2Registry, IStateRegistry stateRegistry)
-        : base(t2Registry, stateRegistry)
-    {
-    }
-
-    protected override void RegisterT2State(IT2Registry registry)
+    public IInstruction RegisterT2State(IT2Registry registry)
     {
         registry.Map(OpCodes.EORimm, States.InstEORimm2);
         registry.Map(OpCodes.EORzpg, States.InstEORzpg2);
@@ -18,41 +13,45 @@ public class InstEOR : InstBase
         registry.Map(OpCodes.EORindx, States.InstEORindx2);
         registry.Map(OpCodes.EORindy, States.InstEORindy2);
         registry.Map(OpCodes.EORind, States.InstEORind2);
+
+        return this;
     }
 
-    protected override void RegisterStates(IStateRegistry stateRegistry)
+    public IInstruction RegisterStates(IStateRegistry stateRegistry)
     {
-        stateRegistry.Map(States.InstEORimm2, ctx => Imm2(ctx));
-        stateRegistry.Map(States.InstEORzpg2, ctx => Zpg2(ctx));
-        stateRegistry.Map(States.InstEORzpg3, ctx => Zpg3(ctx));
-        stateRegistry.Map(States.InstEORzpgx2, ctx => Zpgx2(ctx));
-        stateRegistry.Map(States.InstEORzpgx3, ctx => Zpgx3(ctx));
-        stateRegistry.Map(States.InstEORzpgx4, ctx => Zpgx4(ctx));
-        stateRegistry.Map(States.InstEORabs2, ctx => Abs2(ctx));
-        stateRegistry.Map(States.InstEORabs3, ctx => Abs3(ctx));
-        stateRegistry.Map(States.InstEORabs4, ctx => Abs4(ctx));
-        stateRegistry.Map(States.InstEORabsx2, ctx => Absx2(ctx));
-        stateRegistry.Map(States.InstEORabsx3, ctx => Absx3(ctx));
-        stateRegistry.Map(States.InstEORabsx4, ctx => Absx4(ctx));
-        stateRegistry.Map(States.InstEORabsx5, ctx => Absx5(ctx));
-        stateRegistry.Map(States.InstEORabsy2, ctx => Absy2(ctx));
-        stateRegistry.Map(States.InstEORabsy3, ctx => Absy3(ctx));
-        stateRegistry.Map(States.InstEORabsy4, ctx => Absy4(ctx));
-        stateRegistry.Map(States.InstEORabsy5, ctx => Absy5(ctx));
-        stateRegistry.Map(States.InstEORindx2, ctx => Indx2(ctx));
-        stateRegistry.Map(States.InstEORindx3, ctx => Indx3(ctx));
-        stateRegistry.Map(States.InstEORindx4, ctx => Indx4(ctx));
-        stateRegistry.Map(States.InstEORindx5, ctx => Indx5(ctx));
-        stateRegistry.Map(States.InstEORindx6, ctx => Indx6(ctx));
-        stateRegistry.Map(States.InstEORindy2, ctx => Indy2(ctx));
-        stateRegistry.Map(States.InstEORindy3, ctx => Indy3(ctx));
-        stateRegistry.Map(States.InstEORindy4, ctx => Indy4(ctx));
-        stateRegistry.Map(States.InstEORindy5, ctx => Indy5(ctx));
-        stateRegistry.Map(States.InstEORindy6, ctx => Indy6(ctx));
-        stateRegistry.Map(States.InstEORind2, ctx => Ind2(ctx));
-        stateRegistry.Map(States.InstEORind3, ctx => Ind3(ctx));
-        stateRegistry.Map(States.InstEORind4, ctx => Ind4(ctx));
-        stateRegistry.Map(States.InstEORind5, ctx => Ind5(ctx));
+        stateRegistry.Map(States.InstEORimm2, Imm2);
+        stateRegistry.Map(States.InstEORzpg2, Zpg2);
+        stateRegistry.Map(States.InstEORzpg3, Zpg3);
+        stateRegistry.Map(States.InstEORzpgx2, Zpgx2);
+        stateRegistry.Map(States.InstEORzpgx3, Zpgx3);
+        stateRegistry.Map(States.InstEORzpgx4, Zpgx4);
+        stateRegistry.Map(States.InstEORabs2, Abs2);
+        stateRegistry.Map(States.InstEORabs3, Abs3);
+        stateRegistry.Map(States.InstEORabs4, Abs4);
+        stateRegistry.Map(States.InstEORabsx2, Absx2);
+        stateRegistry.Map(States.InstEORabsx3, Absx3);
+        stateRegistry.Map(States.InstEORabsx4, Absx4);
+        stateRegistry.Map(States.InstEORabsx5, Absx5);
+        stateRegistry.Map(States.InstEORabsy2, Absy2);
+        stateRegistry.Map(States.InstEORabsy3, Absy3);
+        stateRegistry.Map(States.InstEORabsy4, Absy4);
+        stateRegistry.Map(States.InstEORabsy5, Absy5);
+        stateRegistry.Map(States.InstEORindx2, Indx2);
+        stateRegistry.Map(States.InstEORindx3, Indx3);
+        stateRegistry.Map(States.InstEORindx4, Indx4);
+        stateRegistry.Map(States.InstEORindx5, Indx5);
+        stateRegistry.Map(States.InstEORindx6, Indx6);
+        stateRegistry.Map(States.InstEORindy2, Indy2);
+        stateRegistry.Map(States.InstEORindy3, Indy3);
+        stateRegistry.Map(States.InstEORindy4, Indy4);
+        stateRegistry.Map(States.InstEORindy5, Indy5);
+        stateRegistry.Map(States.InstEORindy6, Indy6);
+        stateRegistry.Map(States.InstEORind2, Ind2);
+        stateRegistry.Map(States.InstEORind3, Ind3);
+        stateRegistry.Map(States.InstEORind4, Ind4);
+        stateRegistry.Map(States.InstEORind5, Ind5);
+
+        return this;
     }
 
     protected void XorAWithTemp(Context ctx)
@@ -81,8 +80,10 @@ public class InstEOR : InstBase
     // (indirect)     EOR (oper)    52      2      5
     ///////////////////////////////////////////////////////////////////////////////
 
+    // -------------------------------------------------------------------------
     // [0x49] EOR immediate
-    public void Imm2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Imm2(Context ctx)
     {
         Imm2SetAddrBus(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
@@ -95,71 +96,88 @@ public class InstEOR : InstBase
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x45] EOR zeropage
-    public void Zpg2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Zpg2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstEORzpg3);
     }
-    public void Zpg3(Context ctx)
+    private void Zpg3(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             XorAWithTemp(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x55] EOR zeropage,X
-    public void Zpgx2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Zpgx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstEORzpgx3);
     }
-    public void Zpgx3(Context ctx)
+    private void Zpgx3(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.IncEALWithX();
+
         ctx.AdvanceState(States.InstEORzpgx4);
     }
-    public void Zpgx4(Context ctx)
+    private void Zpgx4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             XorAWithTemp(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x4D] EOR absolute
-    public void Abs2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Abs2(Context ctx)
     {
         FetchEffAddrLow(ctx);
         ctx.AdvanceState(States.InstEORabs3);
     }
-    public void Abs3(Context ctx)
+    private void Abs3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
+
         ctx.AdvanceState(States.InstEORabs4);
     }
-    public void Abs4(Context ctx)
+    private void Abs4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             XorAWithTemp(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x5D] EOR absolute,X
-    public void Absx2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Absx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstEORabsx3);
     }
-    public void Absx3(Context ctx)
+    private void Absx3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
+
         ctx.AdvanceState(States.InstEORabsx4);
     }
-    public void Absx4(Context ctx)
+    private void Absx4(Context ctx)
     {
         var nextState = States.Fetch;
         if (ctx.GetSubStep() == P1MiddleStep)
@@ -182,9 +200,10 @@ public class InstEOR : InstBase
             else
                 nextState = States.InstEORabsx5;
         }
+
         ctx.AdvanceState(nextState);
     }
-    public void Absx5(Context ctx)
+    private void Absx5(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
@@ -192,21 +211,26 @@ public class InstEOR : InstBase
             ctx.Regs.Temp.UpdateValue(data);
             XorAWithTemp(ctx);
         }
+        
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x59] EOR absolute,Y
-    public void Absy2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Absy2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstEORabsy3);
     }
-    public void Absy3(Context ctx)
+    private void Absy3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
+
         ctx.AdvanceState(States.InstEORabsy4);
     }
-    public void Absy4(Context ctx)
+    private void Absy4(Context ctx)
     {
         var nextState = States.Fetch;
         if (ctx.GetSubStep() == P1MiddleStep)
@@ -229,9 +253,10 @@ public class InstEOR : InstBase
             else
                 nextState = States.InstEORabsy5;
         }
+
         ctx.AdvanceState(nextState);
     }
-    public void Absy5(Context ctx)
+    private void Absy5(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
@@ -239,63 +264,75 @@ public class InstEOR : InstBase
             ctx.Regs.Temp.UpdateValue(data);
             XorAWithTemp(ctx);
         }
+
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x41] EOR (indirect,X)
-    public void Indx2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Indx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstEORindx3);
     }
-    public void Indx3(Context ctx)
+    private void Indx3(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
             ctx.Regs.EA.Lsb().AddWithWrapAround(ctx.Regs.X);
             ctx.Regs.EA.Msb().Zero();
         }
+
         ctx.AdvanceState(States.InstEORindx4);
     }
-    public void Indx4(Context ctx)
+    private void Indx4(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
+
         ctx.AdvanceState(States.InstEORindx5);
     }
-    public void Indx5(Context ctx)
+    private void Indx5(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstEORindx6);
     }
-    public void Indx6(Context ctx)
+    private void Indx6(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             XorAWithTemp(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x51] EOR (indirect),Y
-    public void Indy2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Indy2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstEORindy3);
     }
-    public void Indy3(Context ctx)
+    private void Indy3(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
+
         ctx.AdvanceState(States.InstEORindy4);
     }
-    public void Indy4(Context ctx)
+    private void Indy4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
+
         ctx.AdvanceState(States.InstEORindy5);
     }
-    public void Indy5(Context ctx)
+    private void Indy5(Context ctx)
     {
         var nextState = States.Fetch;
         if (ctx.GetSubStep() == P1MiddleStep)
@@ -316,39 +353,47 @@ public class InstEOR : InstBase
             else
                 nextState = States.InstEORindy6;
         }
+
         ctx.AdvanceState(nextState);
     }
-    public void Indy6(Context ctx)
+    private void Indy6(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             XorAWithTemp(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x2] EOR (indirect)
-    public void Ind2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Ind2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstEORind3);
     }
-    public void Ind3(Context ctx)
+    private void Ind3(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
+
         ctx.AdvanceState(States.InstEORind4);
     }
-    public void Ind4(Context ctx)
+    private void Ind4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
+
         ctx.AdvanceState(States.InstEORind5);
     }
-    public void Ind5(Context ctx)
+    private void Ind5(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             XorAWithTemp(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 }

@@ -1,14 +1,9 @@
 ﻿// File-scoped namespace for Sim6502.Instructions
 namespace Sim6502.Instructions;
 
-public class InstNOP : InstBase
+public class InstNOP : InstBase2, IInstruction
 {
-    public InstNOP(IT2Registry t2Registry, IStateRegistry stateRegistry)
-        : base(t2Registry, stateRegistry)
-    {
-    }
-
-    protected override void RegisterT2State(IT2Registry registry)
+    public IInstruction RegisterT2State(IT2Registry registry)
     {
         registry.Map(OpCodes.NOP02, States.InstNOP2);
         registry.Map(OpCodes.NOP03, States.Fetch);
@@ -54,17 +49,21 @@ public class InstNOP : InstBase
         registry.Map(OpCodes.NOPF4, States.InstNOP4);
         registry.Map(OpCodes.NOPFB, States.Fetch);
         registry.Map(OpCodes.NOPFC, States.InstNOP4);
+
+        return this;
     }
 
-    protected override void RegisterStates(IStateRegistry registry)
+    public IInstruction RegisterStates(IStateRegistry registry)
     {
-        registry.Map(States.InstNOP2, ctx => Nop2(ctx));
-        registry.Map(States.InstNOP3, ctx => Nop3(ctx));
-        registry.Map(States.InstNOP4, ctx => Nop4(ctx));
-        registry.Map(States.InstNOP5, ctx => Nop5(ctx));
-        registry.Map(States.InstNOP6, ctx => Nop6(ctx));
-        registry.Map(States.InstNOP7, ctx => Nop7(ctx));
-        registry.Map(States.InstNOP8, ctx => Nop8(ctx));
+        registry.Map(States.InstNOP2, Nop2);
+        registry.Map(States.InstNOP3, Nop3);
+        registry.Map(States.InstNOP4, Nop4);
+        registry.Map(States.InstNOP5, Nop5);
+        registry.Map(States.InstNOP6, Nop6);
+        registry.Map(States.InstNOP7, Nop7);
+        registry.Map(States.InstNOP8, Nop8);
+
+        return this;
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -77,37 +76,37 @@ public class InstNOP : InstBase
     // ------------------------------------------------
     // implied        NOP           EA      1      2  
     /////////////////////////////////////////////////////////////////////////////
-    public void Nop2(Context ctx)
+    private void Nop2(Context ctx)
     {
         ctx.AdvanceState(States.Fetch);
     }
 
-    public void Nop3(Context ctx)
+    private void Nop3(Context ctx)
     {
         ctx.AdvanceState(States.InstNOP2);
     }
 
-    public void Nop4(Context ctx)
+    private void Nop4(Context ctx)
     {
         ctx.AdvanceState(States.InstNOP3);
     }
 
-    public void Nop5(Context ctx)
+    private void Nop5(Context ctx)
     {
         ctx.AdvanceState(States.InstNOP4);
     }
 
-    public void Nop6(Context ctx)
+    private void Nop6(Context ctx)
     {
         ctx.AdvanceState(States.InstNOP5);
     }
 
-    public void Nop7(Context ctx)
+    private void Nop7(Context ctx)
     {
         ctx.AdvanceState(States.InstNOP6);
     }
 
-    public void Nop8(Context ctx)
+    private void Nop8(Context ctx)
     {
         ctx.AdvanceState(States.InstNOP7);
     }

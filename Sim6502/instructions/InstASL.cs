@@ -2,18 +2,6 @@ using Sim6502.types;
 
 namespace Sim6502.Instructions;
 
-// ASL - Arithmetic Shift Left
-// C <- [76543210] <- 0
-// N V B D I Z C
-// + - - - - + +
-//
-// addressing     assembler     opc   bytes  cycles
-// ------------------------------------------------
-// accumulator    ASL A         0A      1      2
-// zeropage       ASL oper      06      2      5
-// zeropage,X     ASL oper,X    16      2      6
-// absolute       ASL oper      0E      3      6
-
 public class InstASL : InstBase2, IInstruction
 {
     public IInstruction RegisterT2State(IT2Registry registry)
@@ -66,7 +54,24 @@ public class InstASL : InstBase2, IInstruction
         ctx.Regs.P.Zero.UpdateValue(value.EqualsZero());
     }
 
+    /////////////////////////////////////////////////////////////////////////////
+    // ASL - Arithmetic Shift Left
+    // C <- [76543210] <- 0
+    // N V B D I Z C
+    // + - - - - + +
+    //
+    // addressing     assembler     opc   bytes  cycles
+    // ------------------------------------------------
+    // accumulator    ASL A         0A      1      2  
+    // zeropage       ASL oper      06      2      5  
+    // zeropage,X     ASL oper,X    16      2      6  
+    // absolute       ASL oper      0E      3      6  
+    // absolute,X     ASL oper,X    1E      3      7 
+    ///////////////////////////////////////////////////////////////////////////// 
+
+    // -------------------------------------------------------------------------
     // [0xA0] ASL accumulator
+    // -------------------------------------------------------------------------
     private void Acc2(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
@@ -74,7 +79,9 @@ public class InstASL : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xA6] ASL zeropage
+    // -------------------------------------------------------------------------
     private void Zpg2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -104,7 +111,9 @@ public class InstASL : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
-    // [0x16] ASL zeropage,X
+    // -------------------------------------------------------------------------
+    // [0x16] ASL zeropage,X 
+    // -------------------------------------------------------------------------
     private void Zpgx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -141,7 +150,9 @@ public class InstASL : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
-    // [0x0E] ASL absolute
+    // -------------------------------------------------------------------------
+    // [0x0E] ASL absolute 
+    // -------------------------------------------------------------------------
     private void Abs2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -178,7 +189,9 @@ public class InstASL : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x1E] ASL absolute,X
+    // -------------------------------------------------------------------------
     private void Absx2(Context ctx)
     {
         FetchEffAddrLow(ctx);

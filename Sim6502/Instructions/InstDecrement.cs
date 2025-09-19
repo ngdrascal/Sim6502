@@ -76,7 +76,9 @@ public class InstDecrement : InstBase2, IInstruction
     // absolute,X     DEC oper,X    DE      3      7
     ///////////////////////////////////////////////////////////////////////////////
 
+    // -------------------------------------------------------------------------
     // [0x3A] DEC accumulator
+    // -------------------------------------------------------------------------
     private void DecAcc2(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
@@ -85,7 +87,9 @@ public class InstDecrement : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xC6] DEC zeropage
+    // -------------------------------------------------------------------------
     private void DecZpg2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -111,7 +115,9 @@ public class InstDecrement : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xD6] DEC zeropage,X
+    // -------------------------------------------------------------------------
     private void DecZpgx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -144,7 +150,9 @@ public class InstDecrement : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xCE] DEC absolute
+    // -------------------------------------------------------------------------
     private void DecAbs2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -177,7 +185,9 @@ public class InstDecrement : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xDE] DEC absolute,X
+    // -------------------------------------------------------------------------
     private void DecAbsx2(Context ctx)
     {
         FetchEffAddrLow(ctx);

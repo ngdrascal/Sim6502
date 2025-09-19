@@ -64,29 +64,30 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         _ = new InstCPX().RegisterT2State(this).RegisterStates(this);
         _ = new InstCPY().RegisterT2State(this).RegisterStates(this);
         _ = new InstDecrement().RegisterT2State(this).RegisterStates(this);
+        _ = new InstEOR().RegisterT2State(this).RegisterStates(this);
+        _ = new InstFlags().RegisterT2State(this).RegisterStates(this);
+        _ = new InstIncrement().RegisterT2State(this).RegisterStates(this);
+        _ = new InstLDA().RegisterT2State(this).RegisterStates(this);
+        _ = new InstLDX().RegisterT2State(this).RegisterStates(this);
+        _ = new InstLDY().RegisterT2State(this).RegisterStates(this);
+        _ = new InstLSR().RegisterT2State(this).RegisterStates(this);
+        _ = new InstNOP().RegisterT2State(this).RegisterStates(this);
 
-        _ = new InstLDA2().RegisterT2State(this).RegisterStates(this);
-        _ = new InstLDX(this, this);
-        _ = new InstLDY(this, this);
         _ = new InstSTA(this, this);
         _ = new InstSTX(this, this);
         _ = new InstSTY(this, this);
         _ = new InstSTZ(this, this);
         _ = new InstTransfer(this, this);
         _ = new InstStack(this, this);
-        _ = new InstLSR(this, this);
         _ = new InstROL(this, this);
         _ = new InstROR(this, this);
         _ = new InstORA(this, this);
-        _ = new InstEOR(this, this);
         _ = new InstTRB(this, this);
         _ = new InstTSB(this, this);
-        _ = new InstFlags(this, this);
-        _ = new InstIncrement(this, this);
+
         _ = new InstSBC(this, this);
         _ = new InstSTP(this, this);
         _ = new InstWAI(this, this);
-        _ = new InstNOP(this, this);
         _ = new Interrupts(this, this);
     }
 

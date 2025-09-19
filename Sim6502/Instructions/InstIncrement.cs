@@ -2,14 +2,9 @@
 
 namespace Sim6502.Instructions;
 
-public class InstIncrement : InstBase
+public class InstIncrement : InstBase2, IInstruction
 {
-    public InstIncrement(IT2Registry t2Registry, IStateRegistry stateRegistry)
-        : base(t2Registry, stateRegistry)
-    {
-    }
-
-    protected override void RegisterT2State(IT2Registry registry)
+    public IInstruction RegisterT2State(IT2Registry registry)
     {
         registry.Map(OpCodes.INCacc, States.InstINCacc2);
         registry.Map(OpCodes.INCzpg, States.InstINCzpg2);
@@ -18,33 +13,35 @@ public class InstIncrement : InstBase
         registry.Map(OpCodes.INCabsx, States.InstINCabsx2);
         registry.Map(OpCodes.INXimp, States.InstINXimp2);
         registry.Map(OpCodes.INYimp, States.InstINYimp2);
+        return this;
     }
 
-    protected override void RegisterStates(IStateRegistry stateRegistry)
+    public IInstruction RegisterStates(IStateRegistry stateRegistry)
     {
-        stateRegistry.Map(States.InstINCacc2, ctx => IncAcc2(ctx));
-        stateRegistry.Map(States.InstINCzpg2, ctx => IncZpg2(ctx));
-        stateRegistry.Map(States.InstINCzpg3, ctx => IncZpg3(ctx));
-        stateRegistry.Map(States.InstINCzpg4, ctx => IncZpg4(ctx));
-        stateRegistry.Map(States.InstINCzpg5, ctx => IncZpg5(ctx));
-        stateRegistry.Map(States.InstINCzpgx2, ctx => IncZpgx2(ctx));
-        stateRegistry.Map(States.InstINCzpgx3, ctx => IncZpgx3(ctx));
-        stateRegistry.Map(States.InstINCzpgx4, ctx => IncZpgx4(ctx));
-        stateRegistry.Map(States.InstINCzpgx5, ctx => IncZpgx5(ctx));
-        stateRegistry.Map(States.InstINCzpgx6, ctx => IncZpgx6(ctx));
-        stateRegistry.Map(States.InstINCabs2, ctx => IncAbs2(ctx));
-        stateRegistry.Map(States.InstINCabs3, ctx => IncAbs3(ctx));
-        stateRegistry.Map(States.InstINCabs4, ctx => IncAbs4(ctx));
-        stateRegistry.Map(States.InstINCabs5, ctx => IncAbs5(ctx));
-        stateRegistry.Map(States.InstINCabs6, ctx => IncAbs6(ctx));
-        stateRegistry.Map(States.InstINCabsx2, ctx => IncAbsx2(ctx));
-        stateRegistry.Map(States.InstINCabsx3, ctx => IncAbsx3(ctx));
-        stateRegistry.Map(States.InstINCabsx4, ctx => IncAbsx4(ctx));
-        stateRegistry.Map(States.InstINCabsx5, ctx => IncAbsx5(ctx));
-        stateRegistry.Map(States.InstINCabsx6, ctx => IncAbsx6(ctx));
-        stateRegistry.Map(States.InstINCabsx7, ctx => IncAbsx7(ctx));
-        stateRegistry.Map(States.InstINXimp2, ctx => InxImp2(ctx));
-        stateRegistry.Map(States.InstINYimp2, ctx => InyImp2(ctx));
+        stateRegistry.Map(States.InstINCacc2, IncAcc2);
+        stateRegistry.Map(States.InstINCzpg2, IncZpg2);
+        stateRegistry.Map(States.InstINCzpg3, IncZpg3);
+        stateRegistry.Map(States.InstINCzpg4, IncZpg4);
+        stateRegistry.Map(States.InstINCzpg5, IncZpg5);
+        stateRegistry.Map(States.InstINCzpgx2, IncZpgx2);
+        stateRegistry.Map(States.InstINCzpgx3, IncZpgx3);
+        stateRegistry.Map(States.InstINCzpgx4, IncZpgx4);
+        stateRegistry.Map(States.InstINCzpgx5, IncZpgx5);
+        stateRegistry.Map(States.InstINCzpgx6, IncZpgx6);
+        stateRegistry.Map(States.InstINCabs2, IncAbs2);
+        stateRegistry.Map(States.InstINCabs3, IncAbs3);
+        stateRegistry.Map(States.InstINCabs4, IncAbs4);
+        stateRegistry.Map(States.InstINCabs5, IncAbs5);
+        stateRegistry.Map(States.InstINCabs6, IncAbs6);
+        stateRegistry.Map(States.InstINCabsx2, IncAbsx2);
+        stateRegistry.Map(States.InstINCabsx3, IncAbsx3);
+        stateRegistry.Map(States.InstINCabsx4, IncAbsx4);
+        stateRegistry.Map(States.InstINCabsx5, IncAbsx5);
+        stateRegistry.Map(States.InstINCabsx6, IncAbsx6);
+        stateRegistry.Map(States.InstINCabsx7, IncAbsx7);
+        stateRegistry.Map(States.InstINXimp2, InxImp2);
+        stateRegistry.Map(States.InstINYimp2, InyImp2);
+        return this;
     }
 
     private void IncTempAndUpdateFlags(Context ctx)
@@ -77,124 +74,172 @@ public class InstIncrement : InstBase
     // absolute,X     INC oper,X    FE      3      7
     ///////////////////////////////////////////////////////////////////////////////
 
+    // -------------------------------------------------------------------------
     // [0x1A] INC accumulator
-    public void IncAcc2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void IncAcc2(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
             IncAndUpdateFlags(ctx, ctx.Regs.A);
-        ctx.AdvanceState(States.Fetch);
-    }
-    // [0xE6] INC zeropage
-    public void IncZpg2(Context ctx)
-    {
-        FetchEffAddrLow(ctx);
-        ctx.AdvanceState(States.InstINCzpg3);
-    }
-    public void IncZpg3(Context ctx)
-    {
-        LoadTempFromEffAddr(ctx);
-        ctx.AdvanceState(States.InstINCzpg4);
-    }
-    public void IncZpg4(Context ctx)
-    {
-        if (ctx.GetSubStep() == P2LastSubstep)
-            IncTempAndUpdateFlags(ctx);
-        ctx.AdvanceState(States.InstINCzpg5);
-    }
-    public void IncZpg5(Context ctx)
-    {
-        StoreTempToEffAddr(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
-    // [0xF6] INC zeropage,X
-    public void IncZpgx2(Context ctx)
+    // -------------------------------------------------------------------------
+    // [0xE6] INC zeropage
+    // -------------------------------------------------------------------------
+    private void IncZpg2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
+        ctx.AdvanceState(States.InstINCzpg3);
+    }
+
+    private void IncZpg3(Context ctx)
+    {
+        LoadTempFromEffAddr(ctx);
+
+        ctx.AdvanceState(States.InstINCzpg4);
+    }
+
+    private void IncZpg4(Context ctx)
+    {
+        if (ctx.GetSubStep() == P2LastSubstep)
+            IncTempAndUpdateFlags(ctx);
+
+        ctx.AdvanceState(States.InstINCzpg5);
+    }
+
+    private void IncZpg5(Context ctx)
+    {
+        StoreTempToEffAddr(ctx);
+
+        ctx.AdvanceState(States.Fetch);
+    }
+
+    // -------------------------------------------------------------------------
+    // [0xF6] INC zeropage,X
+    // -------------------------------------------------------------------------
+    private void IncZpgx2(Context ctx)
+    {
+        FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstINCzpgx3);
     }
-    public void IncZpgx3(Context ctx)
+
+    private void IncZpgx3(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.IncEALWithX();
+
         ctx.AdvanceState(States.InstINCzpgx4);
     }
-    public void IncZpgx4(Context ctx)
+
+    private void IncZpgx4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
+
         ctx.AdvanceState(States.InstINCzpgx5);
     }
-    public void IncZpgx5(Context ctx)
+
+    private void IncZpgx5(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
             IncTempAndUpdateFlags(ctx);
+
         ctx.AdvanceState(States.InstINCzpgx6);
     }
-    public void IncZpgx6(Context ctx)
+
+    private void IncZpgx6(Context ctx)
     {
         StoreTempToEffAddr(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xEE] INC absolute
-    public void IncAbs2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void IncAbs2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstINCabs3);
     }
-    public void IncAbs3(Context ctx)
+
+    private void IncAbs3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
+
         ctx.AdvanceState(States.InstINCabs4);
     }
-    public void IncAbs4(Context ctx)
+
+    private void IncAbs4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
+
         ctx.AdvanceState(States.InstINCabs5);
     }
-    public void IncAbs5(Context ctx)
+
+    private void IncAbs5(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
             IncTempAndUpdateFlags(ctx);
+
         ctx.AdvanceState(States.InstINCabs6);
     }
-    public void IncAbs6(Context ctx)
+
+    private void IncAbs6(Context ctx)
     {
         StoreTempToEffAddr(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xFE] INC absolute,X
-    public void IncAbsx2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void IncAbsx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstINCabsx3);
     }
-    public void IncAbsx3(Context ctx)
+
+    private void IncAbsx3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
+
         ctx.AdvanceState(States.InstINCabsx4);
     }
-    public void IncAbsx4(Context ctx)
+
+    private void IncAbsx4(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.IncEAWithX();
+
         ctx.AdvanceState(States.InstINCabsx5);
     }
-    public void IncAbsx5(Context ctx)
+
+    private void IncAbsx5(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
+
         ctx.AdvanceState(States.InstINCabsx6);
     }
-    public void IncAbsx6(Context ctx)
+
+    private void IncAbsx6(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
             IncTempAndUpdateFlags(ctx);
+
         ctx.AdvanceState(States.InstINCabsx7);
     }
-    public void IncAbsx7(Context ctx)
+
+    private void IncAbsx7(Context ctx)
     {
         StoreTempToEffAddr(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
@@ -208,10 +253,11 @@ public class InstIncrement : InstBase
     // ------------------------------------------------
     // implied        INX           E8      1      2
     ///////////////////////////////////////////////////////////////////////////////
-    public void InxImp2(Context ctx)
+    private void InxImp2(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
             IncAndUpdateFlags(ctx, ctx.Regs.X);
+
         ctx.AdvanceState(States.Fetch);
     }
 
@@ -225,10 +271,11 @@ public class InstIncrement : InstBase
     // ------------------------------------------------
     // implied        INY           C8      1      2 
     ///////////////////////////////////////////////////////////////////////////////   
-    public void InyImp2(Context ctx)
+    private void InyImp2(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
             IncAndUpdateFlags(ctx, ctx.Regs.Y);
+
         ctx.AdvanceState(States.Fetch);
     }
 }

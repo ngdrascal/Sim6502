@@ -1,13 +1,8 @@
 ﻿namespace Sim6502.Instructions;
 
-public class InstFlags : InstBase
+public class InstFlags : InstBase2, IInstruction
 {
-    public InstFlags(IT2Registry t2Registry, IStateRegistry stateRegistry)
-        : base(t2Registry, stateRegistry)
-    {
-    }
-
-    protected override void RegisterT2State(IT2Registry registry)
+    public IInstruction RegisterT2State(IT2Registry registry)
     {
         registry.Map(OpCodes.CLCimp, States.InstCLCimp2);
         registry.Map(OpCodes.CLDimp, States.InstCLDimp2);
@@ -16,17 +11,21 @@ public class InstFlags : InstBase
         registry.Map(OpCodes.SECimp, States.InstSECimp2);
         registry.Map(OpCodes.SEDimp, States.InstSEDimp2);
         registry.Map(OpCodes.SEIimp, States.InstSEIimp2);
+
+        return this;
     }
 
-    protected override void RegisterStates(IStateRegistry stateRegistry)
+    public IInstruction RegisterStates(IStateRegistry stateRegistry)
     {
-        stateRegistry.Map(States.InstCLCimp2, ctx => ClcImp2(ctx));
-        stateRegistry.Map(States.InstCLDimp2, ctx => CldImp2(ctx));
-        stateRegistry.Map(States.InstCLIimp2, ctx => CliImp2(ctx));
-        stateRegistry.Map(States.InstCLVimp2, ctx => ClvImp2(ctx));
-        stateRegistry.Map(States.InstSECimp2, ctx => SecImp2(ctx));
-        stateRegistry.Map(States.InstSEDimp2, ctx => SedImp2(ctx));
-        stateRegistry.Map(States.InstSEIimp2, ctx => SeiImp2(ctx));
+        stateRegistry.Map(States.InstCLCimp2, ClcImp2);
+        stateRegistry.Map(States.InstCLDimp2, CldImp2);
+        stateRegistry.Map(States.InstCLIimp2, CliImp2);
+        stateRegistry.Map(States.InstCLVimp2, ClvImp2);
+        stateRegistry.Map(States.InstSECimp2, SecImp2);
+        stateRegistry.Map(States.InstSEDimp2, SedImp2);
+        stateRegistry.Map(States.InstSEIimp2, SeiImp2);
+
+        return this;
     }
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -39,7 +38,7 @@ public class InstFlags : InstBase
     // ------------------------------------------------
     // implied        CLC           18      1      2
     ///////////////////////////////////////////////////////////////////////////////
-    public void ClcImp2(Context ctx)
+    private void ClcImp2(Context ctx)
     {
         ctx.Regs.P.ClearCarry();
         ctx.AdvanceState(States.Fetch);
@@ -55,7 +54,7 @@ public class InstFlags : InstBase
     // ------------------------------------------------
     // implied        CLD           D8      1      2
     ///////////////////////////////////////////////////////////////////////////////   
-    public void CldImp2(Context ctx)
+    private void CldImp2(Context ctx)
     {
         ctx.Regs.P.ClearDecimal();
         ctx.AdvanceState(States.Fetch);
@@ -71,7 +70,7 @@ public class InstFlags : InstBase
     // ------------------------------------------------
     // implied        CLI           58      1      2
     ///////////////////////////////////////////////////////////////////////////////
-    public void CliImp2(Context ctx)
+    private void CliImp2(Context ctx)
     {
         ctx.Regs.P.ClearIRQDisabled();
         ctx.AdvanceState(States.Fetch);
@@ -87,7 +86,7 @@ public class InstFlags : InstBase
     // ------------------------------------------------
     // implied        CLV           B8      1      2
     ///////////////////////////////////////////////////////////////////////////////
-    public void ClvImp2(Context ctx)
+    private void ClvImp2(Context ctx)
     {
         ctx.Regs.P.ClearOverflow();
         ctx.AdvanceState(States.Fetch);
@@ -103,7 +102,7 @@ public class InstFlags : InstBase
     // ------------------------------------------------
     // implied        SEC           38      1      2
     ///////////////////////////////////////////////////////////////////////////////
-    public void SecImp2(Context ctx)
+    private void SecImp2(Context ctx)
     {
         ctx.Regs.P.SetCarry();
         ctx.AdvanceState(States.Fetch);
@@ -119,7 +118,7 @@ public class InstFlags : InstBase
     // ------------------------------------------------
     // implied        SED           F8      1      2
     ///////////////////////////////////////////////////////////////////////////////
-    public void SedImp2(Context ctx)
+    private void SedImp2(Context ctx)
     {
         ctx.Regs.P.SetDecimal();
         ctx.AdvanceState(States.Fetch);
@@ -135,7 +134,7 @@ public class InstFlags : InstBase
     // ------------------------------------------------
     // implied        SEI           78      1      2
     ///////////////////////////////////////////////////////////////////////////////
-    public void SeiImp2(Context ctx)
+    private void SeiImp2(Context ctx)
     {
         ctx.Regs.P.SetIRQDisabled();
         ctx.AdvanceState(States.Fetch);

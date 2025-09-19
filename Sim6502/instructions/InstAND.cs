@@ -1,21 +1,5 @@
 namespace Sim6502.Instructions;
 
-// AND - "AND" Memory with Accumulator
-// A AND M -> A
-// N V B D I Z C
-// + - - - - - + -
-//
-// addressing     assembler     opc   bytes  cycles
-// ------------------------------------------------
-// immediate      AND #oper     29      2      2
-// zeropage       AND oper      25      2      3
-// zeropage,X     AND oper,X    35      2      4
-// absolute       AND oper      2D      3      4
-// absolute,X     AND oper,X    3D      3      4*
-// absolute,Y     AND oper,Y    39      3      4*
-// (indirect,X)   AND (oper,X)  21      2      6
-// (indirect),Y   AND (oper),Y  31      2      5*
-// (indirect)     AND (oper)    32      2      5
 public class InstAND : InstBase2, IInstruction
 {
     public IInstruction RegisterT2State(IT2Registry registry)
@@ -85,7 +69,28 @@ public class InstAND : InstBase2, IInstruction
         ctx.Regs.UpdateAUpdateFlags(result);
     }
 
+    /////////////////////////////////////////////////////////////////////////////
+    // AND - "AND" Memory with Accumulator
+    // A AND M -> A
+    // N V B D I Z C
+    // + - - - - + -
+    //
+    // addressing     assembler     opc   bytes  cycles
+    // ------------------------------------------------
+    // immediate      AND #oper     29      2      2
+    // zeropage       AND oper      25      2      3
+    // zeropage,X     AND oper,X    35      2      4
+    // absolute       AND oper      2D      3      4
+    // absolute,X     AND oper,X    3D      3      4*
+    // absolute,Y     AND oper,Y    39      3      4*
+    // (indirect,X)   AND (oper,X)  21      2      6
+    // (indirect),Y   AND (oper),Y  31      2      5*
+    // (indirect)     AND (oper)    32      2      5
+    /////////////////////////////////////////////////////////////////////////////
+
+    // -------------------------------------------------------------------------
     // [0x29] AND immediate
+    // -------------------------------------------------------------------------
     private void Imm2(Context ctx)
     {
         Imm2SetAddrBus(ctx);
@@ -99,7 +104,9 @@ public class InstAND : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x25] AND zeropage
+    // -------------------------------------------------------------------------
     private void Zpg2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -114,7 +121,9 @@ public class InstAND : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x35] AND zeropage,X
+    // -------------------------------------------------------------------------
     private void Zpgx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -136,7 +145,9 @@ public class InstAND : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x2D] AND absolute
+    // -------------------------------------------------------------------------
     private void Abs2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -157,7 +168,9 @@ public class InstAND : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x3D] AND absolute,X
+    // -------------------------------------------------------------------------
     private void Absx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -209,7 +222,9 @@ public class InstAND : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x39] AND absolute,Y
+    // -------------------------------------------------------------------------
     private void Absy2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -261,7 +276,9 @@ public class InstAND : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x21] AND (indirect,X)
+    // -------------------------------------------------------------------------
     private void Indx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -300,7 +317,9 @@ public class InstAND : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x31] AND (indirect),Y
+    // -------------------------------------------------------------------------
     private void Indy2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -357,7 +376,9 @@ public class InstAND : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0x32] AND (indirect)
+    // -------------------------------------------------------------------------
     private void Ind2(Context ctx)
     {
         FetchEffAddrLow(ctx);

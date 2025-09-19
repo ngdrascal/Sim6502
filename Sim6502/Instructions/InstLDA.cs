@@ -1,13 +1,8 @@
 ﻿namespace Sim6502.Instructions;
 
-public class InstLDA : InstBase
+public class InstLDA : InstBase2, IInstruction
 {
-    public InstLDA(IT2Registry t2Registry, IStateRegistry stateRegistry)
-        : base(t2Registry, stateRegistry)
-    {
-    }
-
-    protected override void RegisterT2State(IT2Registry registry)
+    public IInstruction RegisterT2State(IT2Registry registry)
     {
         registry.Map(OpCodes.LDAimm, States.InstLDAimm2);
         registry.Map(OpCodes.LDAzpg, States.InstLDAzpg2);
@@ -18,9 +13,11 @@ public class InstLDA : InstBase
         registry.Map(OpCodes.LDAindx, States.InstLDAindx2);
         registry.Map(OpCodes.LDAindy, States.InstLDAindy2);
         registry.Map(OpCodes.LDAind, States.InstLDAind2);
+
+        return this;
     }
 
-    protected override void RegisterStates(IStateRegistry stateRegistry)
+    public IInstruction RegisterStates(IStateRegistry stateRegistry)
     {
         stateRegistry.Map(States.InstLDAimm2, Imm2);
         stateRegistry.Map(States.InstLDAzpg2, Zpg2);
@@ -53,6 +50,8 @@ public class InstLDA : InstBase
         stateRegistry.Map(States.InstLDAind3, Ind3);
         stateRegistry.Map(States.InstLDAind4, Ind4);
         stateRegistry.Map(States.InstLDAind5, Ind5);
+
+        return this;
     }
 
     protected void LoadAFromEffAddr(Context ctx)
@@ -88,8 +87,10 @@ public class InstLDA : InstBase
     // (indirect)     LDA (oper)    B2      2      5 
     ///////////////////////////////////////////////////////////////////////////////
 
+    // -------------------------------------------------------------------------
     // [0xA9] LDA immediate
-    public void Imm2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Imm2(Context ctx)
     {
         Imm2SetAddrBus(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
@@ -101,65 +102,91 @@ public class InstLDA : InstBase
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xA5] LDA zeropage
-    public void Zpg2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Zpg2(Context ctx)
     {
         FetchEffAddrLow(ctx);
         ctx.AdvanceState(States.InstLDAzpg3);
     }
-    public void Zpg3(Context ctx)
+
+    private void Zpg3(Context ctx)
     {
         LoadAFromEffAddr(ctx);
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xB5] LDA zeropage,X
-    public void Zpgx2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Zpgx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
         ctx.AdvanceState(States.InstLDAzpgx3);
     }
-    public void Zpgx3(Context ctx)
+
+    private void Zpgx3(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.IncEALWithX();
         ctx.AdvanceState(States.InstLDAzpgx4);
     }
-    public void Zpgx4(Context ctx)
+
+    private void Zpgx4(Context ctx)
     {
         LoadAFromEffAddr(ctx);
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xAD] LDA absolute
-    public void Abs2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Abs2(Context ctx)
     {
         FetchEffAddrLow(ctx);
         ctx.AdvanceState(States.InstLDAabs3);
     }
-    public void Abs3(Context ctx)
+
+    private void Abs3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
         ctx.AdvanceState(States.InstLDAabs4);
     }
-    public void Abs4(Context ctx)
+
+    private void Abs4(Context ctx)
     {
         LoadAFromEffAddr(ctx);
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xBD] LDA absolute,X
-    public void Absx2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Absx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
         ctx.AdvanceState(States.InstLDAabsx3);
     }
-    public void Absx3(Context ctx)
+
+    private void Absx3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
         ctx.AdvanceState(States.InstLDAabsx4);
     }
-    public void Absx4(Context ctx)
+
+    /*
+    The 6502 does a fetch during the Cycle 4, before it checks to see if
+    there was any carry; if there is no carry into the high byte of the address,
+    as is often true, then the address fetched from was correct and there is
+    no cycle five; the operation is a four-cycle operation in this case. Absolute
+    indexed writes, however require five cycles.
+
+    From: Programming the 65816: including the 6502, 65c02, and 65802
+    By:   David Eyes, Ron Lichty
+    */
+
+    private void Absx4(Context ctx)
     {
         var nextState = States.Fetch;
         if (ctx.GetSubStep() == P1MiddleStep)
@@ -181,24 +208,29 @@ public class InstLDA : InstBase
         }
         ctx.AdvanceState(nextState);
     }
-    public void Absx5(Context ctx)
+
+    private void Absx5(Context ctx)
     {
         LoadAFromEffAddr(ctx);
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xB9] LDA absolute,Y
-    public void Absy2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Absy2(Context ctx)
     {
         FetchEffAddrLow(ctx);
         ctx.AdvanceState(States.InstLDAabsy3);
     }
-    public void Absy3(Context ctx)
+
+    private void Absy3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
         ctx.AdvanceState(States.InstLDAabsy4);
     }
-    public void Absy4(Context ctx)
+
+    private void Absy4(Context ctx)
     {
         var nextState = States.Fetch;
         if (ctx.GetSubStep() == P1MiddleStep)
@@ -220,19 +252,23 @@ public class InstLDA : InstBase
         }
         ctx.AdvanceState(nextState);
     }
-    public void Absy5(Context ctx)
+
+    private void Absy5(Context ctx)
     {
         LoadAFromEffAddr(ctx);
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xA1] LDA (indirect,X)
-    public void Indx2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Indx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
         ctx.AdvanceState(States.InstLDAindx3);
     }
-    public void Indx3(Context ctx)
+
+    private void Indx3(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
@@ -241,43 +277,51 @@ public class InstLDA : InstBase
         }
         ctx.AdvanceState(States.InstLDAindx4);
     }
-    public void Indx4(Context ctx)
+
+    private void Indx4(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
         ctx.AdvanceState(States.InstLDAindx5);
     }
-    public void Indx5(Context ctx)
+
+    private void Indx5(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstLDAindx6);
     }
-    public void Indx6(Context ctx)
+
+    private void Indx6(Context ctx)
     {
         LoadAFromEffAddr(ctx);
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xB1] LDA (indirect),Y
-    public void Indy2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Indy2(Context ctx)
     {
         FetchEffAddrLow(ctx);
         ctx.AdvanceState(States.InstLDAindy3);
     }
-    public void Indy3(Context ctx)
+
+    private void Indy3(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
         ctx.AdvanceState(States.InstLDAindy4);
     }
-    public void Indy4(Context ctx)
+
+    private void Indy4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstLDAindy5);
     }
-    public void Indy5(Context ctx)
+
+    private void Indy5(Context ctx)
     {
         var nextState = States.Fetch;
         if (ctx.GetSubStep() == P1MiddleStep)
@@ -299,31 +343,36 @@ public class InstLDA : InstBase
         }
         ctx.AdvanceState(nextState);
     }
-    public void Indy6(Context ctx)
+    private void Indy6(Context ctx)
     {
         LoadAFromEffAddr(ctx);
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xB2] LDA (indirect)
-    public void Ind2(Context ctx)
+    // -------------------------------------------------------------------------
+    private void Ind2(Context ctx)
     {
         FetchEffAddrLow(ctx);
         ctx.AdvanceState(States.InstLDAind3);
     }
-    public void Ind3(Context ctx)
+
+    private void Ind3(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
         ctx.AdvanceState(States.InstLDAind4);
     }
-    public void Ind4(Context ctx)
+
+    private void Ind4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstLDAind5);
     }
-    public void Ind5(Context ctx)
+
+    private void Ind5(Context ctx)
     {
         LoadAFromEffAddr(ctx);
         ctx.AdvanceState(States.Fetch);

@@ -47,7 +47,9 @@ public class InstCPX : InstBase2, IInstruction
     // absolute       CPX oper      EC      3      4
     ///////////////////////////////////////////////////////////////////////////////
 
+    // -------------------------------------------------------------------------
     // [0xE0] CPX immediate
+    // -------------------------------------------------------------------------
     private void Imm2(Context ctx)
     {
         Imm2SetAddrBus(ctx);
@@ -62,7 +64,9 @@ public class InstCPX : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xE4] CPX zeropage
+    // -------------------------------------------------------------------------
     private void Zpg2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -79,7 +83,9 @@ public class InstCPX : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xEC] CPX absolute
+    // -------------------------------------------------------------------------
     private void Abs2(Context ctx)
     {
         FetchEffAddrLow(ctx);

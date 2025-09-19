@@ -65,7 +65,30 @@ public class InstCMP : InstBase2, IInstruction
         flags.Negative.UpdateValue((result & 0x80) > 0);
     }
 
+    /////////////////////////////////////////////////////////////////////////////
+    // CMP - Compare Memory with Accumulator
+    // A - M
+    // N V B D I Z C
+    // + - - - - + +
+    //
+    // addressing     assembler     opc   bytes  cycles
+    // ------------------------------------------------
+    // immediate      CMP #oper     C9      2      2
+    // zeropage       CMP oper      C5      2      3
+    // zeropage,X     CMP oper,X    D5      2      4
+    // absolute       CMP oper      CD      3      4
+    // absolute,X     CMP oper,X    DD      3      4+p
+    // absolute,Y     CMP oper,Y    D9      3      4+p
+    // (indirect,X)   CMP (oper,X)  C1      2      6
+    // (indirect),Y   CMP (oper),Y  D1      2      5+p
+    // (indirect)     CMP (oper)    D2      2      5
+    //
+    // p: =1 if page is crossed
+    /////////////////////////////////////////////////////////////////////////////
+
+    // -------------------------------------------------------------------------
     // [0xC9] CMP immediate
+    // -------------------------------------------------------------------------
     private void Imm2(Context ctx)
     {
         Imm2SetAddrBus(ctx);
@@ -80,7 +103,9 @@ public class InstCMP : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xC5] CMP zeropage
+    // -------------------------------------------------------------------------
     private void Zpg2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -97,7 +122,9 @@ public class InstCMP : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xD5] CMP zeropage,X
+    // -------------------------------------------------------------------------
     private void Zpgx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -122,7 +149,9 @@ public class InstCMP : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xCD] CMP absolute
+    // -------------------------------------------------------------------------
     private void Abs2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -146,7 +175,9 @@ public class InstCMP : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xDD] CMP absolute,X
+    // -------------------------------------------------------------------------
     private void Absx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -198,7 +229,9 @@ public class InstCMP : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xD9] CMP absolute,Y
+    // -------------------------------------------------------------------------
     private void Absy2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -249,7 +282,9 @@ public class InstCMP : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xC1] CMP (indirect,X)
+    // -------------------------------------------------------------------------
     private void Indx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -293,7 +328,9 @@ public class InstCMP : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
-    // [0xD1] CMP (indirect),Y
+    // -------------------------------------------------------------------------
+    // [0xD1] CMP (indirect,Y)
+    // -------------------------------------------------------------------------
     private void Indy2(Context ctx)
     {
         FetchEffAddrLow(ctx);
@@ -354,7 +391,9 @@ public class InstCMP : InstBase2, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    // -------------------------------------------------------------------------
     // [0xD2] CMP (indirect)
+    // -------------------------------------------------------------------------
     private void Ind2(Context ctx)
     {
         FetchEffAddrLow(ctx);
