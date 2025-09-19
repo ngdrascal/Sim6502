@@ -17,8 +17,12 @@ public class UInt8
 
     public override bool Equals(object? o)
     {
-        if (ReferenceEquals(this, o)) return true;
-        if (o is not UInt8 that) return false;
+        if (ReferenceEquals(this, o))
+            return true;
+
+        if (o is not UInt8 that)
+            return false;
+
         return _value == that._value;
     }
 
@@ -173,8 +177,8 @@ public class UInt8
 
     public int Parity()
     {
-        int parity = 0;
-        int temp = _value;
+        var parity = 0;
+        var temp = _value;
         while (temp != 0)
         {
             parity ^= temp & 1;
@@ -223,31 +227,31 @@ public class UInt8
 
     private BitFlag CalcADCOverflow(int left, int right, int carryIn)
     {
-        int lowNibble = (left & 0x0F) + (right & 0x0F) + carryIn;
+        var lowNibble = (left & 0x0F) + (right & 0x0F) + carryIn;
         if (lowNibble >= 10)
             lowNibble = ((lowNibble + 6) & 0x0F) + 0x10;
 
-        int result = (byte)(left & 0xF0) + (byte)(right & 0xF0) + (byte)lowNibble;
+        var result = (sbyte)(left & 0xF0) + (sbyte)(right & 0xF0) + (sbyte)lowNibble;
 
         return new BitFlag(result < -128 || result > 127);
     }
 
     private MathResult adcBinary(UInt8 operand, BitFlag carryIn)
     {
-        int right = operand._value;
-        int carry = carryIn.ToInt();
+        var right = operand._value;
+        var carry = carryIn.ToInt();
 
-        int result = _value + right + carry;
+        var result = _value + right + carry;
 
-        BitFlag cFlag = new BitFlag(result > 255);
+        var cFlag = new BitFlag(result > 255);
 
-        int rightSign = (right & 0x80) != 0 ? 1 : 0;
-        int valueSign = (_value & 0x80) != 0 ? 1 : 0;
-        int resultSign = (result & 0x80) != 0 ? 1 : 0;
-        BitFlag vFlag = new BitFlag(((rightSign ^ resultSign) & (valueSign ^ resultSign)) != 0);
+        var rightSign = (right & 0x80) != 0 ? 1 : 0;
+        var valueSign = (_value & 0x80) != 0 ? 1 : 0;
+        var resultSign = (result & 0x80) != 0 ? 1 : 0;
+        var vFlag = new BitFlag(((rightSign ^ resultSign) & (valueSign ^ resultSign)) != 0);
 
-        BitFlag zFlag = new BitFlag(result == 0);
-        BitFlag nFlag = new BitFlag((result & 0x80) > 0);
+        var zFlag = new BitFlag(result == 0);
+        var nFlag = new BitFlag((result & 0x80) > 0);
 
         _value = result & 0x00FF;
 
@@ -294,25 +298,25 @@ public class UInt8
          * S23 STA AR ; predicted accumulator result
          * RTS
          */
-        byte N1 = (byte)_value;
-        byte N2 = (byte)operand.ToInt();
+        var N1 = (sbyte)_value;
+        var N2 = (sbyte)operand.ToInt();
 
         // N2L = N2 & $0F
-        byte N2L = (byte)(N2 & 0x0F);
+        var N2L = (sbyte)(N2 & 0x0F);
 
-        byte[] N2H = new byte[2];
+        var N2H = new sbyte[2];
 
         // N2H = N2 & $F0
-        N2H[0] = (byte)(N2 & 0xF0);
+        N2H[0] = (sbyte)(N2 & 0xF0);
 
         // N2H+1 = (N2 & $F0) + $0F
-        N2H[1] = (byte)((N2 & 0xF0) + 0x0F);
+        N2H[1] = (sbyte)((N2 & 0xF0) + 0x0F);
 
         // N1L = N1 & $0F
-        byte N1L = (byte)(N1 & 0x0F);
+        var N1L = (sbyte)(N1 & 0x0F);
 
         // N1H = N1 & $F0
-        byte N1H = (byte)(N1 & 0xF0);
+        var N1H = (sbyte)(N1 & 0xF0);
 
         int C;
         int A;
@@ -358,10 +362,10 @@ public class UInt8
         A &= 0xFF;
         _value = A;
 
-        bool cFlag = CalcCarry(N1, N2, carryIn.ToInt()) == 1;
-        bool vFlag = CalcSBCOverflow(N1, N2, carryIn.ToInt());
-        bool zFlag = _value == 0;
-        bool nFlag = (_value & 0x80) == 0x80;
+        var cFlag = CalcCarry(N1, N2, carryIn.ToInt()) == 1;
+        var vFlag = CalcSBCOverflow(N1, N2, carryIn.ToInt());
+        var zFlag = _value == 0;
+        var nFlag = (_value & 0x80) == 0x80;
 
         return new MathResult(new UInt8(_value), new BitFlag(nFlag), new BitFlag(vFlag),
               new BitFlag(zFlag), new BitFlag(cFlag));
@@ -373,7 +377,7 @@ public class UInt8
         return binaryResult > 0xFF ? 1 : 0;
     }
 
-    private bool CalcSBCOverflow(byte n1, byte n2, int carry)
+    private bool CalcSBCOverflow(sbyte n1, sbyte n2, int carry)
     {
         int binaryResult = n1 - n2 - (1 - carry);
         return binaryResult < -128 || binaryResult > 127;

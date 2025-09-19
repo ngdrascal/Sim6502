@@ -304,11 +304,11 @@ public class UInt8Tests : UnitTestBase
     public void TestADC()
     {
         // ARRANGE:
-        var cIn = 1;
-        var left = 0x70;
-        var right = 0x10;
-        var expectedValue = 0x81;
-        var expectedFlags = "NVzc";
+        const int cIn = 1;
+        const int left = 0x70;
+        const int right = 0x10;
+        const int expectedValue = 0x81;
+        const string expectedFlags = "NVzc";
 
         var carryIn = new BitFlag(cIn == 1);
         var accumulator = new UInt8(left);
@@ -338,7 +338,7 @@ public class UInt8Tests : UnitTestBase
         // If the flag is set then the letter is upper case, otherwise it is lower case.
         // The input-1, input-2, and expected-result is in hex format.
 
-        var csvFile = ".\\types\\adc.csv";
+        const string csvFile = ".\\types\\adc.csv";
         try
         {
             var lines = File.ReadAllLines(csvFile);
@@ -363,7 +363,7 @@ public class UInt8Tests : UnitTestBase
                 // ACT:
                 var actual = accumulator.Adc(operand, cFlagBit, dFlagBit);
 
-                var msg = $" cf: {cFlag:X} acc: {accValue:X2}, operand: {operandValue:X2}";
+                // var msg = $" cf: {cFlag:X} acc: {accValue:X2}, operand: {operandValue:X2}";
 
                 // ASSERT:
                 Assert.Equal(expected.Value(), actual.Value());
@@ -375,11 +375,11 @@ public class UInt8Tests : UnitTestBase
         }
         catch (FileNotFoundException)
         {
-            Assert.True(false, "File not found: " + csvFile);
+            Assert.Fail("File not found: " + csvFile);
         }
         catch (IOException)
         {
-            Assert.True(false, "IO Exception: " + csvFile);
+            Assert.Fail("IO Exception: " + csvFile);
         }
     }
 
@@ -399,7 +399,7 @@ public class UInt8Tests : UnitTestBase
     // +---+------------+--------------+----------------------------------------------------------+   
 
     private void ExecuteSBCBinary(UInt8 leftValue, UInt8 rightValue, BitFlag carryIn,
-                                  UInt8 expectedValue, string expectedNVZC)
+                                  UInt8 expectedValue, string expectedFlags)
     {
         // ARRANGE:
 
@@ -408,10 +408,10 @@ public class UInt8Tests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(expectedValue, actual.Value());
-        Assert.Equal(FlagValue(expectedNVZC, 'N'), actual.Negative());
-        Assert.Equal(FlagValue(expectedNVZC, 'V'), actual.Overflow());
-        Assert.Equal(FlagValue(expectedNVZC, 'Z'), actual.Zero());
-        Assert.Equal(FlagValue(expectedNVZC, 'C'), actual.Carry());
+        Assert.Equal(FlagValue(expectedFlags, 'N'), actual.Negative());
+        Assert.Equal(FlagValue(expectedFlags, 'V'), actual.Overflow());
+        Assert.Equal(FlagValue(expectedFlags, 'Z'), actual.Zero());
+        Assert.Equal(FlagValue(expectedFlags, 'C'), actual.Carry());
     }
 
     [Fact]
@@ -463,7 +463,7 @@ public class UInt8Tests : UnitTestBase
     }
 
     private void ExecuteSBCDecimal(UInt8 leftValue, UInt8 rightValue, BitFlag carryIn,
-                                   UInt8 expectedValue, string expectedNVZC)
+                                   UInt8 expectedValue, string expectedFlags)
     {
         // ARRANGE:
 
@@ -472,10 +472,10 @@ public class UInt8Tests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(expectedValue, actual.Value());
-        Assert.Equal(FlagValue(expectedNVZC, 'N'), actual.Negative());
-        Assert.Equal(FlagValue(expectedNVZC, 'V'), actual.Overflow());
-        Assert.Equal(FlagValue(expectedNVZC, 'Z'), actual.Zero());
-        Assert.Equal(FlagValue(expectedNVZC, 'C'), actual.Carry());
+        Assert.Equal(FlagValue(expectedFlags, 'N'), actual.Negative());
+        Assert.Equal(FlagValue(expectedFlags, 'V'), actual.Overflow());
+        Assert.Equal(FlagValue(expectedFlags, 'Z'), actual.Zero());
+        Assert.Equal(FlagValue(expectedFlags, 'C'), actual.Carry());
     }
 
     [Fact]
@@ -485,9 +485,9 @@ public class UInt8Tests : UnitTestBase
         var right = new UInt8(0x00);
         var carryIn = BitFlag.High();
         var expected = new UInt8(0);
-        var expectedNVZC = "nvZC";
+        const string expectedFlags = "nvZC";
 
-        ExecuteSBCDecimal(left, right, carryIn, expected, expectedNVZC);
+        ExecuteSBCDecimal(left, right, carryIn, expected, expectedFlags);
     }
 
     [Fact]
@@ -511,7 +511,7 @@ public class UInt8Tests : UnitTestBase
     [Fact]
     public void TestSbcDecimalAllCombinations()
     {
-        var csvFile = ".\\types\\sbc.csv";
+        const string csvFile = @".\types\sbc.csv";
         try
         {
             var lines = File.ReadAllLines(csvFile);
@@ -536,7 +536,8 @@ public class UInt8Tests : UnitTestBase
                 // ACT:
                 var actual = accumulator.Sbc(operand, cFlagBit, dFlagBit);
 
-                var msg = $" cf: {cFlag:X} acc: {accValue:X2}, operand: {operandValue:X2}";
+                //  var msg = $" cf: {cFlag:X} acc: {accValue:X2}, operand: {operandValue:X2}";
+                // Console.Write(msg);
 
                 // ASSERT:
                 Assert.Equal(expected.Value(), actual.Value());
@@ -548,11 +549,11 @@ public class UInt8Tests : UnitTestBase
         }
         catch (FileNotFoundException)
         {
-            Assert.True(false, "File not found: " + csvFile);
+            Assert.Fail("File not found: " + csvFile);
         }
         catch (IOException)
         {
-            Assert.True(false, "IO Exception: " + csvFile);
+            Assert.Fail("IO Exception: " + csvFile);
         }
     }
 }
