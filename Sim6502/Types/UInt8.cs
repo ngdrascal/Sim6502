@@ -404,5 +404,4 @@ public class UInt8
         else
             return SbcBinary(operand, carryIn);
     }
-
 }
