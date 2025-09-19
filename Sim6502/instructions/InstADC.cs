@@ -2,14 +2,9 @@ using Sim6502.types;
 
 namespace Sim6502.Instructions;
 
-public class InstADC : InstBase
+public class InstADC : InstBase2, IInstruction
 {
-    public InstADC(IT2Registry it2Registry, IStateRegistry stateRegistry)
-        : base(it2Registry, stateRegistry)
-    {
-    }
-
-    protected override void RegisterT2State(IT2Registry registry)
+    public IInstruction RegisterT2State(IT2Registry registry)
     {
         registry.Map(OpCodes.ADCimm, States.InstADCimm2);
         registry.Map(OpCodes.ADCzpg, States.InstADCzpg2);
@@ -20,9 +15,11 @@ public class InstADC : InstBase
         registry.Map(OpCodes.ADCindx, States.InstADCindx2);
         registry.Map(OpCodes.ADCindy, States.InstADCindy2);
         registry.Map(OpCodes.ADCind, States.InstADCind2);
+
+        return this;
     }
 
-    protected override void RegisterStates(IStateRegistry stateRegistry)
+    public IInstruction RegisterStates(IStateRegistry stateRegistry)
     {
         stateRegistry.Map(States.InstADCimm2, Imm2);
         stateRegistry.Map(States.InstADCimm3, Imm3);
@@ -72,6 +69,8 @@ public class InstADC : InstBase
         stateRegistry.Map(States.InstADCind4,  Ind4);
         stateRegistry.Map(States.InstADCind5,  Ind5);
         stateRegistry.Map(States.InstADCind6,  Ind6);
+
+        return this;
     }
 
     private void AdcThenUpdateFlags(Context ctx)
@@ -112,7 +111,7 @@ public class InstADC : InstBase
     // -------------------------------------------------------------------------
     // [0x69] ADC immediate
     // -------------------------------------------------------------------------
-    public void Imm2(Context ctx)
+    private void Imm2(Context ctx)
     {
         Imm2SetAddrBus(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
@@ -122,13 +121,14 @@ public class InstADC : InstBase
             AdcThenUpdateFlags(ctx);
             ctx.DbgOperand1 = data;
         }
+
         if (ctx.Regs.P.Decimal.IsSet())
             ctx.AdvanceState(States.InstADCimm3);
         else
             ctx.AdvanceState(States.Fetch);
     }
 
-    public void Imm3(Context ctx)
+    private void Imm3(Context ctx)
     {
         // internal operation, nothing to simulate
         ctx.AdvanceState(States.Fetch);
@@ -137,24 +137,26 @@ public class InstADC : InstBase
     // -------------------------------------------------------------------------
     // [0x65] ADC zeropage
     // -------------------------------------------------------------------------
-    public void Zpg2(Context ctx)
+    private void Zpg2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstADCzpg3);
     }
 
-    public void Zpg3(Context ctx)
+    private void Zpg3(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             AdcThenUpdateFlags(ctx);
+
         if (ctx.Regs.P.Decimal.GetValue())
             ctx.AdvanceState(States.InstADCzpg4);
         else
             ctx.AdvanceState(States.Fetch);
     }
 
-    public void Zpg4(Context ctx)
+    private void Zpg4(Context ctx)
     {
         // internal operation, nothing to simulate
         ctx.AdvanceState(States.Fetch);
@@ -163,31 +165,34 @@ public class InstADC : InstBase
     // -------------------------------------------------------------------------
     // [0x75] ADC zeropage,X
     // -------------------------------------------------------------------------
-    public void Zpgx2(Context ctx)
+    private void Zpgx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstADCzpgx3);
     }
 
-    public void Zpgx3(Context ctx)
+    private void Zpgx3(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.IncEALWithX();
+
         ctx.AdvanceState(States.InstADCzpgx4);
     }
 
-    public void Zpgx4(Context ctx)
+    private void Zpgx4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             AdcThenUpdateFlags(ctx);
+
         if (ctx.Regs.P.Decimal.GetValue())
             ctx.AdvanceState(States.InstADCzpgx5);
         else
             ctx.AdvanceState(States.Fetch);
     }
 
-    public void Zpgx5(Context ctx)
+    private void Zpgx5(Context ctx)
     {
         // internal operation, nothing to simulate
         ctx.AdvanceState(States.Fetch);
@@ -196,30 +201,31 @@ public class InstADC : InstBase
     // -------------------------------------------------------------------------
     // [0x6D] ADC absolute
     // -------------------------------------------------------------------------
-    public void Abs2(Context ctx)
+    private void Abs2(Context ctx)
     {
         FetchEffAddrLow(ctx);
         ctx.AdvanceState(States.InstADCabs3);
     }
 
-    public void Abs3(Context ctx)
+    private void Abs3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
         ctx.AdvanceState(States.InstADCabs4);
     }
 
-    public void Abs4(Context ctx)
+    private void Abs4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             AdcThenUpdateFlags(ctx);
+
         if (ctx.Regs.P.Decimal.GetValue())
             ctx.AdvanceState(States.InstADCabs5);
         else
             ctx.AdvanceState(States.Fetch);
     }
 
-    public void Abs5(Context ctx)
+    private void Abs5(Context ctx)
     {
         // internal operation, nothing to simulate
         ctx.AdvanceState(States.Fetch);
@@ -228,19 +234,19 @@ public class InstADC : InstBase
     // -------------------------------------------------------------------------
     // [0x7D] ADC absolute,X
     // -------------------------------------------------------------------------
-    public void Absx2(Context ctx)
+    private void Absx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
         ctx.AdvanceState(States.InstADCabsx3);
     }
 
-    public void Absx3(Context ctx)
+    private void Absx3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
         ctx.AdvanceState(States.InstADCabsx4);
     }
 
-    public void Absx4(Context ctx)
+    private void Absx4(Context ctx)
     {
         var nextState = States.Fetch;
         if (ctx.GetSubStep() == P1MiddleStep)
@@ -268,7 +274,7 @@ public class InstADC : InstBase
         ctx.AdvanceState(nextState);
     }
 
-    public void Absx5(Context ctx)
+    private void Absx5(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
@@ -276,13 +282,14 @@ public class InstADC : InstBase
             ctx.Regs.Temp.UpdateValue(data);
             AdcThenUpdateFlags(ctx);
         }
+
         if (ctx.Regs.P.Decimal.GetValue())
             ctx.AdvanceState(States.InstADCabsx6);
         else
             ctx.AdvanceState(States.Fetch);
     }
 
-    public void Absx6(Context ctx)
+    private void Absx6(Context ctx)
     {
         // internal operation, nothing to simulate
         ctx.AdvanceState(States.Fetch);
@@ -291,19 +298,21 @@ public class InstADC : InstBase
     // -------------------------------------------------------------------------
     // [0x79] ADC absolute,Y
     // -------------------------------------------------------------------------
-    public void Absy2(Context ctx)
+    private void Absy2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstADCabsy3);
     }
 
-    public void Absy3(Context ctx)
+    private void Absy3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
+
         ctx.AdvanceState(States.InstADCabsy4);
     }
 
-    public void Absy4(Context ctx)
+    private void Absy4(Context ctx)
     {
         var nextState = States.Fetch;
         if (ctx.GetSubStep() == P1MiddleStep)
@@ -328,10 +337,11 @@ public class InstADC : InstBase
             else
                 nextState = States.InstADCabsy5;
         }
+
         ctx.AdvanceState(nextState);
     }
 
-    public void Absy5(Context ctx)
+    private void Absy5(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
@@ -339,13 +349,14 @@ public class InstADC : InstBase
             ctx.Regs.Temp.UpdateValue(data);
             AdcThenUpdateFlags(ctx);
         }
+
         if (ctx.Regs.P.Decimal.GetValue())
             ctx.AdvanceState(States.InstADCabsy6);
         else
             ctx.AdvanceState(States.Fetch);
     }
 
-    public void Absy6(Context ctx)
+    private void Absy6(Context ctx)
     {
         // internal operation, nothing to simulate
         ctx.AdvanceState(States.Fetch);
@@ -354,48 +365,53 @@ public class InstADC : InstBase
     // -------------------------------------------------------------------------
     // [0x61] ADC (indirect,X)
     // -------------------------------------------------------------------------
-    public void Indx2(Context ctx)
+    private void Indx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstADCindx3);
     }
 
-    public void Indx3(Context ctx)
+    private void Indx3(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
             ctx.Regs.EA.Lsb().AddWithWrapAround(ctx.Regs.X);
             ctx.Regs.EA.Msb().Zero();
         }
+
         ctx.AdvanceState(States.InstADCindx4);
     }
 
-    public void Indx4(Context ctx)
+    private void Indx4(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
+
         ctx.AdvanceState(States.InstADCindx5);
     }
 
-    public void Indx5(Context ctx)
+    private void Indx5(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
+
         ctx.AdvanceState(States.InstADCindx6);
     }
 
-    public void Indx6(Context ctx)
+    private void Indx6(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             AdcThenUpdateFlags(ctx);
+
         if (ctx.Regs.P.Decimal.GetValue())
             ctx.AdvanceState(States.InstADCindx7);
         else
             ctx.AdvanceState(States.Fetch);
     }
 
-    public void Indx7(Context ctx)
+    private void Indx7(Context ctx)
     {
         // internal operation, nothing to simulate
         ctx.AdvanceState(States.Fetch);
@@ -404,27 +420,30 @@ public class InstADC : InstBase
     // -------------------------------------------------------------------------
     // [0x71] ADC (indirect),Y
     // -------------------------------------------------------------------------
-    public void Indy2(Context ctx)
+    private void Indy2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstADCindy3);
     }
 
-    public void Indy3(Context ctx)
+    private void Indy3(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
+
         ctx.AdvanceState(States.InstADCindy4);
     }
 
-    public void Indy4(Context ctx)
+    private void Indy4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
+
         ctx.AdvanceState(States.InstADCindy5);
     }
 
-    public void Indy5(Context ctx)
+    private void Indy5(Context ctx)
     {
         var nextState = States.Fetch;
         if (ctx.GetSubStep() == P1MiddleStep)
@@ -449,18 +468,20 @@ public class InstADC : InstBase
             else
                 nextState = States.InstADCindy6;
         }
+
         ctx.AdvanceState(nextState);
     }
 
-    public void Indy6(Context ctx)
+    private void Indy6(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             AdcThenUpdateFlags(ctx);
+
         ctx.AdvanceState(States.Fetch);
     }
 
-    public void Indy7(Context ctx)
+    private void Indy7(Context ctx)
     {
         // internal operation, nothing to simulate
         ctx.AdvanceState(States.Fetch);
@@ -469,38 +490,41 @@ public class InstADC : InstBase
     // -------------------------------------------------------------------------
     // [0x72] ADC (indirect)
     // -------------------------------------------------------------------------
-    public void Ind2(Context ctx)
+    private void Ind2(Context ctx)
     {
         FetchEffAddrLow(ctx);
+
         ctx.AdvanceState(States.InstADCind3);
     }
 
-    public void Ind3(Context ctx)
+    private void Ind3(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
         ctx.AdvanceState(States.InstADCind4);
     }
 
-    public void Ind4(Context ctx)
+    private void Ind4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
+
         ctx.AdvanceState(States.InstADCind5);
     }
 
-    public void Ind5(Context ctx)
+    private void Ind5(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             AdcThenUpdateFlags(ctx);
+
         if (ctx.Regs.P.Decimal.GetValue())
             ctx.AdvanceState(States.InstADCind6);
         else
             ctx.AdvanceState(States.Fetch);
     }
 
-    public void Ind6(Context ctx)
+    private void Ind6(Context ctx)
     {
         // internal operation, nothing to simulate
         ctx.AdvanceState(States.Fetch);

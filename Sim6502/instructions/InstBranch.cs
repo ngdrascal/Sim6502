@@ -2,12 +2,9 @@ using Sim6502.types;
 
 namespace Sim6502.Instructions;
 
-// Branch instructions for 65C02S
-public class InstBranch : InstBase
+public class InstBranch : InstBase2, IInstruction
 {
-    public InstBranch(IT2Registry it2Registry, IStateRegistry stateRegistry) : base(it2Registry, stateRegistry) { }
-
-    protected override void RegisterT2State(IT2Registry registry)
+    public IInstruction RegisterT2State(IT2Registry registry)
     {
         registry.Map(OpCodes.BRArel, States.InstBRArel2);
         registry.Map(OpCodes.BCCrel, States.InstBCCrel2);
@@ -18,45 +15,49 @@ public class InstBranch : InstBase
         registry.Map(OpCodes.BPLrel, States.InstBPLrel2);
         registry.Map(OpCodes.BVCrel, States.InstBVCrel2);
         registry.Map(OpCodes.BVSrel, States.InstBVSrel2);
+
+        return this;
     }
 
-    protected override void RegisterStates(IStateRegistry stateRegistry)
+    public IInstruction RegisterStates(IStateRegistry stateRegistry)
     {
-        stateRegistry.Map(States.InstBRArel2, ctx => BraRel2(ctx));
-        stateRegistry.Map(States.InstBRArel3, ctx => BraRel3(ctx));
-        stateRegistry.Map(States.InstBRArel4, ctx => BraRel4(ctx));
+        stateRegistry.Map(States.InstBRArel2, BraRel2);
+        stateRegistry.Map(States.InstBRArel3, BraRel3);
+        stateRegistry.Map(States.InstBRArel4, BraRel4);
 
-        stateRegistry.Map(States.InstBCCrel2, ctx => BccRel2(ctx));
-        stateRegistry.Map(States.InstBCCrel3, ctx => BccRel3(ctx));
-        stateRegistry.Map(States.InstBCCrel4, ctx => BccRel4(ctx));
+        stateRegistry.Map(States.InstBCCrel2, BccRel2);
+        stateRegistry.Map(States.InstBCCrel3, BccRel3);
+        stateRegistry.Map(States.InstBCCrel4, BccRel4);
 
-        stateRegistry.Map(States.InstBCSrel2, ctx => BcsRel2(ctx));
-        stateRegistry.Map(States.InstBCSrel3, ctx => BcsRel3(ctx));
-        stateRegistry.Map(States.InstBCSrel4, ctx => BcsRel4(ctx));
+        stateRegistry.Map(States.InstBCSrel2, BcsRel2);
+        stateRegistry.Map(States.InstBCSrel3, BcsRel3);
+        stateRegistry.Map(States.InstBCSrel4, BcsRel4);
 
-        stateRegistry.Map(States.InstBEQrel2, ctx => BeqRel2(ctx));
-        stateRegistry.Map(States.InstBEQrel3, ctx => BeqRel3(ctx));
-        stateRegistry.Map(States.InstBEQrel4, ctx => BeqRel4(ctx));
+        stateRegistry.Map(States.InstBEQrel2, BeqRel2);
+        stateRegistry.Map(States.InstBEQrel3, BeqRel3);
+        stateRegistry.Map(States.InstBEQrel4, BeqRel4);
 
-        stateRegistry.Map(States.InstBMIrel2, ctx => BmiRel2(ctx));
-        stateRegistry.Map(States.InstBMIrel3, ctx => BmiRel3(ctx));
-        stateRegistry.Map(States.InstBMIrel4, ctx => BmiRel4(ctx));
+        stateRegistry.Map(States.InstBMIrel2, BmiRel2);
+        stateRegistry.Map(States.InstBMIrel3, BmiRel3);
+        stateRegistry.Map(States.InstBMIrel4, BmiRel4);
 
-        stateRegistry.Map(States.InstBNErel2, ctx => BneRel2(ctx));
-        stateRegistry.Map(States.InstBNErel3, ctx => BneRel3(ctx));
-        stateRegistry.Map(States.InstBNErel4, ctx => BneRel4(ctx));
+        stateRegistry.Map(States.InstBNErel2, BneRel2);
+        stateRegistry.Map(States.InstBNErel3, BneRel3);
+        stateRegistry.Map(States.InstBNErel4, BneRel4);
 
-        stateRegistry.Map(States.InstBPLrel2, ctx => BplRel2(ctx));
-        stateRegistry.Map(States.InstBPLrel3, ctx => BplRel3(ctx));
-        stateRegistry.Map(States.InstBPLrel4, ctx => BplRel4(ctx));
+        stateRegistry.Map(States.InstBPLrel2, BplRel2);
+        stateRegistry.Map(States.InstBPLrel3, BplRel3);
+        stateRegistry.Map(States.InstBPLrel4, BplRel4);
 
-        stateRegistry.Map(States.InstBVCrel2, ctx => BvcRel2(ctx));
-        stateRegistry.Map(States.InstBVCrel3, ctx => BvcRel3(ctx));
-        stateRegistry.Map(States.InstBVCrel4, ctx => BvcRel4(ctx));
+        stateRegistry.Map(States.InstBVCrel2, BvcRel2);
+        stateRegistry.Map(States.InstBVCrel3, BvcRel3);
+        stateRegistry.Map(States.InstBVCrel4, BvcRel4);
 
-        stateRegistry.Map(States.InstBVSrel2, ctx => BvsRel2(ctx));
-        stateRegistry.Map(States.InstBVSrel3, ctx => BvsRel3(ctx));
-        stateRegistry.Map(States.InstBVSrel4, ctx => BvsRel4(ctx));
+        stateRegistry.Map(States.InstBVSrel2, BvsRel2);
+        stateRegistry.Map(States.InstBVSrel3, BvsRel3);
+        stateRegistry.Map(States.InstBVSrel4, BvsRel4);
+
+        return this;
     }
 
     private void BranchCleared2(Context ctx, BitFlag flag, States nextState)
@@ -97,154 +98,156 @@ public class InstBranch : InstBase
         }
     }
 
-    public void Branch4(Context ctx)
+    private void Branch4(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Pins.SetAddrBusPins(ctx.Regs.PC);
+
         ctx.AdvanceState(States.Fetch);
     }
 
     // BRA - Branch Always
-    public void BraRel2(Context ctx)
+    private void BraRel2(Context ctx)
     {
         LoadTempFromPC(ctx);
+
         ctx.AdvanceState(States.InstBRArel3);
     }
 
-    public void BraRel3(Context ctx)
+    private void BraRel3(Context ctx)
     {
         Branch3(ctx, States.InstBRArel4);
     }
 
-    public void BraRel4(Context ctx)
+    private void BraRel4(Context ctx)
     {
         Branch4(ctx);
     }
 
     // BCC - Branch on Carry Clear
-    public void BccRel2(Context ctx)
+    private void BccRel2(Context ctx)
     {
         BranchCleared2(ctx, ctx.Regs.P.Carry, States.InstBCCrel3);
     }
 
-    public void BccRel3(Context ctx)
+    private void BccRel3(Context ctx)
     {
         Branch3(ctx, States.InstBCCrel4);
     }
 
-    public void BccRel4(Context ctx)
+    private void BccRel4(Context ctx)
     {
         Branch4(ctx);
     }
 
     // BCS - Branch on Carry Set
-    public void BcsRel2(Context ctx)
+    private void BcsRel2(Context ctx)
     {
         BranchSet2(ctx, ctx.Regs.P.Carry, States.InstBCSrel3);
     }
 
-    public void BcsRel3(Context ctx)
+    private void BcsRel3(Context ctx)
     {
         Branch3(ctx, States.InstBCSrel4);
     }
 
-    public void BcsRel4(Context ctx)
+    private void BcsRel4(Context ctx)
     {
         Branch4(ctx);
     }
 
     // BEQ - Branch on Result Zero
-    public void BeqRel2(Context ctx)
+    private void BeqRel2(Context ctx)
     {
         BranchSet2(ctx, ctx.Regs.P.Zero, States.InstBEQrel3);
     }
 
-    public void BeqRel3(Context ctx)
+    private void BeqRel3(Context ctx)
     {
         Branch3(ctx, States.InstBEQrel4);
     }
 
-    public void BeqRel4(Context ctx)
+    private void BeqRel4(Context ctx)
     {
         Branch4(ctx);
     }
 
     // BMI - Branch on Result Minus
-    public void BmiRel2(Context ctx)
+    private void BmiRel2(Context ctx)
     {
         BranchSet2(ctx, ctx.Regs.P.Negative, States.InstBMIrel3);
     }
 
-    public void BmiRel3(Context ctx)
+    private void BmiRel3(Context ctx)
     {
         Branch3(ctx, States.InstBMIrel4);
     }
 
-    public void BmiRel4(Context ctx)
+    private void BmiRel4(Context ctx)
     {
         Branch4(ctx);
     }
 
     // BNE - Branch on Result Not Zero
-    public void BneRel2(Context ctx)
+    private void BneRel2(Context ctx)
     {
         BranchCleared2(ctx, ctx.Regs.P.Zero, States.InstBNErel3);
     }
 
-    public void BneRel3(Context ctx)
+    private void BneRel3(Context ctx)
     {
         Branch3(ctx, States.InstBNErel4);
     }
 
-    public void BneRel4(Context ctx)
+    private void BneRel4(Context ctx)
     {
         Branch4(ctx);
     }
 
     // BPL - Branch on Result Plus
-    public void BplRel2(Context ctx)
+    private void BplRel2(Context ctx)
     {
         BranchCleared2(ctx, ctx.Regs.P.Negative, States.InstBPLrel3);
     }
 
-    public void BplRel3(Context ctx)
+    private void BplRel3(Context ctx)
     {
         Branch3(ctx, States.InstBPLrel4);
     }
 
-    public void BplRel4(Context ctx)
+    private void BplRel4(Context ctx)
     {
         Branch4(ctx);
     }
 
     // BVC - Branch on Overflow Clear
-    public void BvcRel2(Context ctx)
+    private void BvcRel2(Context ctx)
     {
         BranchCleared2(ctx, ctx.Regs.P.Overflow, States.InstBVCrel3);
     }
 
-    public void BvcRel3(Context ctx)
+    private void BvcRel3(Context ctx)
     {
         Branch3(ctx, States.InstBVCrel4);
     }
 
-    public void BvcRel4(Context ctx)
+    private void BvcRel4(Context ctx)
     {
         Branch4(ctx);
     }
 
     // BVS - Branch on Overflow Set
-    public void BvsRel2(Context ctx)
+    private void BvsRel2(Context ctx)
     {
         BranchSet2(ctx, ctx.Regs.P.Overflow, States.InstBVSrel3);
     }
 
-    public void BvsRel3(Context ctx)
+    private void BvsRel3(Context ctx)
     {
         Branch3(ctx, States.InstBVSrel4);
     }
 
-    public void BvsRel4(Context ctx)
+    private void BvsRel4(Context ctx)
     {
         Branch4(ctx);
     }

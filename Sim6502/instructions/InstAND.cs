@@ -16,11 +16,9 @@ namespace Sim6502.Instructions;
 // (indirect,X)   AND (oper,X)  21      2      6
 // (indirect),Y   AND (oper),Y  31      2      5*
 // (indirect)     AND (oper)    32      2      5
-public class InstAND : InstBase
+public class InstAND : InstBase2, IInstruction
 {
-    public InstAND(IT2Registry it2Registry, IStateRegistry stateRegistry) : base(it2Registry, stateRegistry) { }
-
-    protected override void RegisterT2State(IT2Registry registry)
+    public IInstruction RegisterT2State(IT2Registry registry)
     {
         registry.Map(OpCodes.ANDimm, States.InstANDimm2);
         registry.Map(OpCodes.ANDzpg, States.InstANDzpg2);
@@ -31,9 +29,11 @@ public class InstAND : InstBase
         registry.Map(OpCodes.ANDindx, States.InstANDindx2);
         registry.Map(OpCodes.ANDindy, States.InstANDindy2);
         registry.Map(OpCodes.ANDind, States.InstANDind2);
+
+        return this;
     }
 
-    protected override void RegisterStates(IStateRegistry stateRegistry)
+    public IInstruction RegisterStates(IStateRegistry stateRegistry)
     {
         stateRegistry.Map(States.InstANDimm2, Imm2);
 
@@ -74,9 +74,11 @@ public class InstAND : InstBase
         stateRegistry.Map(States.InstANDind3, Ind3);
         stateRegistry.Map(States.InstANDind4, Ind4);
         stateRegistry.Map(States.InstANDind5, Ind5);
+
+        return this;
     }
 
-    protected void AndAWithTemp(Context ctx)
+    private void AndAWithTemp(Context ctx)
     {
         var memValue = ctx.Regs.Temp;
         var result = ctx.Regs.A.Copy().And(memValue);
@@ -84,7 +86,7 @@ public class InstAND : InstBase
     }
 
     // [0x29] AND immediate
-    public void Imm2(Context ctx)
+    private void Imm2(Context ctx)
     {
         Imm2SetAddrBus(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
@@ -98,13 +100,13 @@ public class InstAND : InstBase
     }
 
     // [0x25] AND zeropage
-    public void Zpg2(Context ctx)
+    private void Zpg2(Context ctx)
     {
         FetchEffAddrLow(ctx);
         ctx.AdvanceState(States.InstANDzpg3);
     }
 
-    public void Zpg3(Context ctx)
+    private void Zpg3(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
@@ -113,20 +115,20 @@ public class InstAND : InstBase
     }
 
     // [0x35] AND zeropage,X
-    public void Zpgx2(Context ctx)
+    private void Zpgx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
         ctx.AdvanceState(States.InstANDzpgx3);
     }
 
-    public void Zpgx3(Context ctx)
+    private void Zpgx3(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.IncEALWithX();
         ctx.AdvanceState(States.InstANDzpgx4);
     }
 
-    public void Zpgx4(Context ctx)
+    private void Zpgx4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
@@ -135,19 +137,19 @@ public class InstAND : InstBase
     }
 
     // [0x2D] AND absolute
-    public void Abs2(Context ctx)
+    private void Abs2(Context ctx)
     {
         FetchEffAddrLow(ctx);
         ctx.AdvanceState(States.InstANDabs3);
     }
 
-    public void Abs3(Context ctx)
+    private void Abs3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
         ctx.AdvanceState(States.InstANDabs4);
     }
 
-    public void Abs4(Context ctx)
+    private void Abs4(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
@@ -156,19 +158,19 @@ public class InstAND : InstBase
     }
 
     // [0x3D] AND absolute,X
-    public void Absx2(Context ctx)
+    private void Absx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
         ctx.AdvanceState(States.InstANDabsx3);
     }
 
-    public void Absx3(Context ctx)
+    private void Absx3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
         ctx.AdvanceState(States.InstANDabsx4);
     }
 
-    public void Absx4(Context ctx)
+    private void Absx4(Context ctx)
     {
         var nextState = States.Fetch;
         if (ctx.GetSubStep() == P1MiddleStep)
@@ -196,7 +198,7 @@ public class InstAND : InstBase
         ctx.AdvanceState(nextState);
     }
 
-    public void Absx5(Context ctx)
+    private void Absx5(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
@@ -208,19 +210,19 @@ public class InstAND : InstBase
     }
 
     // [0x39] AND absolute,Y
-    public void Absy2(Context ctx)
+    private void Absy2(Context ctx)
     {
         FetchEffAddrLow(ctx);
         ctx.AdvanceState(States.InstANDabsy3);
     }
 
-    public void Absy3(Context ctx)
+    private void Absy3(Context ctx)
     {
         FetchEffAddrHigh(ctx);
         ctx.AdvanceState(States.InstANDabsy4);
     }
 
-    public void Absy4(Context ctx)
+    private void Absy4(Context ctx)
     {
         var nextState = States.Fetch;
         if (ctx.GetSubStep() == P1MiddleStep)
@@ -248,7 +250,7 @@ public class InstAND : InstBase
         ctx.AdvanceState(nextState);
     }
 
-    public void Absy5(Context ctx)
+    private void Absy5(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
@@ -260,13 +262,13 @@ public class InstAND : InstBase
     }
 
     // [0x21] AND (indirect,X)
-    public void Indx2(Context ctx)
+    private void Indx2(Context ctx)
     {
         FetchEffAddrLow(ctx);
         ctx.AdvanceState(States.InstANDindx3);
     }
 
-    public void Indx3(Context ctx)
+    private void Indx3(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
@@ -276,13 +278,13 @@ public class InstAND : InstBase
         ctx.AdvanceState(States.InstANDindx4);
     }
 
-    public void Indx4(Context ctx)
+    private void Indx4(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
         ctx.AdvanceState(States.InstANDindx5);
     }
 
-    public void Indx5(Context ctx)
+    private void Indx5(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
@@ -290,7 +292,7 @@ public class InstAND : InstBase
         ctx.AdvanceState(States.InstANDindx6);
     }
 
-    public void Indx6(Context ctx)
+    private void Indx6(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
@@ -299,19 +301,19 @@ public class InstAND : InstBase
     }
 
     // [0x31] AND (indirect),Y
-    public void Indy2(Context ctx)
+    private void Indy2(Context ctx)
     {
         FetchEffAddrLow(ctx);
         ctx.AdvanceState(States.InstANDindy3);
     }
 
-    public void Indy3(Context ctx)
+    private void Indy3(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
         ctx.AdvanceState(States.InstANDindy4);
     }
 
-    public void Indy4(Context ctx)
+    private void Indy4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
@@ -319,7 +321,7 @@ public class InstAND : InstBase
         ctx.AdvanceState(States.InstANDindy5);
     }
 
-    public void Indy5(Context ctx)
+    private void Indy5(Context ctx)
     {
         var nextState = States.Fetch;
         if (ctx.GetSubStep() == P1MiddleStep)
@@ -347,7 +349,7 @@ public class InstAND : InstBase
         ctx.AdvanceState(nextState);
     }
 
-    public void Indy6(Context ctx)
+    private void Indy6(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
@@ -356,19 +358,19 @@ public class InstAND : InstBase
     }
 
     // [0x32] AND (indirect)
-    public void Ind2(Context ctx)
+    private void Ind2(Context ctx)
     {
         FetchEffAddrLow(ctx);
         ctx.AdvanceState(States.InstANDind3);
     }
 
-    public void Ind3(Context ctx)
+    private void Ind3(Context ctx)
     {
         FetchEA2LowIndirect(ctx);
         ctx.AdvanceState(States.InstANDind4);
     }
 
-    public void Ind4(Context ctx)
+    private void Ind4(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
@@ -376,7 +378,7 @@ public class InstAND : InstBase
         ctx.AdvanceState(States.InstANDind5);
     }
 
-    public void Ind5(Context ctx)
+    private void Ind5(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)

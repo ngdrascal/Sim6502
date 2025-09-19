@@ -54,6 +54,17 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         _debugRegisters = String.Empty;
 
         // Instantiate all instruction classes
+        _ = new InstADC().RegisterT2State(this).RegisterStates(this);
+        _ = new InstAND().RegisterT2State(this).RegisterStates(this);
+        _ = new InstASL().RegisterT2State(this).RegisterStates(this);
+        _ = new InstBIT().RegisterT2State(this).RegisterStates(this);
+        _ = new InstBranch().RegisterT2State(this).RegisterStates(this);
+        _ = new InstCMP().RegisterT2State(this).RegisterStates(this);
+        _ = new InstControl().RegisterT2State(this).RegisterStates(this);
+        _ = new InstCPX().RegisterT2State(this).RegisterStates(this);
+        _ = new InstCPY().RegisterT2State(this).RegisterStates(this);
+        _ = new InstDecrement().RegisterT2State(this).RegisterStates(this);
+
         _ = new InstLDA2().RegisterT2State(this).RegisterStates(this);
         _ = new InstLDX(this, this);
         _ = new InstLDY(this, this);
@@ -63,26 +74,16 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         _ = new InstSTZ(this, this);
         _ = new InstTransfer(this, this);
         _ = new InstStack(this, this);
-        _ = new InstASL(this, this);
         _ = new InstLSR(this, this);
         _ = new InstROL(this, this);
         _ = new InstROR(this, this);
-        _ = new InstAND(this, this);
         _ = new InstORA(this, this);
         _ = new InstEOR(this, this);
-        _ = new InstBIT(this, this);
         _ = new InstTRB(this, this);
         _ = new InstTSB(this, this);
         _ = new InstFlags(this, this);
-        _ = new InstBranch(this, this);
-        _ = new InstControl(this, this);
-        _ = new InstDecrement(this, this);
         _ = new InstIncrement(this, this);
-        _ = new InstADC(this, this);
         _ = new InstSBC(this, this);
-        _ = new InstCMP(this, this);
-        _ = new InstCPX(this, this);
-        _ = new InstCPY(this, this);
         _ = new InstSTP(this, this);
         _ = new InstWAI(this, this);
         _ = new InstNOP(this, this);
