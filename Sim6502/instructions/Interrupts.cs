@@ -2,7 +2,7 @@ using UInt16 = Sim6502.types.UInt16;
 
 namespace Sim6502.Instructions;
 
-public class Interrupts : InstBase2, IInstruction
+public class Interrupts : InstBase, IInstruction
 {
     public IInstruction RegisterT2State(IT2Registry registry)
     {

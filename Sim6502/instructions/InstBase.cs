@@ -12,20 +12,14 @@ public class InstBase
     protected const byte High = Constants.High;
     protected const byte Write = Low;
     protected const byte Read = High;
-    protected const byte P1MiddleStep = Constants.P1MiddleStep;
-    protected const byte P2MiddleStep = Constants.P2MiddleStep;
-    protected const byte P2LastSubstep = Constants.P2LastSubstep;
+    protected static readonly byte P1MiddleStep = Constants.P1MiddleStep;
+    protected static readonly byte P2MiddleStep = Constants.P2MiddleStep;
+    protected static readonly byte P2LastSubstep = Constants.P2LastSubstep;
 
-    protected InstBase(IT2Registry it2Registry, IStateRegistry stateRegistry)
+    protected InstBase()
     {
-        RegisterT2State(it2Registry);
-        RegisterStates(stateRegistry);
         // _logger = LoggerFactory.GetLogger("W65c02s.stack");
     }
-
-    protected virtual void RegisterT2State(IT2Registry registry) { }
-
-    protected virtual void RegisterStates(IStateRegistry registry) { }
 
     /////////////////////////////////////////////////////////////////////////////
     // common routines

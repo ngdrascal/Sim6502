@@ -2,7 +2,7 @@ using Sim6502.types;
 
 namespace Sim6502.Instructions;
 
-public class InstASL : InstBase2, IInstruction
+public class InstASL : InstBase, IInstruction
 {
     public IInstruction RegisterT2State(IT2Registry registry)
     {

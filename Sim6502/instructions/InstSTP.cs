@@ -3,7 +3,7 @@ namespace Sim6502.Instructions;
 /// <summary>
 /// Implements STP (Stop the processor) instruction for W65c02s.
 /// </summary>
-public class InstSTP : InstBase2, IInstruction
+public class InstSTP : InstBase, IInstruction
 {
     public IInstruction RegisterT2State(IT2Registry registry)
     {

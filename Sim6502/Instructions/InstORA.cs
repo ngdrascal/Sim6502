@@ -1,6 +1,6 @@
 ﻿namespace Sim6502.Instructions;
 
-public class InstORA : InstBase2, IInstruction
+public class InstORA : InstBase, IInstruction
 {
     public IInstruction RegisterT2State(IT2Registry registry)
     {

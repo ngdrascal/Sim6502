@@ -2,7 +2,7 @@
 
 namespace Sim6502.Instructions;
 
-public class InstROL : InstBase2, IInstruction
+public class InstROL : InstBase, IInstruction
 {
     public IInstruction RegisterT2State(IT2Registry registry)
     {

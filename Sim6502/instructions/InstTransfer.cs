@@ -1,6 +1,6 @@
 namespace Sim6502.Instructions;
 
-public class InstTransfer : InstBase2, IInstruction
+public class InstTransfer : InstBase, IInstruction
 {
     public IInstruction RegisterT2State(IT2Registry registry)
     {
