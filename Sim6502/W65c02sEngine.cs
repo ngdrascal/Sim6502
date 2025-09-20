@@ -59,6 +59,7 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         _ = new InstASL().RegisterT2State(this).RegisterStates(this);
         _ = new InstBIT().RegisterT2State(this).RegisterStates(this);
         _ = new InstBranch().RegisterT2State(this).RegisterStates(this);
+        _ = new InstBRK().RegisterT2State(this).RegisterStates(this);
         _ = new InstCMP().RegisterT2State(this).RegisterStates(this);
         _ = new InstControl().RegisterT2State(this).RegisterStates(this);
         _ = new InstCPX().RegisterT2State(this).RegisterStates(this);

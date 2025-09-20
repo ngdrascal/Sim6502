@@ -163,6 +163,25 @@ public class InstBase
         }
     }
 
+    // NOTE: The BRK instruction, the non-maskable and maskable interrupts
+    //       share some code (steps 2 - 7).  This state is a replacement for
+    //       the FETCH state.  It differs by discarding the read op-code
+    //       and NOT increment the program counter.  This differentiates the
+    //       interrupts (NMI and IRQ) from the break instruction.
+    protected void LoadTempFromPcDontAdvancePc(Context ctx)
+    {
+        if (ctx.GetSubStep() == P1MiddleStep)
+        {
+            ctx.Pins.SetAddrBusPins(ctx.Regs.PC);
+            ctx.Pins.SetRWB(Read);
+        }
+        else if (ctx.GetSubStep() == P2LastSubstep)
+        {
+            var data = ctx.Pins.GetDataBusPins();
+            ctx.Regs.Temp.UpdateValue(data);
+        }
+    }
+
     protected void PrepareStackWrite(Context ctx)
     {
         if (ctx.GetSubStep() == P1MiddleStep)
