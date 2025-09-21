@@ -658,8 +658,9 @@ public class BranchTests : UnitTestBase
     public void TestBranchIntegration()
     {
         // ARRANGE:
-        byte[] program = {
-                                // 0000:              .ORG $0000
+        byte[] program =
+        [
+            // 0000:              .ORG $0000
             0xA9, 0x00,         // 0000: START:       LDA #$00
             0x48,               // 0002:              PHA
             0x28,               // 0003:              PLP
@@ -709,8 +710,8 @@ public class BranchTests : UnitTestBase
             0x8D, 0x4C, 0x00,   // 0048:              STA RESULT
             0x00,               // 004B:              BRK
                                 // 004C: RESULT:      
-            0xFF,               // 004C:              .DB $FF
-        };
+            0xFF // 004C:              .DB $FF
+        ];
 
         // ACT:
         ExecuteProgram(program, new UInt16(0x0000));
