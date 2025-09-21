@@ -56,6 +56,11 @@ public class Context
         }
     }
 
+    public void AdvanceState(bool condition, States trueState, States falseState)
+    {
+        AdvanceState(condition ? trueState : falseState);
+    }
+
     public void InitState(States value)
     {
         State = value;

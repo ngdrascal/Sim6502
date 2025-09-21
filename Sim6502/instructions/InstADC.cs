@@ -1,5 +1,3 @@
-using Sim6502.types;
-
 namespace Sim6502.Instructions;
 
 public class InstADC : InstBase, IInstruction
@@ -64,11 +62,11 @@ public class InstADC : InstBase, IInstruction
         stateRegistry.Map(States.InstADCindy6, Indy6);
         stateRegistry.Map(States.InstADCindy7, Indy7);
 
-        stateRegistry.Map(States.InstADCind2,  Ind2);
-        stateRegistry.Map(States.InstADCind3,  Ind3);
-        stateRegistry.Map(States.InstADCind4,  Ind4);
-        stateRegistry.Map(States.InstADCind5,  Ind5);
-        stateRegistry.Map(States.InstADCind6,  Ind6);
+        stateRegistry.Map(States.InstADCind2, Ind2);
+        stateRegistry.Map(States.InstADCind3, Ind3);
+        stateRegistry.Map(States.InstADCind4, Ind4);
+        stateRegistry.Map(States.InstADCind5, Ind5);
+        stateRegistry.Map(States.InstADCind6, Ind6);
 
         return this;
     }
@@ -122,10 +120,7 @@ public class InstADC : InstBase, IInstruction
             ctx.DbgOperand1 = data;
         }
 
-        if (ctx.Regs.P.Decimal.IsSet())
-            ctx.AdvanceState(States.InstADCimm3);
-        else
-            ctx.AdvanceState(States.Fetch);
+        ctx.AdvanceState(ctx.Regs.P.Decimal.IsSet(), States.InstADCimm3, States.Fetch);
     }
 
     private void Imm3(Context ctx)
@@ -150,10 +145,7 @@ public class InstADC : InstBase, IInstruction
         if (ctx.GetSubStep() == P2LastSubstep)
             AdcThenUpdateFlags(ctx);
 
-        if (ctx.Regs.P.Decimal.GetValue())
-            ctx.AdvanceState(States.InstADCzpg4);
-        else
-            ctx.AdvanceState(States.Fetch);
+        ctx.AdvanceState(ctx.Regs.P.Decimal.GetValue(), States.InstADCzpg4, States.Fetch);
     }
 
     private void Zpg4(Context ctx)
@@ -186,10 +178,7 @@ public class InstADC : InstBase, IInstruction
         if (ctx.GetSubStep() == P2LastSubstep)
             AdcThenUpdateFlags(ctx);
 
-        if (ctx.Regs.P.Decimal.GetValue())
-            ctx.AdvanceState(States.InstADCzpgx5);
-        else
-            ctx.AdvanceState(States.Fetch);
+        ctx.AdvanceState(ctx.Regs.P.Decimal.GetValue(), States.InstADCzpgx5, States.Fetch);
     }
 
     private void Zpgx5(Context ctx)
@@ -219,10 +208,7 @@ public class InstADC : InstBase, IInstruction
         if (ctx.GetSubStep() == P2LastSubstep)
             AdcThenUpdateFlags(ctx);
 
-        if (ctx.Regs.P.Decimal.GetValue())
-            ctx.AdvanceState(States.InstADCabs5);
-        else
-            ctx.AdvanceState(States.Fetch);
+        ctx.AdvanceState(ctx.Regs.P.Decimal.GetValue(), States.InstADCabs5, States.Fetch);
     }
 
     private void Abs5(Context ctx)
@@ -283,10 +269,7 @@ public class InstADC : InstBase, IInstruction
             AdcThenUpdateFlags(ctx);
         }
 
-        if (ctx.Regs.P.Decimal.GetValue())
-            ctx.AdvanceState(States.InstADCabsx6);
-        else
-            ctx.AdvanceState(States.Fetch);
+        ctx.AdvanceState(ctx.Regs.P.Decimal.GetValue(), States.InstADCabsx6, States.Fetch);
     }
 
     private void Absx6(Context ctx)
@@ -350,10 +333,7 @@ public class InstADC : InstBase, IInstruction
             AdcThenUpdateFlags(ctx);
         }
 
-        if (ctx.Regs.P.Decimal.GetValue())
-            ctx.AdvanceState(States.InstADCabsy6);
-        else
-            ctx.AdvanceState(States.Fetch);
+        ctx.AdvanceState(ctx.Regs.P.Decimal.GetValue(), States.InstADCabsy6, States.Fetch);
     }
 
     private void Absy6(Context ctx)
@@ -405,10 +385,7 @@ public class InstADC : InstBase, IInstruction
         if (ctx.GetSubStep() == P2LastSubstep)
             AdcThenUpdateFlags(ctx);
 
-        if (ctx.Regs.P.Decimal.GetValue())
-            ctx.AdvanceState(States.InstADCindx7);
-        else
-            ctx.AdvanceState(States.Fetch);
+        ctx.AdvanceState(ctx.Regs.P.Decimal.GetValue(), States.InstADCindx7, States.Fetch);
     }
 
     private void Indx7(Context ctx)
@@ -518,10 +495,7 @@ public class InstADC : InstBase, IInstruction
         if (ctx.GetSubStep() == P2LastSubstep)
             AdcThenUpdateFlags(ctx);
 
-        if (ctx.Regs.P.Decimal.GetValue())
-            ctx.AdvanceState(States.InstADCind6);
-        else
-            ctx.AdvanceState(States.Fetch);
+        ctx.AdvanceState(ctx.Regs.P.Decimal.GetValue(), States.InstADCind6, States.Fetch);
     }
 
     private void Ind6(Context ctx)
