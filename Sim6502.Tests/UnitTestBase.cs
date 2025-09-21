@@ -42,7 +42,7 @@ public class UnitTestBase
             stateLogger.LogDebug($"advanceState(): {args.NewState}");
         };
 
-        Cpu = new W65C02SEngine(Ctx, loggerFactory);
+        Cpu = new W65C02SEngine(Ctx);
         Cpu.SubstepChanging+= (_, args) =>
         {
             if (Ctx.GetSubStep()==Constants.P2LastSubstep)

@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using Sim6502.Instructions;
 using UInt8 = Sim6502.types.UInt8;
 using UInt16 = Sim6502.types.UInt16;
@@ -28,11 +27,7 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
     private bool _nmiAsserted;
     private bool _irqAsserted;
 
-    // private readonly ILogger _instLogger;
-    // private readonly ILogger _stateLogger;
-    private string _debugRegisters;
-
-    public W65C02SEngine(Context ctx, ILoggerFactory loggerFactory)
+    public W65C02SEngine(Context ctx)
     {
         _ctx = ctx;
         ctx.InitState(States.WarmUp0);
@@ -48,10 +43,6 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         _rstClockCount = 0;
         _nmiAsserted = false;
         _irqAsserted = false;
-
-        // _instLogger = loggerFactory.CreateLogger("W65c02s.inst_");
-        // _stateLogger = loggerFactory.CreateLogger("W65c02s.state");
-        _debugRegisters = String.Empty;
 
         // Instantiate all instruction classes
         _ = new InstADC().RegisterT2State(this).RegisterStates(this);
