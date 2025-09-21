@@ -30,6 +30,20 @@ public class Registers
         _temp = new UInt8(0);
     }
 
+    public Registers(Registers source)
+    {
+        _p = new StatusRegister(source.P);
+        _a = new UInt8(source.A.ToInt());
+        _x = new UInt8(source.X.ToInt());
+        _y = new UInt8(source.Y.ToInt());
+        _pc = new UInt16(source.PC.ToInt());
+        _s = new UInt8(source.S.ToInt());
+        _inst = new UInt8(source.Inst.ToInt());
+        _ea = new UInt16(source.EA.ToInt());
+        _ea2 = new UInt16(source.EA2.ToInt());
+        _temp = new UInt8(source.Temp.ToInt());
+    }
+
     public UInt8 A => _a;
 
     public void UpdateAUpdateFlags(UInt8 value)
@@ -119,4 +133,9 @@ public class Registers
     public void CopyEA2ToEA() => _ea.UpdateValue(_ea2);
 
     public UInt8 Temp => _temp;
+
+    public override string ToString()
+    {
+        return $"A:{A.ToInt():X2} P:{P} X:{X.ToInt():X2} Y:{Y.ToInt():X2} S:{S.ToInt():X2} PC:{PC.ToInt():X4}";
+    }
 }

@@ -10,7 +10,7 @@ internal class Program
         var statusReg = new StatusRegister();
         var regs = new Registers(statusReg);
         var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Debug));
-        var ctx = new Context(pins, regs, loggerFactory);
+        var ctx = new Context(pins, regs);
         var cpu = new W65C02SEngine(ctx, loggerFactory);
         while (true)
         {

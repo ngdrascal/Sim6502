@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Sim6502.types;
+using Sim6502.Tests.Logging;
 using UInt16 = Sim6502.types.UInt16;
 using UInt8 = Sim6502.types.UInt8;
 
-namespace Sim6502.Tests.Types;
+namespace Sim6502.Tests;
 
 public class UnitTestBase
 {
@@ -16,28 +17,38 @@ public class UnitTestBase
     protected readonly Context Ctx;
     protected readonly W65C02SEngine Cpu;
     protected byte Phi2;
-
-    public UnitTestBase()
+    
+    protected UnitTestBase()
     {
         Pins = new Pins();
         var statusReg = new StatusRegister();
         Regs = new Registers(statusReg);
-        var loggerFactory = // LoggerFactory.Create(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Debug));
-
-        LoggerFactory.Create(builder =>
+        var loggerFactory = LoggerFactory.Create(builder =>
         {
-            builder
-                .AddSimpleConsole(options =>
-                {
-                    options.SingleLine = true;
-                    options.IncludeScopes = false;
-                })
+            builder.AddConsoleIndentLogger(_ => { })
                 .SetMinimumLevel(LogLevel.Trace);
         });
+        var instLogger = loggerFactory.CreateLogger("W65c02s.inst_");
+        var stateLogger = loggerFactory.CreateLogger("W65c02s.state");
 
+        Ctx = new Context(Pins, Regs);
+        Ctx.StateChanging += (_, args) =>
+        {
+            if (args.NewState == States.Fetch && Ctx.DbgOpCode != null)
+            {
+                instLogger.LogDebug("{Disassemble,-24} {DebugRegisters}", Disassembler.Disassemble(Ctx),
+                    Ctx.DebugCapture.ToString());
+            }
+            stateLogger.LogDebug($"advanceState(): {args.NewState}");
+        };
 
-        Ctx = new Context(Pins, Regs, loggerFactory);
         Cpu = new W65C02SEngine(Ctx, loggerFactory);
+        Cpu.SubstepChanging+= (_, args) =>
+        {
+            if (Ctx.GetSubStep()==Constants.P2LastSubstep)
+                Ctx.CaptureRegs();
+            stateLogger.LogTrace("Executing state: {CtxState}, substep: {SubStep}", args.State, args.Substep);
+        };
 
         Phi2 = (byte)Low.ToInt();
 
@@ -50,17 +61,6 @@ public class UnitTestBase
         Pins.SetRESB((byte)High.ToInt());
         Pins.SetRDY((byte)High.ToInt());
     }
-
-    // [Fact]
-    // public void TestDummy()
-    // {
-    //     // ARRANGE:
-    //
-    //     // ACT:
-    //
-    //     // ASSERT:
-    //     Assert.True(true, "dummy");
-    // }
 
     protected void BootToAddress(UInt16 addr)
     {

@@ -31,8 +31,6 @@ public class UInt8
     public override string ToString() => $"0x{_value:X2}";
     
     public int ToInt() => _value;
-    
-    public string ToHex() => $"0x{_value:X2}";
 
     public void UpdateValue(int toValue)
     {
@@ -236,7 +234,7 @@ public class UInt8
         return new BitFlag(result < -128 || result > 127);
     }
 
-    private MathResult adcBinary(UInt8 operand, BitFlag carryIn)
+    private MathResult AdcBinary(UInt8 operand, BitFlag carryIn)
     {
         var right = operand._value;
         var carry = carryIn.ToInt();
@@ -263,7 +261,7 @@ public class UInt8
         if (decimalMode.IsSet())
             return AdcDecimal(operand, carryIn);
         else
-            return adcBinary(operand, carryIn);
+            return AdcBinary(operand, carryIn);
     }
 
     private MathResult SbcDecimal(UInt8 operand, BitFlag carryIn)

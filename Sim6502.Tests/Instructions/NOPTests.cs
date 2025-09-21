@@ -1,6 +1,5 @@
 ﻿// ReSharper disable InconsistentNaming
 using System.Diagnostics.CodeAnalysis;
-using Sim6502.Tests.Types;
 
 namespace Sim6502.Tests.Instructions;
 

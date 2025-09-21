@@ -25,9 +25,20 @@ public class StatusRegister
         _c = new BitFlag(false);
     }
 
+    public StatusRegister(StatusRegister source)
+    {
+        _n = new BitFlag(source._n.IsSet());
+        _v = new BitFlag(source._v.IsSet());
+        _b = new BitFlag(source._b.IsSet());
+        _d = new BitFlag(source._d.IsSet());
+        _i = new BitFlag(source._i.IsSet());
+        _z = new BitFlag(source._z.IsSet());
+        _c = new BitFlag(source._c.IsSet());
+    }
+
     public override string ToString()
     {
-        string result = _n.IsSet() ? "N" : "n";
+        var result = _n.IsSet() ? "N" : "n";
         result += _v.IsSet() ? "V" : "v";
         result += "1";
         result += _b.IsSet() ? "B" : "b";
@@ -40,7 +51,7 @@ public class StatusRegister
 
     public UInt8 ToUInt8()
     {
-        int result = 0;
+        var result = 0;
         if (_n.IsSet()) result |= 0b10000000;
         if (_v.IsSet()) result |= 0b01000000;
         result |= 0b00100000;
@@ -54,7 +65,7 @@ public class StatusRegister
 
     public UInt8 GetFlags()
     {
-        UInt8 result = new UInt8(0);
+        var result = new UInt8(0);
         if (_n.IsSet()) result.SetBit(7);
         if (_v.IsSet()) result.SetBit(6);
         result.SetBit(5);

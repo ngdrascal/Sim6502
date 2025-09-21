@@ -5,7 +5,7 @@ namespace Sim6502;
 /// <summary>
 /// Disassembler for W65c02s instructions. Converts opcode and operands to human-readable assembly.
 /// </summary>
-public static class Disasembler
+public static class Disassembler
 {
     /// <summary>
     /// Disassembles the current instruction in the context.
@@ -13,10 +13,10 @@ public static class Disasembler
     /// <param name="ctx">CPU context containing opcode and operands.</param>
     /// <returns>Disassembled instruction string.</returns>
 
-    public static string Disasemble(Context ctx)
+    public static string Disassemble(Context ctx)
     {
-        string opCodeStr = ctx.DbgOpCode.ToString().Substring(0, 3);
-        string operandStr = string.Empty;
+        var opCodeStr = ctx.DbgOpCode?.ToString()[..3];
+        string operandStr;
 
         switch (ctx.DbgOpCode)
         {
@@ -134,7 +134,7 @@ public static class Disasembler
             case OpCodes.SBCabsx:
             case OpCodes.STAabsx:
             case OpCodes.STZabsx:
-                operandStr = BuildAbsx(ctx.DbgOperand1, ctx.DbgOperand2);
+                operandStr = BuildAbsX(ctx.DbgOperand1, ctx.DbgOperand2);
                 break;
 
             case OpCodes.ADCabsy:
@@ -146,7 +146,7 @@ public static class Disasembler
             case OpCodes.ORAabsy:
             case OpCodes.SBCabsy:
             case OpCodes.STAabsy:
-                operandStr = BuildAbsy(ctx.DbgOperand1, ctx.DbgOperand2);
+                operandStr = BuildAbsY(ctx.DbgOperand1, ctx.DbgOperand2);
                 break;
 
             case OpCodes.ADCindx:
@@ -157,7 +157,7 @@ public static class Disasembler
             case OpCodes.ORAindx:
             case OpCodes.SBCindx:
             case OpCodes.STAindx:
-                operandStr = BuildIndx(ctx.DbgOperand1);
+                operandStr = BuildIndX(ctx.DbgOperand1);
                 break;
 
             case OpCodes.ADCindy:
@@ -168,7 +168,7 @@ public static class Disasembler
             case OpCodes.ORAindy:
             case OpCodes.SBCindy:
             case OpCodes.STAindy:
-                operandStr = BuildIndy(ctx.DbgOperand1);
+                operandStr = BuildIndY(ctx.DbgOperand1);
                 break;
 
             case OpCodes.ADCind:
@@ -286,61 +286,61 @@ public static class Disasembler
                 break;
         }
 
-        return string.Format("{0:X4}: {1} {2}", ctx.DbgPC, opCodeStr, operandStr);
+        return $"{ctx.DbgPC.ToInt():X4}: {opCodeStr} {operandStr}";
     }
 
     private static string BuildImm(UInt8 value)
     {
-        return string.Format("#$%02X", value.ToInt());
+        return $"#${value.ToInt():X2}";
     }
 
     private static string BuildZpg(UInt8 value)
     {
-        return string.Format("${0:X2}", value.ToInt());
+        return $"${value.ToInt():X2}";
     }
 
     private static string BuildZpgx(UInt8 value)
     {
-        return string.Format("${0:X2},X", value.ToInt());
+        return $"(${value.ToInt():X2},X)";
     }
 
     private static string BuildZpgy(UInt8 value)
     {
-        return string.Format("(${0:X2}),Y", value.ToInt());
+        return $"(${value.ToInt():X2}),Y";
     }
 
     private static string BuildAbs(UInt8 low, UInt8 high)
     {
-        return string.Format("${0:X2}{1:X2}", high.ToInt(), low.ToInt());
+        return $"${high.ToInt():X2}{low.ToInt():X2}";
     }
 
-    private static string BuildAbsx(UInt8 low, UInt8 high)
+    private static string BuildAbsX(UInt8 low, UInt8 high)
     {
-        return string.Format("${0:X2}{1:X2},X", high.ToInt(), low.ToInt());
+        return $"${high.ToInt():X2}{low.ToInt():X2},X";
     }
 
-    private static string BuildAbsy(UInt8 low, UInt8 high)
+    private static string BuildAbsY(UInt8 low, UInt8 high)
     {
-        return string.Format("${0:X2}{1:X2},Y", high.ToInt(), low.ToInt());
+        return $"${high.ToInt():X2}{low.ToInt():X2},Y";
     }
 
-    private static string BuildIndx(UInt8 value)
+    private static string BuildIndX(UInt8 value)
     {
-        return string.Format("(${0:X2},X)", value.ToInt());
+        return $"(${value.ToInt():X2},X)";
     }
 
-    private static string BuildIndy(UInt8 value)
+    private static string BuildIndY(UInt8 value)
     {
-        return string.Format("(${0:X2}),Y", value.ToInt());
+        return $"(${value.ToInt():X2}),Y";
     }
 
     private static string BuildInd(UInt8 value)
     {
-        return string.Format("(${0:X2})", value.ToInt());
+        return $"(${value.ToInt():X2})";
     }
 
     private static string BuildRel(UInt8 value)
     {
-        return string.Format("${0:X2}", value.ToInt());
+        return $"${value.ToInt():X2}";
     }
 }

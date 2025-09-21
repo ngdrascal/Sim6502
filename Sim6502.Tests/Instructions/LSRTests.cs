@@ -1,6 +1,5 @@
 ﻿// ReSharper disable InconsistentNaming
 using System.Diagnostics.CodeAnalysis;
-using Sim6502.Tests.Types;
 using Sim6502.types;
 using UInt16 = Sim6502.types.UInt16;
 using UInt8 = Sim6502.types.UInt8;

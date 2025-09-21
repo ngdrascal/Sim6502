@@ -27,9 +27,9 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
     private byte _lastNmiState = 1;
     private bool _nmiAsserted;
     private bool _irqAsserted;
-    
-    private readonly ILogger _instLogger;
-    private readonly ILogger _stateLogger;
+
+    // private readonly ILogger _instLogger;
+    // private readonly ILogger _stateLogger;
     private string _debugRegisters;
 
     public W65C02SEngine(Context ctx, ILoggerFactory loggerFactory)
@@ -49,8 +49,8 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         _nmiAsserted = false;
         _irqAsserted = false;
 
-        _instLogger = loggerFactory.CreateLogger("W65c02s.inst_");
-        _stateLogger = loggerFactory.CreateLogger("W65c02s.state");
+        // _instLogger = loggerFactory.CreateLogger("W65c02s.inst_");
+        // _stateLogger = loggerFactory.CreateLogger("W65c02s.state");
         _debugRegisters = String.Empty;
 
         // Instantiate all instruction classes
@@ -90,6 +90,13 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         _ = new Interrupts().RegisterT2State(this).RegisterStates(this);
     }
 
+    public event EventHandler<SubstepChangingEventArgs>? SubstepChanging;
+
+    private void OnStateChanging(SubstepChangingEventArgs args)
+    {
+        SubstepChanging?.Invoke(this, args);
+    }
+
     public long InstCount => _instCount;
 
     public long CycleCount => _cycleCount;
@@ -127,14 +134,14 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
 
         _lastClock = _ctx.Pins.GetPHI2();
 
-        var subStep = _ctx.GetSubStep();
+        var substep = _ctx.GetSubStep();
 
-        if (subStep == 1)
+        if (substep == 1)
         {
-            if (_ctx.State == States.Fetch && _ctx.DbgOpCode != null)
-                _instLogger.LogDebug("{Disassemble,-24} {DebugRegisters}", Disasembler.Disasemble(_ctx), _debugRegisters);
-
-            _stateLogger.LogDebug("----------------------------------------");
+            // if (_ctx.State == States.Fetch && _ctx.DbgOpCode != null)
+            //     _instLogger.LogDebug("{Disassemble,-24} {DebugRegisters}", Disassembler.Disassemble(_ctx), _debugRegisters);
+            //
+            // _stateLogger.LogDebug("----------------------------------------");
 
             if (_ctx.Pins.GetRDY() == Low)
             {
@@ -159,7 +166,7 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
 
             _cycleCount++;
         }
-        else if (subStep == Constants.P1LastStep)
+        else if (substep == Constants.P1LastStep)
         {
             _ctx.Pins.SetPHI1O(Low);
             _ctx.Pins.SetPHI2O(High);
@@ -169,19 +176,22 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
             if (_ctx.NmiFlag || _ctx.IrqFlag)
                 _ctx.InitState(States.Interrupt1);
 
-        _stateLogger.LogTrace("Executing state: {CtxState}, substep: {SubStep}", _ctx.State, subStep);
+        OnStateChanging(new SubstepChangingEventArgs(_ctx.State, substep));
+
         var method = _stateMethodMap[(int)_ctx.State];
         method(_ctx);
 
-        if (subStep == LastSubstep)
+        if (substep == LastSubstep)
         {
             _ctx.Pins.SetPHI1O(High);
             _ctx.Pins.SetPHI1O(Low);
             CheckForReset(_ctx);
             CheckForNmi(_ctx);
             CheckForIrq(_ctx);
-            var regs = _ctx.Regs;
-            _debugRegisters = $"A:{regs.A.ToInt():X2} P:{regs.P} X:{regs.X.ToInt():X2} Y:{regs.Y.ToInt():X2} S:{regs.S.ToInt():X2} PC:{regs.PC.ToInt():X4}";
+            _ctx.CaptureRegs();
+
+            // var regs = _ctx.Regs;
+            // _debugRegisters = $"A:{regs.A.ToInt():X2} P:{regs.P} X:{regs.X.ToInt():X2} Y:{regs.Y.ToInt():X2} S:{regs.S.ToInt():X2} PC:{regs.PC.ToInt():X4}";
         }
 
         _ctx.IncSubStep();

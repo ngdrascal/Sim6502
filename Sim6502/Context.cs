@@ -3,46 +3,37 @@ using UInt16 = Sim6502.types.UInt16;
 
 namespace Sim6502;
 
-using Microsoft.Extensions.Logging;
-
 public class Context
 {
-    private readonly IPinsInternal _pins;
-    private readonly Registers _registers;
-    private bool _crossedPageBoundary;
-    private States _currentState;
     private int _subStep;
-    private bool _nmiFlag;
-    private bool _irqFlag;
-    private States _readyState;
+    private Registers _debugCapture;
 
-    private UInt16 _dbgPC;
-    private OpCodes? _dbgOpCode;
-    private UInt8 _dbgOperand1;
-    private UInt8 _dbgOperand2;
-    private readonly ILogger _stateLogger;
-
-    public Context(IPinsInternal pins, Registers registers, ILoggerFactory loggerFactory)
+    public Context(IPinsInternal pins, Registers registers)
     {
-        _pins = pins;
-        _registers = registers;
-        _stateLogger = loggerFactory.CreateLogger("W65c02s.state");
-        _nmiFlag = false;
-        _irqFlag = false;
+        Pins = pins;
+        Regs = registers;
+
+        NmiFlag = false;
+        IrqFlag = false;
+        DbgPC = new UInt16(0);
+        DbgOperand1 = new UInt8(0);
+        DbgOperand2 = new UInt8(0);
     }
 
-    public IPinsInternal Pins => _pins;
+    public event EventHandler<StateChangingEventArgs>? StateChanging;
 
-    public Registers Regs => _registers;
-
-    public bool CrossedPageBoundary
+    private void OnStateChanging(StateChangingEventArgs args)
     {
-        get => _crossedPageBoundary;
-        set => _crossedPageBoundary = value;
+        StateChanging?.Invoke(this, args);
     }
-    public States State => _currentState;
 
-    private void SetState(States value) => _currentState = value;
+    public IPinsInternal Pins { get; }
+
+    public Registers Regs { get; }
+
+    public bool CrossedPageBoundary { get; set; }
+
+    public States State { get; private set; }
 
     public int GetSubStep() => _subStep;
 
@@ -59,56 +50,44 @@ public class Context
     {
         if (_subStep == Constants.P2LastSubstep)
         {
+            OnStateChanging(new StateChangingEventArgs(State, nextState));
+
             InitState(nextState);
-            _stateLogger?.LogDebug($"advanceState(): {nextState}");
         }
     }
 
     public void InitState(States value)
     {
-        SetState(value);
+        State = value;
         Pins.SetDBGSTATE((byte)State);
     }
 
-    public bool NmiFlag => _nmiFlag;
+    public bool NmiFlag { get; private set; }
 
-    public void SetNmiFlag() => _nmiFlag = true;
+    public void SetNmiFlag() => NmiFlag = true;
 
-    public void ClearNmiFlag() => _nmiFlag = false;
+    public void ClearNmiFlag() => NmiFlag = false;
 
-    public bool IrqFlag => _irqFlag;
+    public bool IrqFlag { get; private set; }
 
-    public void SetIrqFlag() => _irqFlag = true;
+    public void SetIrqFlag() => IrqFlag = true;
 
-    public void ClearIrqFlag() => _irqFlag = false;
+    public void ClearIrqFlag() => IrqFlag = false;
 
-    public States ReadyState
+    public States ReadyState { get; set; }
+
+    public UInt16 DbgPC { get; set; }
+
+    public OpCodes? DbgOpCode { get; set; }
+
+    public UInt8 DbgOperand1 { get; set; }
+
+    public UInt8 DbgOperand2 { get; set; }
+
+    public void CaptureRegs()
     {
-        get => _readyState;
-        set => _readyState = value;
+        _debugCapture = new Registers(Regs);
     }
 
-    public UInt16 DbgPC
-    {
-        get => _dbgPC;
-        set => _dbgPC = value;
-    }
-
-    public OpCodes? DbgOpCode
-    {
-        get => _dbgOpCode;
-        set => _dbgOpCode = value;
-    }
-
-    public UInt8 DbgOperand1
-    {
-        get => _dbgOperand1;
-        set => _dbgOperand1 = value;
-    }
-
-    public UInt8 DbgOperand2
-    {
-        get => _dbgOperand2;
-        set => _dbgOperand2 = value;
-    }
+    public Registers DebugCapture => _debugCapture;
 }

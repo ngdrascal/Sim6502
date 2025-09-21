@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Sim6502.Tests.Types;
 using Sim6502.types;
 using UInt16 = Sim6502.types.UInt16;
 using UInt8 = Sim6502.types.UInt8;
@@ -836,26 +835,24 @@ public class ADCTests : UnitTestBase
     // -------------------------------------------------------------------------
     // Integration
     // -------------------------------------------------------------------------
-    private void ExecuteADC(byte acc, byte operand, BitFlag cFlag, BitFlag dFlag,
-                            MathResult expected)
+    private void ExecuteADC(byte acc, byte operand, BitFlag cFlag, BitFlag dFlag, MathResult expected)
     {
         // ARRANGE:
-        var cFlagOpCode = cFlag 
-                          == High ? OpCodes.SECimp.ToByte() : OpCodes.CLCimp.ToByte();
-        var dFlagOpCode = dFlag == High ? OpCodes.SEDimp.ToByte() : OpCodes.CLDimp.ToByte();
+        var cFlagOpCode = cFlag.IsSet() ? OpCodes.SECimp.ToByte() : OpCodes.CLCimp.ToByte();
+        var dFlagOpCode = dFlag.IsSet() ? OpCodes.SEDimp.ToByte() : OpCodes.CLDimp.ToByte();
 
         byte[] program = {
-                            // 0000: .ORG $0000
-            0xA2, 0xFF,     // 0000: LDX #$FF ; set the stack pointer
-            0x9A,           // 0002: TXS
-            0xA9, 0x00,     // 0003: LDA #$00 ; clear the flags
-            0x48,           // 0005: PHA
-            0x28,           // 0006: PLP
-            dFlagOpCode,    // 0007: SED|CLD ; set|clear decimal flag
-            cFlagOpCode,    // 0008: SEC ; set|clear the carry flag
-            0xA9, acc,      // 0009: LDA #$00 ; A = acc
-            0x69, operand,  // 000B: SBC #$01 ; A = A - operand
-            0x00,           // 000D: BRK
+                                // 0000:        .ORG $0000
+            0xA2, 0xFF,         // 0000:        LDX #$FF            ; set the stack pointer
+            0x9A,               // 0002:        TXS
+            0xA9, 0x00,         // 0003:        LDA #$00            ; clear the flags
+            0x48,               // 0005:        PHA
+            0x28,               // 0006:        PLP
+            dFlagOpCode,        // 0007:        SED|CLD             ; set|clear decimal flag
+            cFlagOpCode,        // 0008:        SEC|CLC             ; set|clear the carry flag
+            0xA9, acc,          // 0009:        LDA #$'ACC'         ; A = acc
+            0x69, operand,      // 000B:        ADC #$'operand'     ; A = A - operand
+            0x00,               // 000D:        BRK
         };
 
         // ACT:

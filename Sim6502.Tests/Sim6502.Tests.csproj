@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sim6502\Sim6502.csproj" />
+    <ProjectReference Include="..\SuperSimpleConsoleLogger\SuperSimpleConsoleLogger.csproj" />
   </ItemGroup>
 
   <ItemGroup>
