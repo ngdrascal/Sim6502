@@ -12,9 +12,13 @@ public class UInt16
     public const int MaxBit = 16;
 
     public UInt16() { }
+
     public UInt16(int value) => UpdateValue(value);
+
     public UInt16(UInt8 lsb, UInt8 msb) => UpdateValue((msb.ToInt() << 8) | lsb.ToInt());
+
     public UInt16(UInt8 lsb) => UpdateValue(lsb.ToInt());
+
     public UInt16 Copy() => new UInt16(_lsb, _msb);
 
     public override bool Equals(object? o)
@@ -25,7 +29,9 @@ public class UInt16
     }
 
     public override int GetHashCode() => ToInt();
+
     public override string ToString() => $"0x{ToInt():X4}";
+
     public int ToInt() => (_msb.ToInt() << 8) + _lsb.ToInt();
 
     public void UpdateValue(int toValue)
@@ -37,6 +43,7 @@ public class UInt16
     }
 
     public void UpdateValue(UInt16 toValue) => UpdateValue(toValue.ToInt());
+
     public bool EqualsZero() => ToInt() == 0;
 
     public bool IsBitSet(int bitIndex)
