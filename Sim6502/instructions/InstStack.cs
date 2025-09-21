@@ -49,7 +49,16 @@ public class InstStack : InstBase, IInstruction
         return this;
     }
 
+    /////////////////////////////////////////////////////////////////////////////
     // PHA - Push Accumulator On Stack
+    // push A
+    // N V B D I Z C
+    // - - - - - - -
+    //
+    // addressing assembler opc bytes cycles
+    // ------------------------------------------------
+    // implied PHA 48 1 3
+    /////////////////////////////////////////////////////////////////////////////
     private void InstPHAimp2(Context ctx)
     {
         ReadAndDiscard(ctx);
@@ -72,7 +81,16 @@ public class InstStack : InstBase, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    /////////////////////////////////////////////////////////////////////////////
     // PHP - Push Processor Status On Stack
+    // push P
+    // N V B D I Z C
+    // - - - - - - -
+    //
+    // addressing assembler opc bytes cycles
+    // ------------------------------------------------
+    // implied PHP 08 1 3
+    /////////////////////////////////////////////////////////////////////////////
     private void InstPHPimp2(Context ctx)
     {
         ReadAndDiscard(ctx);
@@ -96,7 +114,16 @@ public class InstStack : InstBase, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    /////////////////////////////////////////////////////////////////////////////
     // PHX - Push Index Register X On Stack
+    // push X
+    // N V B D I Z C
+    // - - - - - - -
+    //
+    // addressing assembler opc bytes cycles
+    // ------------------------------------------------
+    // implied PHX DA 1 3
+    /////////////////////////////////////////////////////////////////////////////
     private void InstPHXimp2(Context ctx)
     {
         ReadAndDiscard(ctx);
@@ -120,7 +147,16 @@ public class InstStack : InstBase, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    /////////////////////////////////////////////////////////////////////////////
     // PHY - Push Index Register Y On Stack
+    // push Y
+    // N V B D I Z C
+    // - - - - - - -
+    //
+    // addressing assembler opc bytes cycles
+    // ------------------------------------------------
+    // implied PHY 5A 1 3
+    /////////////////////////////////////////////////////////////////////////////
     private void InstPHYimp2(Context ctx)
     {
         ReadAndDiscard(ctx);
@@ -144,7 +180,16 @@ public class InstStack : InstBase, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    /////////////////////////////////////////////////////////////////////////////
     // PLA - Pull Accumulator From Stack
+    // pull A
+    // N V B D I Z C
+    // + - - - - + -
+    //
+    // addressing assembler opc bytes cycles
+    // ------------------------------------------------
+    // implied PLA 68 1 4
+    /////////////////////////////////////////////////////////////////////////////
     private void InstPLAimp2(Context ctx)
     {
         ReadAndDiscard(ctx);
@@ -174,7 +219,16 @@ public class InstStack : InstBase, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    /////////////////////////////////////////////////////////////////////////////
     // PLP - Pull Processor Status From Stack
+    // pull P
+    // N V B D I Z C
+    // + + + + + + +
+    //
+    // addressing assembler opc bytes cycles
+    // ------------------------------------------------
+    // implied PLP 28 1 4
+    /////////////////////////////////////////////////////////////////////////////
     private void InstPLPimp2(Context ctx)
     {
         ReadAndDiscard(ctx);
@@ -203,7 +257,16 @@ public class InstStack : InstBase, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    /////////////////////////////////////////////////////////////////////////////
     // PLX - Pull Index Register X From Stack
+    // pull X
+    // N V B D I Z C
+    // + - - - - + -
+    //
+    // addressing assembler opc bytes cycles
+    // ------------------------------------------------
+    // implied PLX FA 1 4
+    /////////////////////////////////////////////////////////////////////////////
     private void InstPLXimp2(Context ctx)
     {
         ReadAndDiscard(ctx);
@@ -233,7 +296,16 @@ public class InstStack : InstBase, IInstruction
         ctx.AdvanceState(States.Fetch);
     }
 
+    /////////////////////////////////////////////////////////////////////////////
     // PLY - Pull Index Register Y From Stack
+    // pull Y
+    // N V B D I Z C
+    // + - - - - + -
+    //
+    // addressing assembler opc bytes cycles
+    // ------------------------------------------------
+    // implied PLY 7A 1 4
+    /////////////////////////////////////////////////////////////////////////////
     private void InstPLYimp2(Context ctx)
     {
         ReadAndDiscard(ctx);
