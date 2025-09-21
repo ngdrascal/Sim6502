@@ -296,7 +296,9 @@ public class UInt8
          * S23 STA AR ; predicted accumulator result
          * RTS
          */
+        // ReSharper disable InconsistentNaming
         var N1 = (sbyte)_value;
+
         var N2 = (sbyte)operand.ToInt();
 
         // N2L = N2 & $0F
@@ -320,6 +322,7 @@ public class UInt8
         int A;
         int X;
         int oldA;
+        // ReSharper restore InconsistentNaming
 
         C = carryIn.ToInt();
         A = N1L;
@@ -336,7 +339,7 @@ public class UInt8
             C = 0;
         }
 
-        A |= (N1H);
+        A |= (byte)(N1H);
 
         oldA = (A & 0xFF);
         A = A - N2H[X] - (1 - C);
