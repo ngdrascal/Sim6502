@@ -26,51 +26,35 @@ public class MathResult
         _carry = FlagValue(flags, 'C');
     }
 
-    protected BitFlag FlagValue(string nvzc, char flag)
+    private BitFlag FlagValue(string nvzc, char flag)
     {
-        switch (flag)
+        return flag switch
         {
-            case 'N':
-            case 'n':
-                return nvzc.ToCharArray()[0] == 'N' ? BitFlag.High() : BitFlag.Low();
-            case 'V':
-            case 'v':
-                return nvzc.ToCharArray()[1] == 'V' ? BitFlag.High() : BitFlag.Low();
-            case 'Z':
-            case 'z':
-                return nvzc.ToCharArray()[2] == 'Z' ? BitFlag.High() : BitFlag.Low();
-            case 'C':
-            case 'c':
-                return nvzc.ToCharArray()[3] == 'C' ? BitFlag.High() : BitFlag.Low();
-            default:
-                return BitFlag.Low();
-        }
+            'N' or 'n' => nvzc.ToCharArray()[0] == 'N' ? BitFlag.High() : BitFlag.Low(),
+            'V' or 'v' => nvzc.ToCharArray()[1] == 'V' ? BitFlag.High() : BitFlag.Low(),
+            'Z' or 'z' => nvzc.ToCharArray()[2] == 'Z' ? BitFlag.High() : BitFlag.Low(),
+            'C' or 'c' => nvzc.ToCharArray()[3] == 'C' ? BitFlag.High() : BitFlag.Low(),
+            _ => BitFlag.Low()
+        };
     }
 
-    // public static MathResult Adc(UInt8 a, UInt8 operand, BitFlag carry, BitFlag decimalFlag)
-    // {
-    //     // Implement ADC logic here (stub for now)
-    //     // TODO: Replace with actual 6502 ADC logic
-    //     int value = a.ToInt() + operand.ToInt() + (carry.IsSet() ? 1 : 0);
-    //     value &= 0xFF;
-    //     var result = new UInt8(value);
-    //     // Flags are stubs
-    //     return new MathResult(result, BitFlag.Low(), BitFlag.Low(), result.EqualsZero() ? BitFlag.High() : BitFlag.Low(), BitFlag.Low());
-    // }
+    public UInt8 Value() => _value;
+
+    public BitFlag Negative() => _negative;
+
+    public BitFlag Overflow() => _overflow;
+
+    public BitFlag Zero() => _zero;
+
+    public BitFlag Carry() => _carry;
 
     public override string ToString()
     {
-        string flags = "";
+        var flags = "";
         flags += _negative.IsSet() ? "N" : "n";
         flags += _overflow.IsSet() ? "V" : "v";
         flags += _zero.IsSet() ? "Z" : "z";
         flags += _carry.IsSet() ? "C" : "c";
-        return string.Format("{0:X2} {1}", _value.ToInt(), flags);
+        return $"{_value.ToInt():X2} {flags}";
     }
-
-    public UInt8 Value() => _value;
-    public BitFlag Negative() => _negative;
-    public BitFlag Overflow() => _overflow;
-    public BitFlag Zero() => _zero;
-    public BitFlag Carry() => _carry;
 }
