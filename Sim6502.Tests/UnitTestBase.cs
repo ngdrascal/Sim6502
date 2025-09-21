@@ -8,16 +8,17 @@ namespace Sim6502.Tests;
 
 public class UnitTestBase
 {
+    private readonly Context _ctx;
+    private readonly W65C02SEngine _cpu;
+    private byte _phi2;
+
+    protected readonly Pins Pins;
+    protected readonly Registers Regs;
+
     protected readonly BitFlag Low = new(false);
     protected readonly BitFlag High = new(true);
     protected readonly UInt16 BootAddr = new(0x1000);
 
-    protected readonly Pins Pins;
-    protected readonly Registers Regs;
-    protected readonly Context Ctx;
-    protected readonly W65C02SEngine Cpu;
-    protected byte Phi2;
-    
     protected UnitTestBase()
     {
         Pins = new Pins();
@@ -31,26 +32,26 @@ public class UnitTestBase
         var instLogger = loggerFactory.CreateLogger("W65c02s.inst_");
         var stateLogger = loggerFactory.CreateLogger("W65c02s.state");
 
-        Ctx = new Context(Pins, Regs);
-        Ctx.StateChanging += (_, args) =>
+        _ctx = new Context(Pins, Regs);
+        _ctx.StateChanging += (_, args) =>
         {
-            if (args.NewState == States.Fetch && Ctx.DbgOpCode != null)
+            if (args.NewState == States.Fetch && _ctx.DbgOpCode != null)
             {
-                instLogger.LogDebug("{Disassemble,-24} {DebugRegisters}", Disassembler.Disassemble(Ctx),
-                    Ctx.DebugCapture.ToString());
+                instLogger.LogDebug("{Disassemble,-24} {DebugRegisters}", Disassembler.Disassemble(_ctx),
+                    _ctx.DebugCapture?.ToString());
             }
             stateLogger.LogDebug($"advanceState(): {args.NewState}");
         };
 
-        Cpu = new W65C02SEngine(Ctx);
-        Cpu.SubstepChanging+= (_, args) =>
+        _cpu = new W65C02SEngine(_ctx);
+        _cpu.SubstepChanging+= (_, args) =>
         {
-            if (Ctx.GetSubStep()==Constants.P2LastSubstep)
-                Ctx.CaptureRegs();
+            if (_ctx.GetSubStep()==Constants.P2LastSubstep)
+                _ctx.CaptureRegs();
             stateLogger.LogTrace("Executing state: {CtxState}, substep: {SubStep}", args.State, args.Substep);
         };
 
-        Phi2 = (byte)Low.ToInt();
+        _phi2 = (byte)Low.ToInt();
 
         // set the inputs
         Pins.SetIRQB((byte)High.ToInt());
@@ -64,9 +65,9 @@ public class UnitTestBase
 
     protected void BootToAddress(UInt16 addr)
     {
-        Phi2 = 1;
+        _phi2 = 1;
 
-        while (Ctx.State == States.WarmUp0)
+        while (_ctx.State == States.WarmUp0)
             ExecuteMicroSteps(1);
 
         ExecuteClockCycles(1); // Warmup1
@@ -91,10 +92,10 @@ public class UnitTestBase
     {
         for (int i = 0; i < count; i++)
         {
-            Pins.SetPHI2(Phi2);
-            Cpu.Step();
+            Pins.SetPHI2(_phi2);
+            _cpu.Step();
 
-            Phi2 = Phi2 == 0 ? (byte)1 : (byte)0;
+            _phi2 = _phi2 == 0 ? (byte)1 : (byte)0;
         }
         // phi2 = (byte)HIGH.ToInt();
     }
@@ -118,7 +119,7 @@ public class UnitTestBase
             ExecuteMicroSteps(1);
 
             var addr = Pins.GetAddrBusPins().ToInt();
-            if (Ctx.GetSubStep() == Constants.P2LastSubstep)
+            if (_ctx.GetSubStep() == Constants.P2LastSubstep)
             {
                 if (Pins.GetRWB() == read)
                 {
