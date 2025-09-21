@@ -47,16 +47,16 @@ public class MathResult
         }
     }
 
-    public static MathResult Adc(UInt8 a, UInt8 operand, BitFlag carry, BitFlag decimalFlag)
-    {
-        // Implement ADC logic here (stub for now)
-        // TODO: Replace with actual 6502 ADC logic
-        int value = a.ToInt() + operand.ToInt() + (carry.IsSet() ? 1 : 0);
-        value &= 0xFF;
-        var result = new UInt8(value);
-        // Flags are stubs
-        return new MathResult(result, BitFlag.Low(), BitFlag.Low(), result.EqualsZero() ? BitFlag.High() : BitFlag.Low(), BitFlag.Low());
-    }
+    // public static MathResult Adc(UInt8 a, UInt8 operand, BitFlag carry, BitFlag decimalFlag)
+    // {
+    //     // Implement ADC logic here (stub for now)
+    //     // TODO: Replace with actual 6502 ADC logic
+    //     int value = a.ToInt() + operand.ToInt() + (carry.IsSet() ? 1 : 0);
+    //     value &= 0xFF;
+    //     var result = new UInt8(value);
+    //     // Flags are stubs
+    //     return new MathResult(result, BitFlag.Low(), BitFlag.Low(), result.EqualsZero() ? BitFlag.High() : BitFlag.Low(), BitFlag.Low());
+    // }
 
     public override string ToString()
     {

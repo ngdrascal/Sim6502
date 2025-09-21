@@ -77,9 +77,9 @@ public class InstADC : InstBase, IInstruction
     {
         var p = ctx.Regs.P;
         var operand = ctx.Regs.Temp;
-        // Use static MathResult.Adc method
-        var result = MathResult.Adc(ctx.Regs.A, operand, p.Carry, p.Decimal);
-        ctx.Regs.A.UpdateValue(result.Value());
+
+        var result = ctx.Regs.A.Adc(operand, p.Carry, p.Decimal);
+
         p.Negative.UpdateValue(result.Value().IsBitSet(7));
         p.Overflow.UpdateValue(result.Overflow());
         p.Zero.UpdateValue(result.Value().EqualsZero());
@@ -104,8 +104,8 @@ public class InstADC : InstBase, IInstruction
     // (indirect),Y   ADC (oper),Y  71      2     5+p+d
     // (zeropage)     ADC (oper)    72      2     5+d
     //
-    // p: =1 if page is crossed.
-    // d: =1 if in decimal mode
+    // p: = 1 if page is crossed.
+    // d: = 1 if in decimal mode
     /////////////////////////////////////////////////////////////////////////////
 
     // -------------------------------------------------------------------------
