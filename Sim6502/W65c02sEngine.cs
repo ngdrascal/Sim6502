@@ -238,7 +238,7 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         ctx.Pins.SetPHI1O(High);
         ctx.Pins.SetPHI1O(Low);
         ctx.Pins.SetAddrBusMode(AddrBusMode.Output);
-        ctx.Pins.SetAddrBusPins(new UInt16(0xFFFF));
+        ctx.Pins.AddrBus = new UInt16(0xFFFF);
         ctx.Pins.SetDataBusMode(DataBusMode.Input);
         ctx.Pins.SetRWB(Read);
     }
@@ -259,7 +259,7 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         {
             ctx.Pins.SetAddrBusMode(AddrBusMode.Output);
             ctx.Pins.SetDataBusMode(DataBusMode.Input);
-            ctx.Pins.SetAddrBusPins(new UInt16(0xFFFC));
+            ctx.Pins.AddrBus = new UInt16(0xFFFC);
             ctx.Pins.SetRWB(Read);
         }
         else if (ctx.GetSubStep() == LastSubstep)
@@ -274,7 +274,7 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
     {
         if (ctx.GetSubStep() == P1MiddleStep)
         {
-            ctx.Pins.SetAddrBusPins(new UInt16(0xFFFD));
+            ctx.Pins.AddrBus = new UInt16(0xFFFD);
             ctx.Pins.SetRWB(Read);
         }
         else if (ctx.GetSubStep() == LastSubstep)
@@ -297,7 +297,7 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         {
             var pc = ctx.Regs.PC.Copy();
             ctx.DbgPC = pc;
-            ctx.Pins.SetAddrBusPins(pc);
+            ctx.Pins.AddrBus = pc;
             ctx.Regs.PC.Inc();
             ctx.Pins.SetRWB(Read);
         }

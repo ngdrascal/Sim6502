@@ -104,7 +104,7 @@ public class ASLTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(operand1.ToInt(), Pins.GetAddrBusPins().ToInt());
+        Assert.Equal(operand1.ToInt(), Pins.AddrBus.ToInt());
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(BootAddr.AddUnsigned(new UInt8(2)), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -182,7 +182,7 @@ public class ASLTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(BootAddr.AddUnsigned(new UInt8(2)), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -260,7 +260,7 @@ public class ASLTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(BootAddr.AddUnsigned(new UInt8(3)), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -342,7 +342,7 @@ public class ASLTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(BootAddr.AddUnsigned(new UInt8(3)), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);

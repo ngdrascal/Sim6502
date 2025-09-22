@@ -38,7 +38,7 @@ public class ADCTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(new UInt16(0x1001), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZ, Regs.P.Zero);
@@ -121,7 +121,7 @@ public class ADCTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZ, Regs.P.Zero);
@@ -209,7 +209,7 @@ public class ADCTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZ, Regs.P.Zero);
@@ -297,7 +297,7 @@ public class ADCTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZ, Regs.P.Zero);
@@ -394,7 +394,7 @@ public class ADCTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZ, Regs.P.Zero);
@@ -493,7 +493,7 @@ public class ADCTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZ, Regs.P.Zero);
@@ -589,7 +589,7 @@ public class ADCTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZ, Regs.P.Zero);
@@ -668,15 +668,15 @@ public class ADCTests : UnitTestBase
 
         Pins.SetDataBusPins(operand);
         ExecuteClockCycles(1); // InstADCindy2 - fetch the second byte of the op-code (EA low)
-        Assert.Equal(new UInt16(0x1001), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
 
         Pins.SetDataBusPins(indAddrLsb);
         ExecuteClockCycles(1); // InstADCindy3 - fetch the value at EA, put in EA2 Low
-        Assert.Equal(new UInt16(operand), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(operand), Pins.AddrBus);
 
         Pins.SetDataBusPins(indAddrMsb);
         ExecuteClockCycles(1); // InstADCindy4 - fetch the value at EA + 1, put in EA2 High
-        Assert.Equal(new UInt16(operand).Inc(), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(operand).Inc(), Pins.AddrBus);
 
         Pins.SetDataBusPins(memValue);
         ExecuteClockCycles(1); // InstADCindy5 - load the A reg. with the value at EA + Y
@@ -693,7 +693,7 @@ public class ADCTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZ, Regs.P.Zero);
@@ -784,7 +784,7 @@ public class ADCTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZ, Regs.P.Zero);

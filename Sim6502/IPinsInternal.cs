@@ -27,7 +27,7 @@ public interface IPinsInternal
     UInt16 AddrBus { get; set; }
 
     // TODO: make private and use AddrBus property
-    void SetAddrBusPins(UInt16 value);
+    // void SetAddrBusPins(UInt16 value);
 
     void SetDataBusMode(DataBusMode mode);
 

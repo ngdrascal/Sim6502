@@ -119,7 +119,7 @@ public class UnitTestBase
         {
             ExecuteMicroSteps(1);
 
-            var addr = Pins.GetAddrBusPins().ToInt();
+            var addr = Pins.AddrBus.ToInt();
             if (_ctx.GetSubStep() == Constants.P2LastSubstep)
             {
                 if (Pins.GetRWB() == read)

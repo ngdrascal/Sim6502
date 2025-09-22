@@ -87,35 +87,50 @@ public class Pins : IPinsInternal, IPinsExternal
     public byte GetA14() => ReadPin(PinMap.A14);
     public byte GetA15() => ReadPin(PinMap.A15);
 
+    // public UInt16 AddrBus
+    // {
+    //     get => GetAddrBusPins();
+    //     set => SetAddrBusPins(value);
+    // }
+
+    // TODO: make private and use AddrBus property
+
     public UInt16 AddrBus
     {
-        get => GetAddrBusPins();
-        set => SetAddrBusPins(value);
+        get
+        {
+            int addr = 0;
+            for (int i = 0; i < PinMap.AddrPins.Length; i++)
+            {
+                int pv = ReadPin(PinMap.AddrPins[i]) << i;
+                addr |= pv;
+            }
+
+            return new UInt16(addr);
+        }
+        set
+        {
+            var rawValue = value.ToInt();
+            for (var i = 0; i < PinMap.AddrPins.Length; i++)
+            {
+                byte pinValue = (byte)(rawValue & 0x01);
+                WritePin(PinMap.AddrPins[i], pinValue);
+                rawValue >>= 1;
+            }
+        }
     }
 
     // TODO: make private and use AddrBus property
-    public UInt16 GetAddrBusPins()
-    {
-        int addr = 0;
-        for (int i = 0; i < PinMap.AddrPins.Length; i++)
-        {
-            int pv = ReadPin(PinMap.AddrPins[i]) << i;
-            addr |= pv;
-        }
-        return new UInt16(addr);
-    }
-
-    // TODO: make private and use AddrBus property
-    public void SetAddrBusPins(UInt16 value)
-    {
-        int rawValue = value.ToInt();
-        for (int i = 0; i < PinMap.AddrPins.Length; i++)
-        {
-            byte pinValue = (byte)(rawValue & 0x01);
-            WritePin(PinMap.AddrPins[i], pinValue);
-            rawValue >>= 1;
-        }
-    }
+    // public void SetAddrBusPins(UInt16 value)
+    // {
+    //     int rawValue = value.ToInt();
+    //     for (int i = 0; i < PinMap.AddrPins.Length; i++)
+    //     {
+    //         byte pinValue = (byte)(rawValue & 0x01);
+    //         WritePin(PinMap.AddrPins[i], pinValue);
+    //         rawValue >>= 1;
+    //     }
+    // }
 
     public DataBusMode GetDataBusMode() => _dataBusMode;
 

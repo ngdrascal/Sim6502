@@ -34,7 +34,7 @@ public class STATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
@@ -70,7 +70,7 @@ public class STATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
@@ -106,7 +106,7 @@ public class STATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
@@ -144,7 +144,7 @@ public class STATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
@@ -194,7 +194,7 @@ public class STATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
@@ -241,7 +241,7 @@ public class STATests : UnitTestBase
 
         Pins.SetDataBusPins(indAddrLsb);
         ExecuteClockCycles(1); // InstSTAidx4 - fetch the value at EA, put in EA2 Low
-        Assert.Equal(new UInt16(operand.Copy().AddWithWrapAround(xValue)), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(operand.Copy().AddWithWrapAround(xValue)), Pins.AddrBus);
 
         Pins.SetDataBusPins(indAddrMsb);
         ExecuteClockCycles(1); // InstSTAidx5 - fetch the value at EA + 1, put in EA2 High
@@ -250,7 +250,7 @@ public class STATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
@@ -292,15 +292,15 @@ public class STATests : UnitTestBase
 
         Pins.SetDataBusPins(operand);
         ExecuteClockCycles(1); // InstSTAindy2 - fetch the second byte of the op-code into EA low
-        Assert.Equal(new UInt16(0x1001), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
 
         Pins.SetDataBusPins(indAddrLsb);
         ExecuteClockCycles(1); // InstSTAindy3 - fetch the value at EA, put in EA2 Low
-        Assert.Equal(new UInt16(operand), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(operand), Pins.AddrBus);
 
         Pins.SetDataBusPins(indAddrMsb);
         ExecuteClockCycles(1); // InstSTAindy4 - fetch the value at EA + 1, put in EA2 High
-        Assert.Equal(new UInt16(operand.Copy().Inc()), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(operand.Copy().Inc()), Pins.AddrBus);
 
         ExecuteClockCycles(1); // InstSTAindy5 - add the Y reg to EA
 
@@ -308,7 +308,7 @@ public class STATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
@@ -359,7 +359,7 @@ public class STATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());

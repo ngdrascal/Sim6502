@@ -89,9 +89,9 @@ public class InstBRK : InstBase, IInstruction
             ctx.Pins.SetAddrBusMode(AddrBusMode.Output);
             ctx.Pins.SetDataBusMode(DataBusMode.Input);
             if (ctx.NmiFlag)
-                ctx.Pins.SetAddrBusPins(new UInt16(0xFFFA));
+                ctx.Pins.AddrBus = new UInt16(0xFFFA);
             else
-                ctx.Pins.SetAddrBusPins(new UInt16(0xFFFE));
+                ctx.Pins.AddrBus = new UInt16(0xFFFE);
             ctx.Pins.SetRWB(Read);
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
@@ -109,9 +109,9 @@ public class InstBRK : InstBase, IInstruction
         if (ctx.GetSubStep() == P1MiddleStep)
         {
             if (ctx.NmiFlag)
-                ctx.Pins.SetAddrBusPins(new UInt16(0xFFFB));
+                ctx.Pins.AddrBus = new UInt16(0xFFFB);
             else
-                ctx.Pins.SetAddrBusPins(new UInt16(0xFFFF));
+                ctx.Pins.AddrBus = new UInt16(0xFFFF);
             ctx.Pins.SetRWB(Read);
         }
         else if (ctx.GetSubStep() == P2LastSubstep)

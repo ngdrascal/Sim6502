@@ -31,7 +31,7 @@ public class ORATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(new UInt16(0x1001), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -83,7 +83,7 @@ public class ORATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -139,7 +139,7 @@ public class ORATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -195,7 +195,7 @@ public class ORATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -259,7 +259,7 @@ public class ORATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -341,7 +341,7 @@ public class ORATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -422,7 +422,7 @@ public class ORATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(finalAddr, Pins.GetAddrBusPins());
+        Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -471,15 +471,15 @@ public class ORATests : UnitTestBase
 
         Pins.SetDataBusPins(operand);
         ExecuteClockCycles(1); // InstORAindy2 - fetch the second byte of the op-code (EA low)
-        Assert.Equal(new UInt16(0x1001), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
 
         Pins.SetDataBusPins(indAddrLsb);
         ExecuteClockCycles(1); // InstORAindy3 - fetch the value at EA, put in EA2 Low
-        Assert.Equal(new UInt16(operand), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(operand), Pins.AddrBus);
 
         Pins.SetDataBusPins(indAddrMsb);
         ExecuteClockCycles(1); // InstORAindy4 - fetch the value at EA + 1, put in EA2 High
-        Assert.Equal(new UInt16(operand).Inc(), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(operand).Inc(), Pins.AddrBus);
 
         Pins.SetDataBusPins(memValue);
         ExecuteClockCycles(1); // InstORAindy5 - load the A reg. with the value at EA + Y
@@ -493,7 +493,7 @@ public class ORATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -571,7 +571,7 @@ public class ORATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);

@@ -31,7 +31,7 @@ public class StackTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(stackTop, Pins.GetAddrBusPins());
+        Assert.Equal(stackTop, Pins.AddrBus);
         Assert.Equal(aValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(spValue.Dec(), Regs.S);
@@ -55,13 +55,13 @@ public class StackTests : UnitTestBase
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstPHPimp2 - read the next instruction and discard
-        Assert.Equal(new UInt16(0x1001), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
 
         ExecuteClockCycles(1); // InstPHPimp3 - push P reg and decrement S reg
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(stackTop, Pins.GetAddrBusPins());
+        Assert.Equal(stackTop, Pins.AddrBus);
         Assert.Equal(pValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(spValue.Dec(), Regs.S);
@@ -85,13 +85,13 @@ public class StackTests : UnitTestBase
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstPHAimp2 - read the next instruction and discard
-        Assert.Equal(new UInt16(0x1001), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
 
         ExecuteClockCycles(1); // InstPHAimp3 - push X reg and decrement S reg
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(stackTop, Pins.GetAddrBusPins());
+        Assert.Equal(stackTop, Pins.AddrBus);
         Assert.Equal(xValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(spValue.Dec(), Regs.S);
@@ -115,13 +115,13 @@ public class StackTests : UnitTestBase
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstPHAimp2 - read the next instruction and discard
-        Assert.Equal(new UInt16(0x1001), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
 
         ExecuteClockCycles(1); // InstPHAimp3 - push Y reg and decrement S reg
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(stackTop, Pins.GetAddrBusPins());
+        Assert.Equal(stackTop, Pins.AddrBus);
         Assert.Equal(yValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(spValue.Dec(), Regs.S);
@@ -144,7 +144,7 @@ public class StackTests : UnitTestBase
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstPLAimp2 - read the next instruction and discard
-        Assert.Equal(new UInt16(0x1001), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
 
         ExecuteClockCycles(1); // InstPLAimp3 - increment S reg
 
@@ -153,7 +153,7 @@ public class StackTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(stackTop.Inc(), Pins.GetAddrBusPins());
+        Assert.Equal(stackTop.Inc(), Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(spValue.Inc(), Regs.S);
@@ -177,7 +177,7 @@ public class StackTests : UnitTestBase
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstPLPimp2 - read the next instruction and discard
-        Assert.Equal(new UInt16(0x1001), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
 
         ExecuteClockCycles(1); // InstPLPimp3 - increment S reg
 
@@ -186,7 +186,7 @@ public class StackTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(stackTop.Inc(), Pins.GetAddrBusPins());
+        Assert.Equal(stackTop.Inc(), Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(spValue.Inc(), Regs.S);
@@ -210,7 +210,7 @@ public class StackTests : UnitTestBase
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstPLXimp2 - read the next instruction and discard
-        Assert.Equal(new UInt16(0x1001), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
 
         ExecuteClockCycles(1); // InstPLXimp3 - increment S reg
 
@@ -219,7 +219,7 @@ public class StackTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(stackTop.Inc(), Pins.GetAddrBusPins());
+        Assert.Equal(stackTop.Inc(), Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(spValue.Inc(), Regs.S);
@@ -243,7 +243,7 @@ public class StackTests : UnitTestBase
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstPLYimp2 - read the next instruction and discard
-        Assert.Equal(new UInt16(0x1001), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
 
         ExecuteClockCycles(1); // InstPLYimp3 - increment S reg
 
@@ -252,7 +252,7 @@ public class StackTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(stackTop.Inc(), Pins.GetAddrBusPins());
+        Assert.Equal(stackTop.Inc(), Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(spValue.Inc(), Regs.S);

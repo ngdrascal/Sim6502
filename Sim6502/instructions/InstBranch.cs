@@ -88,7 +88,7 @@ public class InstBranch : InstBase, IInstruction
             var afterPage = regs.PC.Msb().Copy();
             if (afterPage.Equals(beforePage))
             {
-                ctx.Pins.SetAddrBusPins(ctx.Regs.PC);
+                ctx.Pins.AddrBus = ctx.Regs.PC;
                 ctx.AdvanceState(States.Fetch);
             }
             else
@@ -101,7 +101,7 @@ public class InstBranch : InstBase, IInstruction
     private void Branch4(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            ctx.Pins.SetAddrBusPins(ctx.Regs.PC);
+            ctx.Pins.AddrBus = ctx.Regs.PC;
 
         ctx.AdvanceState(States.Fetch);
     }

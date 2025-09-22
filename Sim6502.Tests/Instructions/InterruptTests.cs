@@ -101,7 +101,7 @@ public class InterruptTests : UnitTestBase
         ExecuteClockCycles(1); // InstBRKimp7
 
         // ASSERT:
-        Assert.Equal(new UInt16(0xFFFB), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0xFFFB), Pins.AddrBus);
         Assert.Equal(handlerAddr, Regs.PC);
         Assert.Equal(stackTop.Sbc(new UInt8(3), High, Low).Value(), Regs.S);
         Assert.Equal(Low, Regs.P.Break);
@@ -152,7 +152,7 @@ public class InterruptTests : UnitTestBase
         ExecuteClockCycles(1); // InstBRKimp7
 
         // ASSERT:
-        Assert.Equal(new UInt16(0xFFFF), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0xFFFF), Pins.AddrBus);
         Assert.Equal(handlerAddr, Regs.PC);
         Assert.Equal(stackTop.Sbc(new UInt8(3), High, Low).Value(), Regs.S);
         Assert.Equal(Low, Regs.P.Break);

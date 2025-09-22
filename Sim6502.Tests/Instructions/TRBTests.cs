@@ -39,7 +39,7 @@ public class TRBTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -91,7 +91,7 @@ public class TRBTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);

@@ -34,7 +34,7 @@ public class STYTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(yValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
@@ -70,7 +70,7 @@ public class STYTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(yValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
@@ -106,7 +106,7 @@ public class STYTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(yValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());

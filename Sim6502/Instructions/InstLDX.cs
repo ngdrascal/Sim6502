@@ -36,7 +36,7 @@
         {
             if (ctx.GetSubStep() == P1MiddleStep)
             {
-                ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
+                ctx.Pins.AddrBus = ctx.Regs.EA;
                 ctx.Pins.SetRWB(Read);
             }
             else if (ctx.GetSubStep() == P2LastSubstep)
@@ -169,7 +169,7 @@
                 ctx.Regs.IncEAWithY();
                 var afterPage = ctx.Regs.EA.Msb().Copy();
                 ctx.CrossedPageBoundary = !afterPage.Equals(beforePage);
-                ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
+                ctx.Pins.AddrBus = ctx.Regs.EA;
                 ctx.Pins.SetRWB(Read);
             }
             else if (ctx.GetSubStep() == P2LastSubstep)

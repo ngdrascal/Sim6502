@@ -47,7 +47,7 @@ public class RORTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(new UInt16(0x1000), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0x1000), Pins.AddrBus);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -128,7 +128,7 @@ public class RORTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -213,7 +213,7 @@ public class RORTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -298,7 +298,7 @@ public class RORTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -387,7 +387,7 @@ public class RORTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);

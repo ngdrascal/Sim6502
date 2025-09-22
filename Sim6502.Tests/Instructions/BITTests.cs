@@ -31,7 +31,7 @@ public class BITTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(new UInt16(0x1001), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(aValue, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -95,7 +95,7 @@ public class BITTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(aValue, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -163,7 +163,7 @@ public class BITTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(aValue, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -231,7 +231,7 @@ public class BITTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(aValue, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -307,7 +307,7 @@ public class BITTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(expectedAddr, Pins.GetAddrBusPins());
+        Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(aValue, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);

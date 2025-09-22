@@ -34,7 +34,7 @@ public class STXTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(finalAddr, Pins.GetAddrBusPins());
+        Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(xValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
@@ -70,7 +70,7 @@ public class STXTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(finalAddr, Pins.GetAddrBusPins());
+        Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(xValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
@@ -106,7 +106,7 @@ public class STXTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(finalAddr, Pins.GetAddrBusPins());
+        Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(xValue, Pins.GetDataBusPins());
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());

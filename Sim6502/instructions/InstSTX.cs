@@ -31,7 +31,7 @@ public class InstSTX : InstBase, IInstruction
     {
         if (ctx.GetSubStep() == Constants.P1MiddleStep)
         {
-            ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
+            ctx.Pins.AddrBus = ctx.Regs.EA;
             ctx.Pins.SetRWB(Constants.Write);
             ctx.Pins.SetDataBusMode(DataBusMode.Output);
         }

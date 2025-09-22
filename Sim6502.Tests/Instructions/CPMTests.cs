@@ -638,15 +638,15 @@ public class CMPTests : UnitTestBase
 
         Pins.SetDataBusPins(operand);
         ExecuteClockCycles(1); // InstCMPindy2 - fetch the second byte of the op-code (EA low)
-        Assert.Equal(new UInt16(0x1001), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
 
         Pins.SetDataBusPins(indAddrLsb);
         ExecuteClockCycles(1); // InstCMPindy3 - fetch the value at EA, put in EA2 Low
-        Assert.Equal(new UInt16(operand), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(operand), Pins.AddrBus);
 
         Pins.SetDataBusPins(indAddrMsb);
         ExecuteClockCycles(1); // InstCMPindy4 - fetch the value at EA + 1, put in EA2 High
-        Assert.Equal(new UInt16(operand).Inc(), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(operand).Inc(), Pins.AddrBus);
 
         Pins.SetDataBusPins(memValue);
         ExecuteClockCycles(1); // InstCMPindy5 - load the A reg. with the value at EA + Y

@@ -28,7 +28,7 @@ public class LDXTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(new UInt16(0x1001), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedX, Regs.X);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -76,7 +76,7 @@ public class LDXTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(new UInt16(operand), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(operand), Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedX, Regs.X);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -129,7 +129,7 @@ public class LDXTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(finalAddr, Pins.GetAddrBusPins());
+        Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedX, Regs.X);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -182,7 +182,7 @@ public class LDXTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(finalAddr, Pins.GetAddrBusPins());
+        Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedX, Regs.X);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -244,7 +244,7 @@ public class LDXTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(finalAddr, Pins.GetAddrBusPins());
+        Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedX, Regs.X);
         Assert.Equal(expectedZFlag, Regs.P.Zero);

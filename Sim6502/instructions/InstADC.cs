@@ -241,7 +241,7 @@ public class InstADC : InstBase, IInstruction
             ctx.Regs.IncEAWithX();
             var afterPage = ctx.Regs.EA.Msb().Copy();
             ctx.CrossedPageBoundary = !afterPage.Equals(beforePage);
-            ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
+            ctx.Pins.AddrBus = ctx.Regs.EA;
             ctx.Pins.SetRWB(Read);
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
@@ -304,7 +304,7 @@ public class InstADC : InstBase, IInstruction
             ctx.Regs.IncEAWithY();
             var afterPage = ctx.Regs.EA.Msb().Copy();
             ctx.CrossedPageBoundary = !afterPage.Equals(beforePage);
-            ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
+            ctx.Pins.AddrBus = ctx.Regs.EA;
             ctx.Pins.SetRWB(Read);
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
@@ -429,7 +429,7 @@ public class InstADC : InstBase, IInstruction
             ctx.Regs.IncEAWithY();
             var afterPage = ctx.Regs.EA.Msb().Copy();
             ctx.CrossedPageBoundary = !afterPage.Equals(beforePage);
-            ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
+            ctx.Pins.AddrBus = ctx.Regs.EA;
             ctx.Pins.SetRWB(Read);
         }
         else if (ctx.GetSubStep() == P2LastSubstep)

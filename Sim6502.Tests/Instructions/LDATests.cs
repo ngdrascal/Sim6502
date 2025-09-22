@@ -28,7 +28,7 @@ public class LDATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(new UInt16(0x1001), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(operand1, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -76,7 +76,7 @@ public class LDATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(new UInt16(0x12), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0x12), Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(data, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -130,7 +130,7 @@ public class LDATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(finalAddr, Pins.GetAddrBusPins());
+        Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedA, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -183,7 +183,7 @@ public class LDATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(finalAddr, Pins.GetAddrBusPins());
+        Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(data, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -247,7 +247,7 @@ public class LDATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(finalAddr, Pins.GetAddrBusPins());
+        Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(data, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -329,7 +329,7 @@ public class LDATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(finalAddr, Pins.GetAddrBusPins());
+        Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(data, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -408,7 +408,7 @@ public class LDATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(finalAddr, Pins.GetAddrBusPins());
+        Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(data, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -455,15 +455,15 @@ public class LDATests : UnitTestBase
 
         Pins.SetDataBusPins(operand1);
         ExecuteClockCycles(1); // InstLDAindy2 - fetch the second byte of the op-code (EA low)
-        Assert.Equal(new UInt16(0x1001), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
 
         Pins.SetDataBusPins(addrLsb);
         ExecuteClockCycles(1); // InstLDAindy3 - fetch the value at EA, put in EA2 Low
-        Assert.Equal(new UInt16(operand1), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(operand1), Pins.AddrBus);
 
         Pins.SetDataBusPins(addrMsb);
         ExecuteClockCycles(1); // InstLDAindy4 - fetch the value at EA + 1, put in EA2 High
-        Assert.Equal(new UInt16(operand1).Inc(), Pins.GetAddrBusPins());
+        Assert.Equal(new UInt16(operand1).Inc(), Pins.AddrBus);
 
         Pins.SetDataBusPins(data);
         ExecuteClockCycles(1); // InstLDAindy5 - load the A reg. with the value at EA + Y
@@ -477,7 +477,7 @@ public class LDATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(finalAddr, Pins.GetAddrBusPins());
+        Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(data, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -552,7 +552,7 @@ public class LDATests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
-        Assert.Equal(finalAddr, Pins.GetAddrBusPins());
+        Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(data, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);

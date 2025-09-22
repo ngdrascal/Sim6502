@@ -28,7 +28,7 @@ public class InstBase
     {
         if (ctx.GetSubStep() == P1MiddleStep)
         {
-            ctx.Pins.SetAddrBusPins(ctx.Regs.PC);
+            ctx.Pins.AddrBus = ctx.Regs.PC;
             ctx.Regs.PC.Inc();
             ctx.Pins.SetRWB(Read);
         }
@@ -42,7 +42,7 @@ public class InstBase
         {
             var addr = regs.PC.Copy();
             regs.PC.Inc();
-            pins.SetAddrBusPins(addr);
+            pins.AddrBus = addr;
             pins.SetRWB(Read);
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
@@ -63,7 +63,7 @@ public class InstBase
         {
             var addr = regs.PC.Copy();
             regs.PC.Inc();
-            pins.SetAddrBusPins(addr);
+            pins.AddrBus = addr;
             pins.SetRWB(Read);
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
@@ -78,7 +78,7 @@ public class InstBase
     {
         if (ctx.GetSubStep() == P1MiddleStep)
         {
-            ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
+            ctx.Pins.AddrBus = ctx.Regs.EA;
             ctx.Pins.SetRWB(Read);
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
@@ -95,7 +95,7 @@ public class InstBase
         {
             var eaPlus1 = ctx.Regs.EA.Copy();
             eaPlus1.Inc();
-            ctx.Pins.SetAddrBusPins(eaPlus1);
+            ctx.Pins.AddrBus = eaPlus1;
             ctx.Pins.SetRWB(Read);
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
@@ -110,7 +110,7 @@ public class InstBase
         if (ctx.GetSubStep() == P1MiddleStep)
         {
             var addr = ctx.Regs.PC;
-            ctx.Pins.SetAddrBusPins(addr);
+            ctx.Pins.AddrBus = addr;
             ctx.Pins.SetRWB(Read);
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
@@ -123,7 +123,7 @@ public class InstBase
     {
         if (ctx.GetSubStep() == P1MiddleStep)
         {
-            ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
+            ctx.Pins.AddrBus = ctx.Regs.EA;
             ctx.Pins.SetRWB(Read);
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
@@ -137,7 +137,7 @@ public class InstBase
     {
         if (ctx.GetSubStep() == P1MiddleStep)
         {
-            ctx.Pins.SetAddrBusPins(ctx.Regs.EA);
+            ctx.Pins.AddrBus = ctx.Regs.EA;
             ctx.Pins.SetRWB(Write);
             ctx.Pins.SetDataBusMode(DataBusMode.Output);
         }
@@ -151,7 +151,7 @@ public class InstBase
     {
         if (ctx.GetSubStep() == P1MiddleStep)
         {
-            ctx.Pins.SetAddrBusPins(ctx.Regs.PC);
+            ctx.Pins.AddrBus = ctx.Regs.PC;
             ctx.Pins.SetRWB(Read);
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
@@ -172,7 +172,7 @@ public class InstBase
     {
         if (ctx.GetSubStep() == P1MiddleStep)
         {
-            ctx.Pins.SetAddrBusPins(ctx.Regs.PC);
+            ctx.Pins.AddrBus = ctx.Regs.PC;
             ctx.Pins.SetRWB(Read);
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
@@ -187,7 +187,7 @@ public class InstBase
         if (ctx.GetSubStep() == P1MiddleStep)
         {
             var sp = new UInt16(0x100).AddUnsigned(ctx.Regs.S);
-            ctx.Pins.SetAddrBusPins(sp);
+            ctx.Pins.AddrBus = sp;
             ctx.Pins.SetRWB(Write);
         }
         if (ctx.GetSubStep() == P2MiddleStep)
@@ -201,7 +201,7 @@ public class InstBase
         if (ctx.GetSubStep() == P1MiddleStep)
         {
             var sp = new UInt16(0x100).AddUnsigned(ctx.Regs.S);
-            ctx.Pins.SetAddrBusPins(sp);
+            ctx.Pins.AddrBus = sp;
             ctx.Pins.SetDataBusMode(DataBusMode.Input);
             ctx.Pins.SetRWB(Read);
         }
@@ -212,7 +212,7 @@ public class InstBase
         if (ctx.GetSubStep() == P1MiddleStep)
         {
             var sp = new UInt16(0x100).AddUnsigned(ctx.Regs.S);
-            ctx.Pins.SetAddrBusPins(sp);
+            ctx.Pins.AddrBus = sp;
             ctx.Pins.SetDataBusMode(DataBusMode.Output);
             ctx.Pins.SetRWB(Write);
         }
@@ -234,7 +234,7 @@ public class InstBase
         {
             ctx.Regs.S.Inc();
             var sp = new UInt16(0x100).AddUnsigned(ctx.Regs.S);
-            ctx.Pins.SetAddrBusPins(sp);
+            ctx.Pins.AddrBus = sp;
             ctx.Pins.SetDataBusMode(DataBusMode.Input);
             ctx.Pins.SetRWB(Read);
         }
