@@ -35,6 +35,9 @@ public class Context
 
     public States State { get; private set; }
 
+    public int Substep => _subStep;
+
+    // TODO: Remove and replace with Substep property
     public int GetSubStep() => _subStep;
 
     public void IncSubStep()

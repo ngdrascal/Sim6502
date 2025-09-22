@@ -27,7 +27,7 @@ public class UnitTestBase
         var loggerFactory = LoggerFactory.Create(builder =>
         {
             builder.AddConsoleIndentLogger(_ => { })
-                .SetMinimumLevel(LogLevel.Trace);
+                .SetMinimumLevel(LogLevel.Debug);
         });
         var instLogger = loggerFactory.CreateLogger("W65c02s.inst_");
         var stateLogger = loggerFactory.CreateLogger("W65c02s.state");
@@ -39,8 +39,10 @@ public class UnitTestBase
             {
                 instLogger.LogDebug("{Disassemble,-24} {DebugRegisters}", Disassembler.Disassemble(_ctx),
                     _ctx.DebugCapture?.ToString());
+
+                instLogger.LogDebug("---------------------------------------------------------------");
             }
-            stateLogger.LogDebug($"advanceState(): {args.NewState}");
+            stateLogger.LogDebug("advanceState(): {newState}", args.NewState);
         };
 
         _cpu = new W65C02SEngine(_ctx);
@@ -48,7 +50,7 @@ public class UnitTestBase
         {
             if (_ctx.GetSubStep()==Constants.P2LastSubstep)
                 _ctx.CaptureRegs();
-            stateLogger.LogTrace("Executing state: {CtxState}, substep: {SubStep}", args.State, args.Substep);
+            stateLogger.LogTrace("   state: {CtxState} substep: {SubStep} regs: {regs}", args.State, args.Substep, _ctx.Regs);
         };
 
         _phi2 = (byte)Low.ToInt();
@@ -73,10 +75,10 @@ public class UnitTestBase
         ExecuteClockCycles(1); // Warmup1
         ExecuteClockCycles(1); // Warmup2
 
-        Pins.SetDataBusPins(addr.Lsb());
+        Pins.DataBus = addr.Lsb();
         ExecuteClockCycles(1); // Boot1
 
-        Pins.SetDataBusPins(addr.Msb());
+        Pins.DataBus =addr.Msb();
         ExecuteClockCycles(1); // Boot2
     }
 
@@ -97,7 +99,6 @@ public class UnitTestBase
 
             _phi2 = _phi2 == 0 ? (byte)1 : (byte)0;
         }
-        // phi2 = (byte)HIGH.ToInt();
     }
 
     protected readonly byte[] Memory = new byte[64 * 1024];
@@ -107,11 +108,11 @@ public class UnitTestBase
         // ARRANGE:
         const byte read = 1;
 
+        var startAddrInt = startAddr.ToInt();
         for (var i = 0; i < program.Length; i++)
-            Memory[i] = program[i];
+            Memory[startAddrInt + i] = program[i];
 
         BootToAddress(startAddr);
-        // regs.S.UpdateValue(new UInt8(0xFF));
 
         // ACT:
         while (true)
@@ -127,11 +128,11 @@ public class UnitTestBase
                         break;
 
                     Pins.SetDataBusMode(DataBusMode.Input);
-                    Pins.SetDataBusPins(new UInt8(Memory[addr]));
+                    Pins.DataBus = new UInt8(Memory[addr]);
                 }
                 else
                 {
-                    Memory[addr] = (byte)Pins.GetAddrBusPins().ToInt();
+                    Memory[addr] = (byte)Pins.DataBus.ToInt();
                 }
             }
         }

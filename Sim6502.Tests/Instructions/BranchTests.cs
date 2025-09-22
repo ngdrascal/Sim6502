@@ -660,63 +660,63 @@ public class BranchTests : UnitTestBase
         // ARRANGE:
         byte[] program =
         [
-            // 0000:              .ORG $0000
-            0xA9, 0x00,         // 0000: START:       LDA #$00
-            0x48,               // 0002:              PHA
-            0x28,               // 0003:              PLP
-            0xB0, 0x40,         // 0004:              BCS ERROR
-            0xF0, 0x3E,         // 0006:              BEQ ERROR
-            0x30, 0x3C,         // 0008:              BMI ERROR
-            0x70, 0x3A,         // 000A:              BVS ERROR
-                                // 000C:              
-                                // 000C: BCC0:        
-            0x90, 0x03,         // 000C:              BCC BNE0
-            0x4C, 0x46, 0x00,   // 000E:              JMP ERROR
-                                // 0011: BNE0:        
-            0xD0, 0x03,         // 0011:              BNE BPL0
-            0x4C, 0x46, 0x00,   // 0013:              JMP ERROR
-                                // 0016: BPL0:        
-            0x10, 0x03,         // 0016:              BPL BVC0
-            0x4C, 0x46, 0x00,   // 0018:              JMP ERROR
-                                // 001B: BVC0:        
-            0x50, 0x03,         // 001B:              BVC BCC1
-            0x4C, 0x46, 0x00,   // 001D:              JMP ERROR
-                                // 0020: BCC1:        
-            0xA9, 0xFF,         // 0020:              LDA #$FF
-            0x48,               // 0022:              PHA
-            0x28,               // 0023:              PLP
-            0x90, 0x20,         // 0024:              BCC ERROR
-            0xD0, 0x1E,         // 0026:              BNE ERROR
-            0x10, 0x1C,         // 0028:              BPL ERROR
-            0x50, 0x1A,         // 002A:              BVC ERROR
-                                // 002C:              
-            0xB0, 0x03,         // 002C:              BCS BEQ1
-            0x4C, 0x46, 0x00,   // 002E:              JMP ERROR
-                                // 0031: BEQ1:        
-            0xF0, 0x03,         // 0031:              BEQ BMI1
-            0x4C, 0x46, 0x00,   // 0033:              JMP ERROR
-                                // 0036: BMI1:        
-            0x30, 0x03,         // 0036:              BMI BVS1
-            0x4C, 0x46, 0x00,   // 0038:              JMP ERROR
-                                // 003B: BVS1:        
-            0x70, 0x03,         // 003B:              BVS SUCCESS
-            0x4C, 0x46, 0x00,   // 003D:              JMP ERROR
-                                // 0040: SUCCESS:     
-            0xA9, 0x00,         // 0040:              LDA #$00
-            0x8D, 0x4C, 0x00,   // 0042:              STA RESULT
-            0x00,               // 0045:              BRK
-                                // 0046: ERROR:       
-            0xA9, 0x01,         // 0046:              LDA #$01
-            0x8D, 0x4C, 0x00,   // 0048:              STA RESULT
-            0x00,               // 004B:              BRK
-                                // 004C: RESULT:      
-            0xFF // 004C:              .DB $FF
+                                // 1000:              .ORG $1000
+            0xA9, 0x00,         // 1000: START:       LDA #$00
+            0x48,               // 1002:              PHA
+            0x28,               // 1003:              PLP
+            0xB0, 0x40,         // 1004:              BCS ERROR
+            0xF0, 0x3E,         // 1006:              BEQ ERROR
+            0x30, 0x3C,         // 1008:              BMI ERROR
+            0x70, 0x3A,         // 100A:              BVS ERROR
+                                // 100C:              
+                                // 100C: BCC0:        
+            0x90, 0x03,         // 100C:              BCC BNE0
+            0x4C, 0x46, 0x00,   // 100E:              JMP ERROR
+                                // 1011: BNE0:        
+            0xD0, 0x03,         // 1011:              BNE BPL0
+            0x4C, 0x46, 0x00,   // 1013:              JMP ERROR
+                                // 1016: BPL0:        
+            0x10, 0x03,         // 1016:              BPL BVC0
+            0x4C, 0x46, 0x00,   // 1018:              JMP ERROR
+                                // 101B: BVC0:        
+            0x50, 0x03,         // 101B:              BVC BCC1
+            0x4C, 0x46, 0x00,   // 101D:              JMP ERROR
+                                // 1020: BCC1:        
+            0xA9, 0xFF,         // 1020:              LDA #$FF
+            0x48,               // 1022:              PHA
+            0x28,               // 1023:              PLP
+            0x90, 0x20,         // 1024:              BCC ERROR
+            0xD0, 0x1E,         // 1026:              BNE ERROR
+            0x10, 0x1C,         // 1028:              BPL ERROR
+            0x50, 0x1A,         // 102A:              BVC ERROR
+                                // 102C:              
+            0xB0, 0x03,         // 102C:              BCS BEQ1
+            0x4C, 0x46, 0x00,   // 102E:              JMP ERROR
+                                // 1031: BEQ1:        
+            0xF0, 0x03,         // 1031:              BEQ BMI1
+            0x4C, 0x46, 0x00,   // 1033:              JMP ERROR
+                                // 1036: BMI1:        
+            0x30, 0x03,         // 1036:              BMI BVS1
+            0x4C, 0x46, 0x00,   // 1038:              JMP ERROR
+                                // 103B: BVS1:        
+            0x70, 0x03,         // 103B:              BVS SUCCESS
+            0x4C, 0x46, 0x00,   // 103D:              JMP ERROR
+                                // 1040: SUCCESS:     
+            0xA9, 0x00,         // 1040:              LDA #$00
+            0x8D, 0x4C, 0x10,   // 1042:              STA RESULT
+            0x00,               // 1045:              BRK
+                                // 1046: ERROR:       
+            0xA9, 0x01,         // 1046:              LDA #$01
+            0x8D, 0x4C, 0x10,   // 1048:              STA RESULT
+            0x00,               // 104B:              BRK
+                                // 104C: RESULT:
+            0xFF                // 104C:              .DB $FF
         ];
 
         // ACT:
-        ExecuteProgram(program, new UInt16(0x0000));
+        ExecuteProgram(program, BootAddr);
 
         // ASSERT:
-        Assert.Equal(0x00, Memory[0x4C]);
+        Assert.Equal(0x00, Memory[BootAddr.ToInt() + 0x4C]);
     }
 }

@@ -186,6 +186,7 @@ public class InstBranch : InstBase, IInstruction
     {
         Branch4(ctx);
     }
+
     /////////////////////////////////////////////////////////////////////////////
     // BEQ - Branch on Result Zero
     // Branch on Z = 1

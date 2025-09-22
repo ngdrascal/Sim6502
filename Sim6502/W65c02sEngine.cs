@@ -129,11 +129,6 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
 
         if (substep == 1)
         {
-            // if (_ctx.State == States.Fetch && _ctx.DbgOpCode != null)
-            //     _instLogger.LogDebug("{Disassemble,-24} {DebugRegisters}", Disassembler.Disassemble(_ctx), _debugRegisters);
-            //
-            // _stateLogger.LogDebug("----------------------------------------");
-
             if (_ctx.Pins.GetRDY() == Low)
             {
                 // this condition is nested instead of ANDs because we don't want
@@ -180,9 +175,6 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
             CheckForNmi(_ctx);
             CheckForIrq(_ctx);
             _ctx.CaptureRegs();
-
-            // var regs = _ctx.Regs;
-            // _debugRegisters = $"A:{regs.A.ToInt():X2} P:{regs.P} X:{regs.X.ToInt():X2} Y:{regs.Y.ToInt():X2} S:{regs.S.ToInt():X2} PC:{regs.PC.ToInt():X4}";
         }
 
         _ctx.IncSubStep();

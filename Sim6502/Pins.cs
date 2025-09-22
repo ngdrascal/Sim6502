@@ -87,6 +87,13 @@ public class Pins : IPinsInternal, IPinsExternal
     public byte GetA14() => ReadPin(PinMap.A14);
     public byte GetA15() => ReadPin(PinMap.A15);
 
+    public UInt16 AddrBus
+    {
+        get => GetAddrBusPins();
+        set => SetAddrBusPins(value);
+    }
+
+    // TODO: make private and use AddrBus property
     public UInt16 GetAddrBusPins()
     {
         int addr = 0;
@@ -98,6 +105,7 @@ public class Pins : IPinsInternal, IPinsExternal
         return new UInt16(addr);
     }
 
+    // TODO: make private and use AddrBus property
     public void SetAddrBusPins(UInt16 value)
     {
         int rawValue = value.ToInt();
@@ -113,6 +121,13 @@ public class Pins : IPinsInternal, IPinsExternal
 
     public void SetDataBusMode(DataBusMode mode) => _dataBusMode = mode;
 
+    public UInt8 DataBus
+    {
+        get => GetDataBusPins();
+        set => SetDataBusPins(value);
+    }
+
+    // TODO: make private and use DataBusPins property
     public UInt8 GetDataBusPins()
     {
         int data = 0;
@@ -127,6 +142,7 @@ public class Pins : IPinsInternal, IPinsExternal
         return new UInt8(data);
     }
 
+    // TODO: make private and use DataBusPins property
     public void SetDataBusPins(UInt8 value)
     {
         byte rawValue = (byte)value.ToInt();

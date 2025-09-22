@@ -24,12 +24,19 @@ public interface IPinsInternal
 
     void SetAddrBusMode(AddrBusMode mode);
 
+    UInt16 AddrBus { get; set; }
+
+    // TODO: make private and use AddrBus property
     void SetAddrBusPins(UInt16 value);
 
     void SetDataBusMode(DataBusMode mode);
 
+    UInt8 DataBus { get; set; }
+
+    // TODO: make private and use DataBus property
     UInt8 GetDataBusPins();
 
+    // TODO: make private and use DataBus property
     void SetDataBusPins(UInt8 value);
 
     void SetRWB(byte value);
