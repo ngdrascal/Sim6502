@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using UInt8 = Sim6502.types.UInt8;
 using UInt16 = Sim6502.types.UInt16;
 
 namespace Sim6502;
 
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public class Registers
 {
     private readonly UInt8 _a;

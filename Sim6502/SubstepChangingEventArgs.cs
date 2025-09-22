@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace Sim6502;
+﻿namespace Sim6502;
 
 public class SubstepChangingEventArgs : EventArgs
 {

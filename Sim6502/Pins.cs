@@ -8,15 +8,15 @@ public class Pins : IPinsInternal, IPinsExternal
     private readonly byte[] _pinValues;
     private AddrBusMode _addrBusMode = AddrBusMode.HighZ;
     private DataBusMode _dataBusMode = DataBusMode.Input;
-    private RdyPinMode _rdyPinMode = RdyPinMode.Input;
-    private readonly UInt8 _dbgInstReg = new UInt8();
+    private const RdyPinMode RdyPinMode = Sim6502.RdyPinMode.Input;
+    private readonly UInt8 _dbgInstReg = new();
     private byte _dbgState;
     private byte _dbgSubStep;
 
     public Pins()
     {
         _pinValues = new byte[40];
-        for (int i = 0; i < 40; i++)
+        for (var i = 0; i < 40; i++)
         {
             _pinValues[i] = 0;
         }
@@ -40,7 +40,7 @@ public class Pins : IPinsInternal, IPinsExternal
 
     public void SetVPB(byte value) => WritePin(PinMap.VPB, value);
 
-    public RdyPinMode GetRdyPinMode() => _rdyPinMode;
+    public RdyPinMode GetRdyPinMode() => RdyPinMode;
 
     public byte GetRDY() => ReadPin(PinMap.RDY);
 
@@ -103,10 +103,10 @@ public class Pins : IPinsInternal, IPinsExternal
         set
         {
             var rawValue = value.ToInt();
-            for (var i = 0; i < PinMap.AddrPins.Length; i++)
+            foreach (var pin in PinMap.AddrPins)
             {
                 var pinValue = (byte)(rawValue & 0x01);
-                WritePin(PinMap.AddrPins[i], pinValue);
+                WritePin(pin, pinValue);
                 rawValue >>= 1;
             }
         }
@@ -115,14 +115,6 @@ public class Pins : IPinsInternal, IPinsExternal
     public DataBusMode GetDataBusMode() => _dataBusMode;
 
     public void SetDataBusMode(DataBusMode mode) => _dataBusMode = mode;
-
-    // public UInt8 DataBus
-    // {
-    //     get => GetDataBusPins();
-    //     set => SetDataBusPins(value);
-    // }
-
-    // TODO: make private and use DataBusPins property
 
     public UInt8 DataBus
     {

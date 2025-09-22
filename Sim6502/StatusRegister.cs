@@ -6,113 +6,112 @@ namespace Sim6502;
 
 public class StatusRegister
 {
-    private readonly BitFlag _n;
-    private readonly BitFlag _v;
-    private readonly BitFlag _b;
-    private readonly BitFlag _d;
-    private readonly BitFlag _i;
-    private readonly BitFlag _z;
-    private readonly BitFlag _c;
-
     public StatusRegister()
     {
-        _n = new BitFlag(false);
-        _v = new BitFlag(false);
-        _b = new BitFlag(true);
-        _d = new BitFlag(false);
-        _i = new BitFlag(true);
-        _z = new BitFlag(false);
-        _c = new BitFlag(false);
+        Negative = new BitFlag(false);
+        Overflow = new BitFlag(false);
+        Break = new BitFlag(true);
+        Decimal = new BitFlag(false);
+        IRQDisabled = new BitFlag(true);
+        Zero = new BitFlag(false);
+        Carry = new BitFlag(false);
     }
 
     public StatusRegister(StatusRegister source)
     {
-        _n = new BitFlag(source._n.IsSet());
-        _v = new BitFlag(source._v.IsSet());
-        _b = new BitFlag(source._b.IsSet());
-        _d = new BitFlag(source._d.IsSet());
-        _i = new BitFlag(source._i.IsSet());
-        _z = new BitFlag(source._z.IsSet());
-        _c = new BitFlag(source._c.IsSet());
+        Negative = new BitFlag(source.Negative.IsSet());
+        Overflow = new BitFlag(source.Overflow.IsSet());
+        Break = new BitFlag(source.Break.IsSet());
+        Decimal = new BitFlag(source.Decimal.IsSet());
+        IRQDisabled = new BitFlag(source.IRQDisabled.IsSet());
+        Zero = new BitFlag(source.Zero.IsSet());
+        Carry = new BitFlag(source.Carry.IsSet());
     }
 
     public override string ToString()
     {
-        var result = _n.IsSet() ? "N" : "n";
-        result += _v.IsSet() ? "V" : "v";
+        var result = Negative.IsSet() ? "N" : "n";
+        result += Overflow.IsSet() ? "V" : "v";
         result += "1";
-        result += _b.IsSet() ? "B" : "b";
-        result += _d.IsSet() ? "D" : "d";
-        result += _i.IsSet() ? "I" : "i";
-        result += _z.IsSet() ? "Z" : "z";
-        result += _c.IsSet() ? "C" : "c";
+        result += Break.IsSet() ? "B" : "b";
+        result += Decimal.IsSet() ? "D" : "d";
+        result += IRQDisabled.IsSet() ? "I" : "i";
+        result += Zero.IsSet() ? "Z" : "z";
+        result += Carry.IsSet() ? "C" : "c";
         return result;
     }
 
     public UInt8 ToUInt8()
     {
         var result = 0;
-        if (_n.IsSet()) result |= 0b10000000;
-        if (_v.IsSet()) result |= 0b01000000;
+        if (Negative.IsSet()) result |= 0b10000000;
+        if (Overflow.IsSet()) result |= 0b01000000;
         result |= 0b00100000;
-        if (_b.IsSet()) result |= 0b00010000;
-        if (_d.IsSet()) result |= 0b00001000;
-        if (_i.IsSet()) result |= 0b00000100;
-        if (_z.IsSet()) result |= 0b00000010;
-        if (_c.IsSet()) result |= 0b00000001;
+        if (Break.IsSet()) result |= 0b00010000;
+        if (Decimal.IsSet()) result |= 0b00001000;
+        if (IRQDisabled.IsSet()) result |= 0b00000100;
+        if (Zero.IsSet()) result |= 0b00000010;
+        if (Carry.IsSet()) result |= 0b00000001;
         return new UInt8(result);
     }
 
     public UInt8 GetFlags()
     {
         var result = new UInt8(0);
-        if (_n.IsSet()) result.SetBit(7);
-        if (_v.IsSet()) result.SetBit(6);
+        if (Negative.IsSet()) result.SetBit(7);
+        if (Overflow.IsSet()) result.SetBit(6);
         result.SetBit(5);
-        if (_b.IsSet()) result.SetBit(4);
-        if (_d.IsSet()) result.SetBit(3);
-        if (_i.IsSet()) result.SetBit(2);
-        if (_z.IsSet()) result.SetBit(1);
-        if (_c.IsSet()) result.SetBit(0);
+        if (Break.IsSet()) result.SetBit(4);
+        if (Decimal.IsSet()) result.SetBit(3);
+        if (IRQDisabled.IsSet()) result.SetBit(2);
+        if (Zero.IsSet()) result.SetBit(1);
+        if (Carry.IsSet()) result.SetBit(0);
         return result;
     }
 
     public void SetFlags(UInt8 value)
     {
-        _n.UpdateValue(value.IsBitSet(7));
-        _v.UpdateValue(value.IsBitSet(6));
-        _b.UpdateValue(value.IsBitSet(4));
-        _d.UpdateValue(value.IsBitSet(3));
-        _i.UpdateValue(value.IsBitSet(2));
-        _z.UpdateValue(value.IsBitSet(1));
-        _c.UpdateValue(value.IsBitSet(0));
+        Negative.UpdateValue(value.IsBitSet(7));
+        Overflow.UpdateValue(value.IsBitSet(6));
+        Break.UpdateValue(value.IsBitSet(4));
+        Decimal.UpdateValue(value.IsBitSet(3));
+        IRQDisabled.UpdateValue(value.IsBitSet(2));
+        Zero.UpdateValue(value.IsBitSet(1));
+        Carry.UpdateValue(value.IsBitSet(0));
     }
 
-    public BitFlag Carry => _c;
-    public void SetCarry() => _c.Set();
-    public void ClearCarry() => _c.Clear();
+    public BitFlag Carry { get; }
 
-    public BitFlag Zero => _z;
-    public void SetZero() => _z.Set();
-    public void ClearZero() => _z.Clear();
+    public void SetCarry() => Carry.Set();
+    public void ClearCarry() => Carry.Clear();
 
-    public BitFlag IRQDisabled => _i;
-    public void SetIRQDisabled() => _i.Set();
-    public void ClearIRQDisabled() => _i.Clear();
+    public BitFlag Zero { get; }
 
-    public BitFlag Decimal => _d;
-    public void SetDecimal() => _d.Set();
-    public void ClearDecimal() => _d.Clear();
+    public void SetZero() => Zero.Set();
+    public void ClearZero() => Zero.Clear();
 
-    public BitFlag Break => _b;
-    public void SetBreak() => _b.Set();
-    public void ClearBreak() => _b.Clear();
+    public BitFlag IRQDisabled { get; }
 
-    public BitFlag Overflow => _v;
-    public void SetOverflow() => _v.Set();
-    public void ClearOverflow() => _v.Clear();
+    public void SetIRQDisabled() => IRQDisabled.Set();
+    public void ClearIRQDisabled() => IRQDisabled.Clear();
 
-    public BitFlag Negative => _n;
-    public void SetNegative() => _n.Set();
-    public void ClearNegative() => _n.Clear();
+    public BitFlag Decimal { get; }
+
+    public void SetDecimal() => Decimal.Set();
+    public void ClearDecimal() => Decimal.Clear();
+
+    public BitFlag Break { get; }
+
+    public void SetBreak() => Break.Set();
+    public void ClearBreak() => Break.Clear();
+
+    public BitFlag Overflow { get; }
+
+    public void SetOverflow() => Overflow.Set();
+    public void ClearOverflow() => Overflow.Clear();
+
+    public BitFlag Negative { get; }
+
+    public void SetNegative() => Negative.Set();
+    public void ClearNegative() => Negative.Clear();
 }
