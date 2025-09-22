@@ -111,7 +111,7 @@ public class InstSBC : InstBase, IInstruction
         Imm2SetAddrBus(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.Temp.UpdateValue(data);
             SbcThenUpdateFlags(ctx);
             ctx.DbgOperand1 = data;
@@ -259,7 +259,7 @@ public class InstSBC : InstBase, IInstruction
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.Temp.UpdateValue(data);
             if (!ctx.CrossedPageBoundary)
             {
@@ -278,7 +278,7 @@ public class InstSBC : InstBase, IInstruction
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.Temp.UpdateValue(data);
             SbcThenUpdateFlags(ctx);
         }
@@ -326,7 +326,7 @@ public class InstSBC : InstBase, IInstruction
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.Temp.UpdateValue(data);
             if (!ctx.CrossedPageBoundary)
             {
@@ -345,7 +345,7 @@ public class InstSBC : InstBase, IInstruction
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.Temp.UpdateValue(data);
             SbcThenUpdateFlags(ctx);
         }
@@ -457,7 +457,7 @@ public class InstSBC : InstBase, IInstruction
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.Temp.UpdateValue(data);
             if (!ctx.CrossedPageBoundary)
             {

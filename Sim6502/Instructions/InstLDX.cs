@@ -41,7 +41,7 @@
             }
             else if (ctx.GetSubStep() == P2LastSubstep)
             {
-                var x = ctx.Pins.GetDataBusPins();
+                var x = ctx.Pins.DataBus;
                 ctx.Regs.SetXUpdateFlags(x);
             }
         }
@@ -69,7 +69,7 @@
             Imm2SetAddrBus(ctx);
             if (ctx.GetSubStep() == P2LastSubstep)
             {
-                var data = ctx.Pins.GetDataBusPins();
+                var data = ctx.Pins.DataBus;
                 ctx.Regs.SetXUpdateFlags(data);
                 ctx.DbgOperand1 = data;
             }
@@ -174,7 +174,7 @@
             }
             else if (ctx.GetSubStep() == P2LastSubstep)
             {
-                var data = ctx.Pins.GetDataBusPins();
+                var data = ctx.Pins.DataBus;
                 if (!ctx.CrossedPageBoundary)
                     ctx.Regs.SetXUpdateFlags(data);
                 else

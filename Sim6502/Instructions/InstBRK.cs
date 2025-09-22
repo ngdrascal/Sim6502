@@ -96,7 +96,7 @@ public class InstBRK : InstBase, IInstruction
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.PC.Lsb().UpdateValue(data);
         }
 
@@ -116,7 +116,7 @@ public class InstBRK : InstBase, IInstruction
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.PC.Msb().UpdateValue(data);
         }
 

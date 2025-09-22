@@ -23,10 +23,10 @@ public class EORTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstEORimm2 - EOR A reg. with operand
 
         // ASSERT:
@@ -72,13 +72,13 @@ public class EORTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstEORzpg2 - fetch the operand into EA reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstEORzpg3 - fetch the memory value at EA then EOR it with A reg
 
         // ASSERT:
@@ -126,15 +126,15 @@ public class EORTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstEORzpgx2 - fetch the operand into EA reg
 
         ExecuteClockCycles(1); // InstEORzpgx3 - EA = EA + X
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstEORzpgx4 - fetch the memory value at EA into temp then EOR Temp reg with A reg
 
         // ASSERT:
@@ -181,16 +181,16 @@ public class EORTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstEORabs2 - fetch the operand into EAL reg
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // InstEORabs3 - fetch the operand into EAH reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstEORabs4 - fetch the memory value at EA into temp then EOR Temp reg with A reg
 
         // ASSERT:
@@ -238,22 +238,22 @@ public class EORTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstEORabsx2 - fetch the operand into EAL reg
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // InstEORabsx3 - fetch the operand into EAH reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstEORabsx4 - fetch the memory value at EA into temp then EOR Temp reg with A reg
 
         // if adding the X reg cause the page to change
         if (!expectedAddr.Msb().Equals(operand2))
         {
-            Pins.SetDataBusPins(memValue);
+            Pins.DataBus = (memValue);
             ExecuteClockCycles(1); // InstADDabsx5 - fetch the value at address EA + Y       
         }
 
@@ -320,22 +320,22 @@ public class EORTests : UnitTestBase
         Regs.Y.UpdateValue(yValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstEORabsy2 - fetch the operand into EAL reg
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // InstEORabsy3 - fetch the operand into EAH reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstEORabsy4 - fetch the memory value at EA into temp then EOR Temp reg with A reg
 
         // if adding the X reg cause the page to change
         if (!expectedAddr.Msb().Equals(operand2))
         {
-            Pins.SetDataBusPins(memValue);
+            Pins.DataBus = (memValue);
             ExecuteClockCycles(1); // InstADDabsy5 - fetch the value at address EA + Y       
         }
 
@@ -403,21 +403,21 @@ public class EORTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);// fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstEORidx2 - fetch the second byte of the op-code (EA low)
 
         ExecuteClockCycles(1); // InstEORidx3 - add X reg to the EA
 
-        Pins.SetDataBusPins(indAddrLsb);
+        Pins.DataBus = (indAddrLsb);
         ExecuteClockCycles(1); // InstEORidx4 - fetch the value at EA, put in EA2 Low
 
-        Pins.SetDataBusPins(indAddrMsb);
+        Pins.DataBus = (indAddrMsb);
         ExecuteClockCycles(1); // InstEORidx5 - fetch the value at EA + 1, put in EA2 High
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstEORidx6 - load the A reg. with the value at 
 
         // ASSERT:
@@ -466,28 +466,28 @@ public class EORTests : UnitTestBase
         Regs.Y.UpdateValue(yValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstEORindy2 - fetch the second byte of the op-code (EA low)
         Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
 
-        Pins.SetDataBusPins(indAddrLsb);
+        Pins.DataBus = (indAddrLsb);
         ExecuteClockCycles(1); // InstEORindy3 - fetch the value at EA, put in EA2 Low
         Assert.Equal(new UInt16(operand), Pins.AddrBus);
 
-        Pins.SetDataBusPins(indAddrMsb);
+        Pins.DataBus = (indAddrMsb);
         ExecuteClockCycles(1); // InstEORindy4 - fetch the value at EA + 1, put in EA2 High
         Assert.Equal(new UInt16(operand).Inc(), Pins.AddrBus);
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstEORindy5 - load the A reg. with the value at EA + Y
 
         // if adding the Y reg cause the page to change
         if (!indAddrMsb.Equals(expectedAddr.Msb()))
         {
-            Pins.SetDataBusPins(aValue);
+            Pins.DataBus = (aValue);
             ExecuteClockCycles(1); // InstEORindy6 - load the A reg. with the value at
         }
 
@@ -554,19 +554,19 @@ public class EORTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);// fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstEORid2 - fetch the second byte of the op-code into EA low
 
-        Pins.SetDataBusPins(indAddrLsb);
+        Pins.DataBus = (indAddrLsb);
         ExecuteClockCycles(1); // InstEORid3 - fetch the value at EA into EA2 Low
 
-        Pins.SetDataBusPins(indAddrMsb);
+        Pins.DataBus = (indAddrMsb);
         ExecuteClockCycles(1); // InstEORid4 - fetch the value at EA + 1 into EA2 High
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstEORidx5 - load the A reg. with the value at EA2
 
         // ASSERT:

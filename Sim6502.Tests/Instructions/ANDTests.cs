@@ -23,10 +23,10 @@ public class ANDTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = operand;
         ExecuteClockCycles(1); // InstANDimm2 - AND A reg. with operand
 
         // ASSERT:
@@ -72,13 +72,13 @@ public class ANDTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = operand;
         ExecuteClockCycles(1); // InstANDzpg2 - fetch the operand into EA reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = memValue;
         ExecuteClockCycles(1); // InstANDzpg3 - fetch the memory value at EA then AND it with A reg
 
         // ASSERT:
@@ -126,15 +126,15 @@ public class ANDTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = operand;
         ExecuteClockCycles(1); // InstANDzpgx2 - fetch the operand into EA reg
 
         ExecuteClockCycles(1); // InstANDzpgx3 - EA = EA + X
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = memValue;
         ExecuteClockCycles(1); // InstANDzpgx4 - fetch the memory value at EA into temp then AND Temp reg with A reg
 
         // ASSERT:
@@ -181,16 +181,16 @@ public class ANDTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = operand1;
         ExecuteClockCycles(1); // InstANDabs2 - fetch the operand into EAL reg
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = operand2;
         ExecuteClockCycles(1); // InstANDabs3 - fetch the operand into EAH reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = memValue;
         ExecuteClockCycles(1); // InstANDabs4 - fetch the memory value at EA into temp then AND Temp reg with A reg
 
         // ASSERT:
@@ -238,22 +238,22 @@ public class ANDTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = operand1;
         ExecuteClockCycles(1); // InstANDabsx2 - fetch the operand into EAL reg
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = operand2;
         ExecuteClockCycles(1); // InstANDabsx3 - fetch the operand into EAH reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = memValue;
         ExecuteClockCycles(1); // InstANDabsx4 - fetch the memory value at EA into temp then AND Temp reg with A reg
 
         // if adding the X reg cause the page to change
         if (!expectedAddr.Msb().Equals(operand2))
         {
-            Pins.SetDataBusPins(memValue);
+            Pins.DataBus = memValue;
             ExecuteClockCycles(1); // InstADDabsx5 - fetch the value at address EA + Y       
         }
 
@@ -320,22 +320,22 @@ public class ANDTests : UnitTestBase
         Regs.Y.UpdateValue(yValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = operand1;
         ExecuteClockCycles(1); // InstANDabsy2 - fetch the operand into EAL reg
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = operand2;
         ExecuteClockCycles(1); // InstANDabsy3 - fetch the operand into EAH reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = memValue;
         ExecuteClockCycles(1); // InstANDabsy4 - fetch the memory value at EA into temp then AND Temp reg with A reg
 
         // if adding the X reg cause the page to change
         if (!expectedAddr.Msb().Equals(operand2))
         {
-            Pins.SetDataBusPins(memValue);
+            Pins.DataBus = memValue;
             ExecuteClockCycles(1); // InstADDabsy5 - fetch the value at address EA + Y       
         }
 
@@ -403,21 +403,21 @@ public class ANDTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1);// fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = operand;
         ExecuteClockCycles(1); // InstANDidx2 - fetch the second byte of the op-code (EA low)
 
         ExecuteClockCycles(1); // InstANDidx3 - add X reg to the EA
 
-        Pins.SetDataBusPins(indAddrLsb);
+        Pins.DataBus = indAddrLsb;
         ExecuteClockCycles(1); // InstANDidx4 - fetch the value at EA, put in EA2 Low
 
-        Pins.SetDataBusPins(indAddrMsb);
+        Pins.DataBus = indAddrMsb;
         ExecuteClockCycles(1); // InstANDidx5 - fetch the value at EA + 1, put in EA2 High
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = memValue;
         ExecuteClockCycles(1); // InstANDidx6 - load the A reg. with the value at EA2
 
         // ASSERT:
@@ -466,28 +466,28 @@ public class ANDTests : UnitTestBase
         Regs.Y.UpdateValue(yValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = operand;
         ExecuteClockCycles(1); // InstANDindy2 - fetch the second byte of the op-code (EA low)
         Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
 
-        Pins.SetDataBusPins(indAddrLsb);
+        Pins.DataBus = indAddrLsb;
         ExecuteClockCycles(1); // InstANDindy3 - fetch the value at EA, put in EA2 Low
         Assert.Equal(new UInt16(operand), Pins.AddrBus);
 
-        Pins.SetDataBusPins(indAddrMsb);
+        Pins.DataBus = indAddrMsb;
         ExecuteClockCycles(1); // InstANDindy4 - fetch the value at EA + 1, put in EA2 High
         Assert.Equal(new UInt16(operand).Inc(), Pins.AddrBus);
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = memValue;
         ExecuteClockCycles(1); // InstANDindy5 - load the A reg. with the value at EA + Y
 
         // if adding the Y reg cause the page to change
         if (!indAddrMsb.Equals(expectedAddr.Msb()))
         {
-            Pins.SetDataBusPins(aValue);
+            Pins.DataBus = aValue;
             ExecuteClockCycles(1); // InstANDindy6 - load the A reg. with the value at
         }
 
@@ -554,19 +554,19 @@ public class ANDTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1);// fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = operand;
         ExecuteClockCycles(1); // InstANDid2 - fetch the second byte of the op-code into EA low
 
-        Pins.SetDataBusPins(indAddrLsb);
+        Pins.DataBus = indAddrLsb;
         ExecuteClockCycles(1); // InstANDid3 - fetch the value at EA into EA2 Low
 
-        Pins.SetDataBusPins(indAddrMsb);
+        Pins.DataBus = indAddrMsb;
         ExecuteClockCycles(1); // InstANDid4 - fetch the value at EA + 1 into EA2 High
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = memValue;
         ExecuteClockCycles(1); // InstANDidx5 - load the A reg. with the value at EA2
 
         // ASSERT:

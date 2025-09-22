@@ -24,10 +24,10 @@ public class STATests : UnitTestBase
         Regs.A.UpdateValue(expectedValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstSTAzpg2 - fetch the second byte of the op-code (zpg-value)
 
         ExecuteClockCycles(1); // InstSTAzpg3 - store the value in A at address zpg-value
@@ -35,7 +35,7 @@ public class STATests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
     }
@@ -58,10 +58,10 @@ public class STATests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstSTAzpgx2 - fetch the second byte of the op-code (zpg-value)
 
         ExecuteClockCycles(1); // InstSTAzpgx3 - EA = zpg-value + X reg
@@ -71,7 +71,7 @@ public class STATests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
     }
@@ -93,13 +93,13 @@ public class STATests : UnitTestBase
         Regs.A.UpdateValue(expectedValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstSTAabs2 - fetch the first byte of the addr
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // InstSTAabs3 - fetch the second byte of the addr
 
         ExecuteClockCycles(1); // InstSTAabs4 - store the value in A at absHi,absLo
@@ -107,7 +107,7 @@ public class STATests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
     }
@@ -129,13 +129,13 @@ public class STATests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstSTAabsx2 - fetch the first byte of the addr
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // InstSTAabsx3 - fetch the second byte of the addr
 
         ExecuteClockCycles(1); // InstSTAabsx4 - add X reg to the effective address
@@ -145,7 +145,7 @@ public class STATests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
     }
@@ -179,13 +179,13 @@ public class STATests : UnitTestBase
         Regs.Y.UpdateValue(yValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstSTAabsy2 - fetch the first byte of the addr
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // InstSTAabsy3 - fetch the second byte of the addr
 
         ExecuteClockCycles(1); // InstSTAabsy4 - add Y reg to the effective address
@@ -195,7 +195,7 @@ public class STATests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
     }
@@ -231,19 +231,19 @@ public class STATests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstSTAidx2 - fetch the second byte of the op-code into EA low
 
         ExecuteClockCycles(1); // InstSTAidx3 - add X reg to the EA, ignore the carry
 
-        Pins.SetDataBusPins(indAddrLsb);
+        Pins.DataBus = (indAddrLsb);
         ExecuteClockCycles(1); // InstSTAidx4 - fetch the value at EA, put in EA2 Low
         Assert.Equal(new UInt16(operand.Copy().AddWithWrapAround(xValue)), Pins.AddrBus);
 
-        Pins.SetDataBusPins(indAddrMsb);
+        Pins.DataBus = (indAddrMsb);
         ExecuteClockCycles(1); // InstSTAidx5 - fetch the value at EA + 1, put in EA2 High
 
         ExecuteClockCycles(1); // InstSTAidx6 - store the A reg. at EA2
@@ -251,7 +251,7 @@ public class STATests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
     }
@@ -287,18 +287,18 @@ public class STATests : UnitTestBase
         Regs.Y.UpdateValue(yValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstSTAindy2 - fetch the second byte of the op-code into EA low
         Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
 
-        Pins.SetDataBusPins(indAddrLsb);
+        Pins.DataBus = (indAddrLsb);
         ExecuteClockCycles(1); // InstSTAindy3 - fetch the value at EA, put in EA2 Low
         Assert.Equal(new UInt16(operand), Pins.AddrBus);
 
-        Pins.SetDataBusPins(indAddrMsb);
+        Pins.DataBus = (indAddrMsb);
         ExecuteClockCycles(1); // InstSTAindy4 - fetch the value at EA + 1, put in EA2 High
         Assert.Equal(new UInt16(operand.Copy().Inc()), Pins.AddrBus);
 
@@ -309,7 +309,7 @@ public class STATests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
     }
@@ -343,16 +343,16 @@ public class STATests : UnitTestBase
         Regs.A.UpdateValue(expectedValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);// fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstSTAid2 - fetch the second byte of the op-code into EA low
 
-        Pins.SetDataBusPins(indAddrLsb);
+        Pins.DataBus = (indAddrLsb);
         ExecuteClockCycles(1); // InstSTAid3 - fetch the value at EA into EA2 Low
 
-        Pins.SetDataBusPins(indAddrMsb);
+        Pins.DataBus = (indAddrMsb);
         ExecuteClockCycles(1); // InstSTAid4 - fetch the value at EA + 1 into EA2 High
 
         ExecuteClockCycles(1); // InstSTAidx5 - store the A reg. with the value at EA2
@@ -360,7 +360,7 @@ public class STATests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
     }

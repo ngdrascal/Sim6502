@@ -23,7 +23,7 @@ public class LSRTests : UnitTestBase
         Regs.A.UpdateValue(input);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // LSRacc - shift value and update flags
@@ -77,13 +77,13 @@ public class LSRTests : UnitTestBase
         BootToAddress(BootAddr);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);// fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // LSRzpg2 - fetch address into EA
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // LSRzpg3 - fetch value from memory
 
         ExecuteClockCycles(1); // LSRzpg4 - shift value and update flags
@@ -93,7 +93,7 @@ public class LSRTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(finalAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);
@@ -141,15 +141,15 @@ public class LSRTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);// fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // LSRzpgx2 - fetch operand1 into EA low
 
         ExecuteClockCycles(1); // LSRzpgx3 - add X reg to EA
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // LSRzpgx4 - fetch value from memory
 
         ExecuteClockCycles(1); // LSRzpgx5 - shift value and update flags
@@ -159,7 +159,7 @@ public class LSRTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(finalAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);
@@ -206,16 +206,16 @@ public class LSRTests : UnitTestBase
         BootToAddress(BootAddr);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);// fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // LSRabs2 - fetch operand1 into EA low
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // LSRabs3 - fetch operand2 into EA high
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // LSRabs4 - fetch value from memory
 
         ExecuteClockCycles(1); // LSRabs5 - shift value and update flags
@@ -225,7 +225,7 @@ public class LSRTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(finalAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);
@@ -274,18 +274,18 @@ public class LSRTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);// fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // LSRabsx2 - fetch operand1 into EA low
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // LSRabsx3 - fetch operand2 into EA high
 
         ExecuteClockCycles(1); // LSRabsx4 - add X to the EA reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // LSRabsx5 - fetch value from memory
 
         ExecuteClockCycles(1); // LSRabsx6 - shift value and update flags
@@ -295,7 +295,7 @@ public class LSRTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);

@@ -45,7 +45,7 @@ public class InstSTZ : InstBase, IInstruction
         }
         else if (ctx.GetSubStep() == Constants.P2MiddleStep)
         {
-            ctx.Pins.SetDataBusPins(new UInt8(0));
+            ctx.Pins.DataBus = new UInt8(0);
         }
     }
 

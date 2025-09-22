@@ -95,7 +95,7 @@ public class InstORA : InstBase, IInstruction
         Imm2SetAddrBus(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             var result = ctx.Regs.A.Copy().Or(data);
             ctx.Regs.UpdateAUpdateFlags(result);
             ctx.DbgOperand1 = data;
@@ -207,7 +207,7 @@ public class InstORA : InstBase, IInstruction
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.Temp.UpdateValue(data);
             if (!ctx.CrossedPageBoundary)
             {
@@ -224,7 +224,7 @@ public class InstORA : InstBase, IInstruction
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.Temp.UpdateValue(data);
             OrAWithTemp(ctx);
         }
@@ -264,7 +264,7 @@ public class InstORA : InstBase, IInstruction
 
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.Temp.UpdateValue(data);
             if (!ctx.CrossedPageBoundary)
             {
@@ -281,7 +281,7 @@ public class InstORA : InstBase, IInstruction
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.Temp.UpdateValue(data);
             OrAWithTemp(ctx);
         }
@@ -375,7 +375,7 @@ public class InstORA : InstBase, IInstruction
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.Temp.UpdateValue(data);
             if (!ctx.CrossedPageBoundary)
                 OrAWithTemp(ctx);

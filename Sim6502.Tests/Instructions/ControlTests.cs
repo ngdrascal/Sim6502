@@ -23,13 +23,13 @@ public class ControlTests : UnitTestBase
         BootToAddress(new UInt16(0x040B));
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstJMPabs2 - fetch the low byte of the target address
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // InstJMPabs3 - fetch the high byte of the target address
 
         // ASSERT:
@@ -54,19 +54,19 @@ public class ControlTests : UnitTestBase
         BootToAddress(BootAddr);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstJMPind2 - fetch the low byte of the indirect address
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // InstJMPind3 - fetch the high byte of the indirect address
 
-        Pins.SetDataBusPins(indAddrLsb);
+        Pins.DataBus = (indAddrLsb);
         ExecuteClockCycles(1); // InstJMPind4 - fetch the low byte of the target address
 
-        Pins.SetDataBusPins(indAddrMsb);
+        Pins.DataBus = (indAddrMsb);
         ExecuteClockCycles(1); // InstJMPind5 - fetch the high byte of the target address
 
         // ASSERT:
@@ -93,20 +93,20 @@ public class ControlTests : UnitTestBase
         Regs.S.UpdateValue(stackTop);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstJSRabs2 - fetch the low byte of the subroutine address
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // InstJSRabs3 - fetch the high byte of the subroutine address
 
         ExecuteClockCycles(1); // InstJSRabs4 - push the high byte of the PC
-        Assert.Equal(expectedReturnAddr.Msb(), Pins.GetDataBusPins());
+        Assert.Equal(expectedReturnAddr.Msb(), Pins.DataBus);
 
         ExecuteClockCycles(1); // InstJSRabs5 - push the low byte of the PC
-        Assert.Equal(expectedReturnAddr.Lsb(), Pins.GetDataBusPins());
+        Assert.Equal(expectedReturnAddr.Lsb(), Pins.DataBus);
 
         ExecuteClockCycles(1); // InstJSRabs6 - set PC reg to the subroutine address
 
@@ -136,20 +136,20 @@ public class ControlTests : UnitTestBase
         Regs.P.GetFlags().UpdateValue(new UInt8(1));
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstRTIimp2 - internal operation
 
         ExecuteClockCycles(1); // InstRTIimp3 - internal operation
 
-        Pins.SetDataBusPins(expectedFlags);
+        Pins.DataBus = (expectedFlags);
         ExecuteClockCycles(1); // InstRTIimp4 - pull the status register
 
-        Pins.SetDataBusPins(returnAddrLsb);
+        Pins.DataBus = (returnAddrLsb);
         ExecuteClockCycles(1); // InstRTIimp5 - pull the low byte of the PC reg
 
-        Pins.SetDataBusPins(returnAddrMsb);
+        Pins.DataBus = (returnAddrMsb);
         ExecuteClockCycles(1); // InstRTIimp6 - pull the high byte of the PC reg
 
         // ASSERT:
@@ -177,17 +177,17 @@ public class ControlTests : UnitTestBase
         Regs.S.UpdateValue(stackTop);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstRTSimp2 - internal operation
 
         ExecuteClockCycles(1); // InstRTSimp3 - internal operation
 
-        Pins.SetDataBusPins(returnAddrLsb);
+        Pins.DataBus = (returnAddrLsb);
         ExecuteClockCycles(1); // InstRTSimp4 - pull the low byte of the PC reg
 
-        Pins.SetDataBusPins(returnAddrMsb);
+        Pins.DataBus = (returnAddrMsb);
         ExecuteClockCycles(1); // InstRTSimp5 - pull the high byte of the PC reg
 
         ExecuteClockCycles(1); // InstRTSimp6 - update the PC reg
@@ -205,17 +205,18 @@ public class ControlTests : UnitTestBase
     public void TestJsrRtsIntegration()
     {
         // ARRANGE:
-        byte[] program = {
-            //                                  0000:       .ORG $0000
-             0xA2,  0xFF, //                    0000:       LDX #$FF        ; load SP with $FF
-             0x9A, //                           0002:       TXS
-             0x18, //                           0003:       CLC             ; clear the carry flag
-             0xA9,  0x01, //                    0004:       LDA #01         ; pass $01 to the subroutine
-             0x20,  0x0A,  0x00, //             0006:       JSR SUB1        ; JMP to subroutine
-             0x00, //                           0009:       BRK             ; stop execution
-             0x38, //                           000A: SUB1: SEC             ; set the carry flag
-             0x60, //                           000B:       RTS
-        };
+        byte[] program =
+        [ 
+                                    // 0000:       .ORG $0000
+             0xA2,  0xFF,           // 0000:       LDX #$FF        ; load SP with $FF
+             0x9A,                  // 0002:       TXS
+             0x18,                  // 0003:       CLC             ; clear the carry flag
+             0xA9,  0x01,           // 0004:       LDA #01         ; pass $01 to the subroutine
+             0x20,  0x0A,  0x00,    // 0006:       JSR SUB1        ; JMP to subroutine
+             0x00,                  // 0009:       BRK             ; stop execution
+             0x38,                  // 000A: SUB1: SEC             ; set the carry flag
+             0x60                   // 000B:       RTS
+        ];
 
         // ACT:
         ExecuteProgram(program, new UInt16(0x0000));
@@ -228,22 +229,23 @@ public class ControlTests : UnitTestBase
     public void TestJsrRtsIntegration2()
     {
         // ARRANGE
-        byte[] program = {
-            0xA9, 0x1F, //              0000: LDA #$1F        ; 8-N-1, 19200 baud
-            0x8D, 0x03, 0x80, //        0002: STA ACIA_CTRL
-            0xA9, 0x0B, //              0005: LDA #$0B        ; no parity, no echo, no interrupts
-            0x8D, 0x02, 0x80, //        0007: STA ACIA_CMD
-            0xA9, 0x1B, //              000A: LDA #$1B        ; begin with escape
-            0x20, 0x10, 0x00, //        000C: JSR ECHO
-            0x00, //                    000F: WAI
-            0x48, //           ECHO:    0010: PHA             ; save A
-            0x8D, 0x00, 0x80, //        0011: STA ACIA_DATA   ; output character
-            0xA9, 0x02, //              0014: LDA #$02        ; initialize delay loop
-            0x3A, //           TXDELAY: 0016: DEC             ; decrement A
-            0xD0, 0xFD, //              0017: BNE TXDELAY     ; until A gets to 0
-            0x68, //                    0019: PLA             ; restore A
-            0x60 //                     001A: RTS             ; return         
-        };
+        byte[] program =
+        [
+            0xA9, 0x1F,             // 0000:            LDA #$1F        ; 8-N-1, 19200 baud
+            0x8D, 0x03, 0x80,       // 0002:            STA ACIA_CTRL
+            0xA9, 0x0B,             // 0005:            LDA #$0B        ; no parity, no echo, no interrupts
+            0x8D, 0x02, 0x80,       // 0007:            STA ACIA_CMD
+            0xA9, 0x1B,             // 000A:            LDA #$1B        ; begin with escape
+            0x20, 0x10, 0x00,       // 000C:            JSR ECHO
+            0x00,                   // 000F:            WAI
+            0x48,                   // 0010: ECHO:      PHA             ; save A
+            0x8D, 0x00, 0x80,       // 0011:            STA ACIA_DATA   ; output character
+            0xA9, 0x02,             // 0014:            LDA #$02        ; initialize delay loop
+            0x3A,                   // 0016: TXDELAY:   DEC             ; decrement A
+            0xD0, 0xFD,             // 0017:            BNE TXDELAY     ; until A gets to 0
+            0x68,                   // 0019:            PLA             ; restore A
+            0x60                    // 001A:            RTS             ; return         
+        ];
 
         // ACT:
         ExecuteProgram(program, new UInt16(0x0000));

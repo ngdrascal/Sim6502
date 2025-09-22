@@ -37,7 +37,7 @@ public class InstSTY : InstBase, IInstruction
         }
         else if (ctx.GetSubStep() == Constants.P2MiddleStep)
         {
-            ctx.Pins.SetDataBusPins(ctx.Regs.Y);
+            ctx.Pins.DataBus = ctx.Regs.Y;
         }
     }
 

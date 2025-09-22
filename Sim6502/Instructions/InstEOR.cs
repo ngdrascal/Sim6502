@@ -88,7 +88,7 @@ public class InstEOR : InstBase, IInstruction
         Imm2SetAddrBus(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             var result = ctx.Regs.A.Copy().Xor(data);
             ctx.Regs.UpdateAUpdateFlags(result);
             ctx.DbgOperand1 = data;
@@ -191,7 +191,7 @@ public class InstEOR : InstBase, IInstruction
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.Temp.UpdateValue(data);
             if (!ctx.CrossedPageBoundary)
             {
@@ -207,7 +207,7 @@ public class InstEOR : InstBase, IInstruction
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.Temp.UpdateValue(data);
             XorAWithTemp(ctx);
         }
@@ -244,7 +244,7 @@ public class InstEOR : InstBase, IInstruction
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.Temp.UpdateValue(data);
             if (!ctx.CrossedPageBoundary)
             {
@@ -260,7 +260,7 @@ public class InstEOR : InstBase, IInstruction
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.Temp.UpdateValue(data);
             XorAWithTemp(ctx);
         }
@@ -346,7 +346,7 @@ public class InstEOR : InstBase, IInstruction
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.Temp.UpdateValue(data);
             if (!ctx.CrossedPageBoundary)
                 XorAWithTemp(ctx);

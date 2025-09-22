@@ -40,7 +40,7 @@ public class RORTests : UnitTestBase
         Regs.A.UpdateValue(input);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);// fetch the opcode
 
         ExecuteClockCycles(1); // RORacc - shift value and update flags
@@ -113,13 +113,13 @@ public class RORTests : UnitTestBase
         Regs.P.Carry.UpdateValue(carryIn);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // RORzpg2 - fetch address into EA
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // RORzpg3 - fetch value from memory
 
         ExecuteClockCycles(1); // RORzpg4 - shift value and update flags
@@ -129,7 +129,7 @@ public class RORTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);
@@ -196,15 +196,15 @@ public class RORTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // RORzpgx2 - fetch operand1 into EA low
 
         ExecuteClockCycles(1); // RORzpgx3 - add X reg to EA
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // RORzpgx4 - fetch value from memory
 
         ExecuteClockCycles(1); // RORzpgx5 - shift value and update flags
@@ -214,7 +214,7 @@ public class RORTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);
@@ -280,16 +280,16 @@ public class RORTests : UnitTestBase
         Regs.P.Carry.UpdateValue(carryIn);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);// fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // RORabs2 - fetch operand1 into EA low
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // RORabs3 - fetch operand2 into EA high
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // RORabs4 - fetch value from memory
 
         ExecuteClockCycles(1); // RORabs5 - shift value and update flags
@@ -299,7 +299,7 @@ public class RORTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);
@@ -367,18 +367,18 @@ public class RORTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);// fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // RORabsx2 - fetch operand1 into EA low
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // RORabsx3 - fetch operand2 into EA high
 
         ExecuteClockCycles(1); // RORabsx4 - add X to the EA reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // RORabsx5 - fetch value from memory
 
         ExecuteClockCycles(1); // RORabsx6 - shift value and update flags
@@ -388,7 +388,7 @@ public class RORTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);

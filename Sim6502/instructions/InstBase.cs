@@ -47,7 +47,7 @@ public class InstBase
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = pins.GetDataBusPins();
+            var data = pins.DataBus;
             regs.EA.Lsb().UpdateValue(data);
             regs.EA.Msb().Zero();
             ctx.DbgOperand1 = data;
@@ -68,7 +68,7 @@ public class InstBase
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = pins.GetDataBusPins();
+            var data = pins.DataBus;
             regs.EA.Msb().UpdateValue(data);
             ctx.DbgOperand2 = data;
         }
@@ -83,7 +83,7 @@ public class InstBase
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.EA2.Lsb().UpdateValue(data);
             ctx.Regs.EA2.Msb().Zero();
         }
@@ -100,7 +100,7 @@ public class InstBase
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.EA2.Msb().UpdateValue(data);
         }
     }
@@ -115,7 +115,7 @@ public class InstBase
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            _ = ctx.Pins.GetDataBusPins();
+            _ = ctx.Pins.DataBus;
         }
     }
 
@@ -128,7 +128,7 @@ public class InstBase
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.Temp.UpdateValue(data);
         }
     }
@@ -143,7 +143,7 @@ public class InstBase
         }
         else if (ctx.GetSubStep() == P2MiddleStep)
         {
-            ctx.Pins.SetDataBusPins(ctx.Regs.Temp);
+            ctx.Pins.DataBus = ctx.Regs.Temp;
         }
     }
 
@@ -156,7 +156,7 @@ public class InstBase
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.Temp.UpdateValue(data);
             ctx.DbgOperand1 = data;
             ctx.Regs.PC.Inc();
@@ -177,7 +177,7 @@ public class InstBase
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.Temp.UpdateValue(data);
         }
     }
@@ -218,7 +218,7 @@ public class InstBase
         }
         else if (ctx.GetSubStep() == P2MiddleStep)
         {
-            ctx.Pins.SetDataBusPins(value);
+            ctx.Pins.DataBus = value;
             // var addr = ctx.Regs.S;
             // _logger.Debug($"JSR|BRK: push {value.ToInt():X2} to 0x1{addr.ToInt():X2}");
         }
@@ -240,7 +240,7 @@ public class InstBase
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             value.UpdateValue(data);
             // var addr = ctx.Regs.S;
             // _logger.Debug($"RTS|RTI: pull {value.ToInt():X2} from 0x1{addr.ToInt():X2}");

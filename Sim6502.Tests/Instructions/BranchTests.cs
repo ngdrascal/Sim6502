@@ -22,10 +22,10 @@ public class BranchTests : UnitTestBase
         flag.UpdateValue(flagInitValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCodeValue);
+        Pins.DataBus = (opCodeValue);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstBXXrel2 - fetch operand, check flag
 
         if (flag.Equals(branchCondition))
@@ -55,10 +55,10 @@ public class BranchTests : UnitTestBase
         Regs.PC.UpdateValue(pcInitValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCodeValue);
+        Pins.DataBus = (opCodeValue);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstBRArel2 - fetch operand, check flag
 
         ExecuteClockCycles(1); // InstBRArel3 - add the operand to the lsb of the PC reg

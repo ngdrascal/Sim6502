@@ -19,7 +19,7 @@ public class WAITests : UnitTestBase
         BootToAddress(BootAddr);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
         ExecuteClockCycles(1); // WAIimp2
         ExecuteClockCycles(1); // WAIimp3

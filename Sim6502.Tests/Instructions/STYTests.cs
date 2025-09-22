@@ -24,10 +24,10 @@ public class STYTests : UnitTestBase
         Regs.Y.UpdateValue(yValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstSTYzpg2 - fetch the second byte of the op-code (zpg-value)
 
         ExecuteClockCycles(1); // InstSTYzpg3 - store the value in Y at address zpg-value
@@ -35,7 +35,7 @@ public class STYTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(yValue, Pins.GetDataBusPins());
+        Assert.Equal(yValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
     }
@@ -58,10 +58,10 @@ public class STYTests : UnitTestBase
         Regs.Y.UpdateValue(yValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstSTYzpgx2 - fetch the second byte of the op-code (zpg-value)
 
         ExecuteClockCycles(1); // InstSTYzpgx3 - EA = zpg-value + X reg
@@ -71,7 +71,7 @@ public class STYTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(yValue, Pins.GetDataBusPins());
+        Assert.Equal(yValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
     }
@@ -93,13 +93,13 @@ public class STYTests : UnitTestBase
         Regs.Y.UpdateValue(yValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstSTYabs2 - fetch the first byte of the addr
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // InstSTYabs3 - fetch the second byte of the addr, EA = op2,op1
 
         ExecuteClockCycles(1); // InstSTYabs4 - store the value in Y at EA
@@ -107,7 +107,7 @@ public class STYTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(yValue, Pins.GetDataBusPins());
+        Assert.Equal(yValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
     }

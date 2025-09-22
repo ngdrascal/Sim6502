@@ -24,10 +24,10 @@ public class STXTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstSTXzpg2 - fetch the second byte of the op-code (zpg-value)
 
         ExecuteClockCycles(1); // InstSTXzpg3 - store the value in X at address zpg-value
@@ -35,7 +35,7 @@ public class STXTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(finalAddr, Pins.AddrBus);
-        Assert.Equal(xValue, Pins.GetDataBusPins());
+        Assert.Equal(xValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
     }
@@ -58,10 +58,10 @@ public class STXTests : UnitTestBase
         Regs.Y.UpdateValue(yValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstSTXzpgy2 - fetch the second byte of the op-code (zpg-value)
 
         ExecuteClockCycles(1); // InstSTXzpgy3 - EA = zpg-value + Y reg
@@ -71,7 +71,7 @@ public class STXTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(finalAddr, Pins.AddrBus);
-        Assert.Equal(xValue, Pins.GetDataBusPins());
+        Assert.Equal(xValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
     }
@@ -93,13 +93,13 @@ public class STXTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstSTXabs2 - fetch the first byte of the addr
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // InstSTXabs3 - fetch the second byte of the addr, EA = op2,op1
 
         ExecuteClockCycles(1); // InstSTXabs4 - store the value in X at EA
@@ -107,7 +107,7 @@ public class STXTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(finalAddr, Pins.AddrBus);
-        Assert.Equal(xValue, Pins.GetDataBusPins());
+        Assert.Equal(xValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
     }

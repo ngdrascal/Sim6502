@@ -41,7 +41,7 @@ public class InstLDY : InstBase, IInstruction
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var y = ctx.Pins.GetDataBusPins();
+            var y = ctx.Pins.DataBus;
             ctx.Regs.SetYUpdateFlags(y);
         }
     }
@@ -69,7 +69,7 @@ public class InstLDY : InstBase, IInstruction
         Imm2SetAddrBus(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.SetYUpdateFlags(data);
             ctx.DbgOperand1 = data;
         }
@@ -174,7 +174,7 @@ public class InstLDY : InstBase, IInstruction
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             if (!ctx.CrossedPageBoundary)
                 ctx.Regs.SetYUpdateFlags(data);
             else

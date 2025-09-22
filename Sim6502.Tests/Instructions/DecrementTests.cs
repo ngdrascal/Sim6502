@@ -12,7 +12,7 @@ public class DecrementTests : UnitTestBase
     // -------------------------------------------------------------------------
     // DEC accumulator
     // -------------------------------------------------------------------------
-    private void ExecuteDECacc(UInt8 accValue, UInt8 expectedValue, BitFlag expectedZFlag,
+    private void ExecuteDECacc(UInt8 accValue, BitFlag expectedZFlag,
                                BitFlag expectedNFlag)
     {
         var opCode = OpCodes.DECacc.ToUInt8();
@@ -24,7 +24,7 @@ public class DecrementTests : UnitTestBase
         Regs.P.Negative.UpdateValue(expectedNFlag.Copy().Not());
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);// fetch the opcode
 
         ExecuteClockCycles(1); // InstDECacc2 - decrement accumulator and set flags
@@ -32,7 +32,7 @@ public class DecrementTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(new UInt16(0x1000), Pins.AddrBus);
-        Assert.Equal(opCode, Pins.GetDataBusPins());
+        Assert.Equal(opCode, Pins.DataBus);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);
@@ -41,19 +41,19 @@ public class DecrementTests : UnitTestBase
     [Fact]
     public void TestDECaccZero()
     {
-        ExecuteDECacc(new UInt8(0), new UInt8(0xFF), Low, High);
+        ExecuteDECacc(new UInt8(0), Low, High);
     }
 
     [Fact]
     public void TestDECaccOne()
     {
-        ExecuteDECacc(new UInt8(1), new UInt8(0x00), High, Low);
+        ExecuteDECacc(new UInt8(1), High, Low);
     }
 
     [Fact]
     public void TestDECaccPos()
     {
-        ExecuteDECacc(new UInt8(2), new UInt8(0x01), Low, Low);
+        ExecuteDECacc(new UInt8(2), Low, Low);
     }
 
     // -------------------------------------------------------------------------
@@ -71,13 +71,13 @@ public class DecrementTests : UnitTestBase
         Regs.P.Negative.UpdateValue(expectedNFlag.Copy().Not());
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);// fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstDECzpg2 - fetch address into EA
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstDECzpg3 - fetch value from memory
 
         ExecuteClockCycles(1); // InstDECzpg4 - decrement value and update flags
@@ -87,7 +87,7 @@ public class DecrementTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(new UInt16(operand1), Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);
@@ -129,15 +129,15 @@ public class DecrementTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);// fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstDECzpgx2 - fetch operand1 into EA low
 
         ExecuteClockCycles(1); // InstDECzpgx3 - add X reg to EA
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstDECzpgx4 - fetch value from memory
 
         ExecuteClockCycles(1); // InstDECzpgx5 - decrement value and update flags
@@ -147,7 +147,7 @@ public class DecrementTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);
@@ -188,16 +188,16 @@ public class DecrementTests : UnitTestBase
         Regs.P.Negative.UpdateValue(expectedNFlag.Copy().Not());
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);// fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstDECabs2 - fetch operand1 into EA low
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // InstDECabs3 - fetch operand2 into EA high
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstDECabs4 - fetch value from memory
 
         ExecuteClockCycles(1); // InstDECabs5 - decrement value and update flags
@@ -207,7 +207,7 @@ public class DecrementTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);
@@ -250,18 +250,18 @@ public class DecrementTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);// fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // DECabsx2 - fetch operand1 into EA low
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // DECabsx3 - fetch operand2 into EA high
 
         ExecuteClockCycles(1); // DECabsx4 - add X to the EA reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // DECabsx5 - fetch value from memory
 
         ExecuteClockCycles(1); // DECabsx6 - shift value and update flags
@@ -271,7 +271,7 @@ public class DecrementTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);
@@ -310,7 +310,7 @@ public class DecrementTests : UnitTestBase
         Regs.P.Negative.UpdateValue(expectedNFlag.Copy().Not());
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);// fetch the opcode
 
         ExecuteClockCycles(1); // InstDEXimp2 - increment register and set flags
@@ -356,7 +356,7 @@ public class DecrementTests : UnitTestBase
         Regs.P.Negative.UpdateValue(expectedNFlag.Copy().Not());
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);// fetch the opcode
 
         ExecuteClockCycles(1); // InstDEYimp2 - increment register and set flags

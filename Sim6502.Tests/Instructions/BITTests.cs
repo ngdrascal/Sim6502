@@ -23,10 +23,10 @@ public class BITTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstBITimm2 - AND A reg. with operand, update flags
 
         // ASSERT:
@@ -84,13 +84,13 @@ public class BITTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstBITzpg2 - fetch the operand into EA reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstBITzpg3 - fetch the memory value at EA then BIT it with A reg
 
         // ASSERT:
@@ -150,15 +150,15 @@ public class BITTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstBITzpgx2 - fetch the operand into EA reg
 
         ExecuteClockCycles(1); // InstBITzpgx3 - EA = EA + X
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstBITzpgx4 - fetch the memory value at EA into temp then BIT Temp reg with A reg
 
         // ASSERT:
@@ -217,16 +217,16 @@ public class BITTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstBITabs2 - fetch the operand into EAL reg
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // InstBITabs3 - fetch the operand into EAH reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstBITabs4 - fetch the memory value at EA into temp then BIT Temp reg with A reg
 
         // ASSERT:
@@ -286,22 +286,22 @@ public class BITTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstBITabsx2 - fetch the operand into EAL reg
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // InstBITabsx3 - fetch the operand into EAH reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstBITabsx4 - fetch the memory value at EA into temp then BIT Temp reg with A reg
 
         // if adding the X reg cause the page to change
         if (!expectedAddr.Msb().Equals(operand2))
         {
-            Pins.SetDataBusPins(memValue);
+            Pins.DataBus = (memValue);
             ExecuteClockCycles(1); // InstADDabsx5 - fetch the value at address EA + Y
         }
 

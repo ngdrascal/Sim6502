@@ -87,22 +87,14 @@ public class Pins : IPinsInternal, IPinsExternal
     public byte GetA14() => ReadPin(PinMap.A14);
     public byte GetA15() => ReadPin(PinMap.A15);
 
-    // public UInt16 AddrBus
-    // {
-    //     get => GetAddrBusPins();
-    //     set => SetAddrBusPins(value);
-    // }
-
-    // TODO: make private and use AddrBus property
-
     public UInt16 AddrBus
     {
         get
         {
-            int addr = 0;
-            for (int i = 0; i < PinMap.AddrPins.Length; i++)
+            var addr = 0;
+            for (var i = 0; i < PinMap.AddrPins.Length; i++)
             {
-                int pv = ReadPin(PinMap.AddrPins[i]) << i;
+                var pv = ReadPin(PinMap.AddrPins[i]) << i;
                 addr |= pv;
             }
 
@@ -113,62 +105,52 @@ public class Pins : IPinsInternal, IPinsExternal
             var rawValue = value.ToInt();
             for (var i = 0; i < PinMap.AddrPins.Length; i++)
             {
-                byte pinValue = (byte)(rawValue & 0x01);
+                var pinValue = (byte)(rawValue & 0x01);
                 WritePin(PinMap.AddrPins[i], pinValue);
                 rawValue >>= 1;
             }
         }
     }
 
-    // TODO: make private and use AddrBus property
-    // public void SetAddrBusPins(UInt16 value)
-    // {
-    //     int rawValue = value.ToInt();
-    //     for (int i = 0; i < PinMap.AddrPins.Length; i++)
-    //     {
-    //         byte pinValue = (byte)(rawValue & 0x01);
-    //         WritePin(PinMap.AddrPins[i], pinValue);
-    //         rawValue >>= 1;
-    //     }
-    // }
-
     public DataBusMode GetDataBusMode() => _dataBusMode;
 
     public void SetDataBusMode(DataBusMode mode) => _dataBusMode = mode;
 
+    // public UInt8 DataBus
+    // {
+    //     get => GetDataBusPins();
+    //     set => SetDataBusPins(value);
+    // }
+
+    // TODO: make private and use DataBusPins property
+
     public UInt8 DataBus
     {
-        get => GetDataBusPins();
-        set => SetDataBusPins(value);
-    }
-
-    // TODO: make private and use DataBusPins property
-    public UInt8 GetDataBusPins()
-    {
-        int data = 0;
-        data |= GetD0();
-        data |= GetD1() << 1;
-        data |= GetD2() << 2;
-        data |= GetD3() << 3;
-        data |= GetD4() << 4;
-        data |= GetD5() << 5;
-        data |= GetD6() << 6;
-        data |= GetD7() << 7;
-        return new UInt8(data);
-    }
-
-    // TODO: make private and use DataBusPins property
-    public void SetDataBusPins(UInt8 value)
-    {
-        byte rawValue = (byte)value.ToInt();
-        WritePin(PinMap.D0, (byte)(rawValue & 0x01)); rawValue >>= 1;
-        WritePin(PinMap.D1, (byte)(rawValue & 0x01)); rawValue >>= 1;
-        WritePin(PinMap.D2, (byte)(rawValue & 0x01)); rawValue >>= 1;
-        WritePin(PinMap.D3, (byte)(rawValue & 0x01)); rawValue >>= 1;
-        WritePin(PinMap.D4, (byte)(rawValue & 0x01)); rawValue >>= 1;
-        WritePin(PinMap.D5, (byte)(rawValue & 0x01)); rawValue >>= 1;
-        WritePin(PinMap.D6, (byte)(rawValue & 0x01)); rawValue >>= 1;
-        WritePin(PinMap.D7, (byte)(rawValue & 0x01));
+        get
+        {
+            var data = 0;
+            data |= GetD0();
+            data |= GetD1() << 1;
+            data |= GetD2() << 2;
+            data |= GetD3() << 3;
+            data |= GetD4() << 4;
+            data |= GetD5() << 5;
+            data |= GetD6() << 6;
+            data |= GetD7() << 7;
+            return new UInt8(data);
+        }
+        set
+        {
+            var rawValue = (byte)value.ToInt();
+            WritePin(PinMap.D0, (byte)(rawValue & 0x01)); rawValue >>= 1;
+            WritePin(PinMap.D1, (byte)(rawValue & 0x01)); rawValue >>= 1;
+            WritePin(PinMap.D2, (byte)(rawValue & 0x01)); rawValue >>= 1;
+            WritePin(PinMap.D3, (byte)(rawValue & 0x01)); rawValue >>= 1;
+            WritePin(PinMap.D4, (byte)(rawValue & 0x01)); rawValue >>= 1;
+            WritePin(PinMap.D5, (byte)(rawValue & 0x01)); rawValue >>= 1;
+            WritePin(PinMap.D6, (byte)(rawValue & 0x01)); rawValue >>= 1;
+            WritePin(PinMap.D7, (byte)(rawValue & 0x01));
+        }
     }
 
     public byte GetD7() => ReadPin(PinMap.D7);

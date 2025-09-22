@@ -27,26 +27,26 @@ public class InterruptTests : UnitTestBase
         Regs.S.UpdateValue(stackTop);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(new UInt8(0x55));
+        Pins.DataBus = (new UInt8(0x55));
         ExecuteClockCycles(1); // InstBRKimp2 - fetch the operand (which is ignored)
 
         ExecuteClockCycles(1); // InstBRKimp3 - push PCH
-        Assert.Equal(expectedReturnAddr.Msb(), Pins.GetDataBusPins());
+        Assert.Equal(expectedReturnAddr.Msb(), Pins.DataBus);
 
         ExecuteClockCycles(1); // InstBRKimp4 - push PCL
-        Assert.Equal(expectedReturnAddr.Lsb(), Pins.GetDataBusPins());
+        Assert.Equal(expectedReturnAddr.Lsb(), Pins.DataBus);
 
         var p = Regs.P.ToUInt8().Copy();
         ExecuteClockCycles(1); // InstBRKimp5 - push flags
-        Assert.Equal(p, Pins.GetDataBusPins());
+        Assert.Equal(p, Pins.DataBus);
 
-        Pins.SetDataBusPins(intVecLsb);
+        Pins.DataBus = (intVecLsb);
         ExecuteClockCycles(1); // InstBRKimp6 - read 0xFFFE into the PCL
 
-        Pins.SetDataBusPins(intVecMsb);
+        Pins.DataBus = (intVecMsb);
         ExecuteClockCycles(1); // InstBRKimp7 - read 0xFFFF into the PCH
 
         // ASSERT:
@@ -79,15 +79,15 @@ public class InterruptTests : UnitTestBase
         Regs.S.UpdateValue(stackTop);
 
         // ACT:
-        Pins.SetDataBusPins(interruptedOpCode);
+        Pins.DataBus = (interruptedOpCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         Pins.SetNMIB(0);
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstLDAzpg2 - fetch the second byte of the op-code (zpg-value)
 
-        Pins.SetDataBusPins(data);
+        Pins.DataBus = (data);
         ExecuteClockCycles(1); // InstLDAzpg3 - fetch the value at address zpg-value
 
         ExecuteClockCycles(1); // Interrupt1
@@ -95,9 +95,9 @@ public class InterruptTests : UnitTestBase
         ExecuteClockCycles(1); // InstBRKimp3
         ExecuteClockCycles(1); // InstBRKimp4
         ExecuteClockCycles(1); // InstBRKimp5
-        Pins.SetDataBusPins(vectorLsb);
+        Pins.DataBus = (vectorLsb);
         ExecuteClockCycles(1); // InstBRKimp6
-        Pins.SetDataBusPins(vectorMsb);
+        Pins.DataBus = (vectorMsb);
         ExecuteClockCycles(1); // InstBRKimp7
 
         // ASSERT:
@@ -130,15 +130,15 @@ public class InterruptTests : UnitTestBase
         Regs.S.UpdateValue(stackTop);
 
         // ACT:
-        Pins.SetDataBusPins(interruptedOpCode);
+        Pins.DataBus = (interruptedOpCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         Pins.SetIRQB(0);
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstLDAzpg2 - fetch the second byte of the op-code (zpg-value)
 
-        Pins.SetDataBusPins(data);
+        Pins.DataBus = (data);
         ExecuteClockCycles(1); // InstLDAzpg3 - fetch the value at address zpg-value
 
         ExecuteClockCycles(1); // Irq1
@@ -146,9 +146,9 @@ public class InterruptTests : UnitTestBase
         ExecuteClockCycles(1); // InstBRKimp3
         ExecuteClockCycles(1); // InstBRKimp4
         ExecuteClockCycles(1); // InstBRKimp5
-        Pins.SetDataBusPins(vectorLsb);
+        Pins.DataBus = (vectorLsb);
         ExecuteClockCycles(1); // InstBRKimp6
-        Pins.SetDataBusPins(vectorMsb);
+        Pins.DataBus = (vectorMsb);
         ExecuteClockCycles(1); // InstBRKimp7
 
         // ASSERT:

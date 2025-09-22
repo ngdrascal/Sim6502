@@ -94,7 +94,7 @@ public class InstCMP : InstBase, IInstruction
         Imm2SetAddrBus(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
         {
-            var data = ctx.Pins.GetDataBusPins();
+            var data = ctx.Pins.DataBus;
             ctx.Regs.Temp.UpdateValue(data);
             CmpWithTemp(ctx);
             ctx.DbgOperand1 = data;

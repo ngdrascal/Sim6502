@@ -15,7 +15,7 @@ public class NOPTests : UnitTestBase
         BootToAddress(BootAddr);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(cycles - 1); // extra cycles needed

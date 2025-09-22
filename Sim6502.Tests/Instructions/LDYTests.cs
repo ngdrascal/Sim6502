@@ -20,10 +20,10 @@ public class LDYTests : UnitTestBase
         BootToAddress(BootAddr);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(expectedY);
+        Pins.DataBus = (expectedY);
         ExecuteClockCycles(1); // InstLDYabs2 - fetch the first operand into X reg
 
         // ASSERT:
@@ -66,13 +66,13 @@ public class LDYTests : UnitTestBase
         BootToAddress(BootAddr);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstLDYzpg2 - fetch the second byte of the op-code (zpg-value)
 
-        Pins.SetDataBusPins(expectedY);
+        Pins.DataBus = (expectedY);
         ExecuteClockCycles(1); // InstLDYzpg3 - fetch the value at address zpg-value
 
         // ASSERT:
@@ -117,15 +117,15 @@ public class LDYTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstLDYzpgx2 - fetch the second byte of the op-code (zpg-value)
 
         ExecuteClockCycles(1); // InstLDYzpgx3 - effective address = zpg-value + Y
 
-        Pins.SetDataBusPins(expectedY);
+        Pins.DataBus = (expectedY);
         ExecuteClockCycles(1); // InstLDYzpgx4 - fetch the value at address the effect address
 
         // ASSERT:
@@ -169,16 +169,16 @@ public class LDYTests : UnitTestBase
         BootToAddress(BootAddr);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstLDYabs2 - fetch the second byte of the op-code (EA low)
 
-        Pins.SetDataBusPins(operand2);
-        ExecuteClockCycles(1); // InstLDYabs3 - fetch the thrid byte of the op-code (EA high)
+        Pins.DataBus = (operand2);
+        ExecuteClockCycles(1); // InstLDYabs3 - fetch the third byte of the op-code (EA high)
 
-        Pins.SetDataBusPins(expectedY);
+        Pins.DataBus = (expectedY);
         ExecuteClockCycles(1); // InstLDYabs4 - fetch the value at effective address
 
         // ASSERT:
@@ -225,22 +225,22 @@ public class LDYTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);// fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstLDYabsx2 - fetch the second byte of the op-code (EA low)
 
-        Pins.SetDataBusPins(operand2);
-        ExecuteClockCycles(1); // InstLDYabsx3 - fetch the thrid byte of the op-code (EA high)
+        Pins.DataBus = (operand2);
+        ExecuteClockCycles(1); // InstLDYabsx3 - fetch the third byte of the op-code (EA high)
 
-        Pins.SetDataBusPins(expectedY);
+        Pins.DataBus = (expectedY);
         ExecuteClockCycles(1); // InstLDYabsx4 - fetch the value at address zpg-value + Y
 
         // if adding the Y reg cause the page to change
         if (!finalAddr.Msb().Equals(operand2))
         {
-            Pins.SetDataBusPins(expectedY);
+            Pins.DataBus = (expectedY);
             ExecuteClockCycles(1); // InstLDYabsy5 - fetch the value at address zpg-value + Y       
         }
 

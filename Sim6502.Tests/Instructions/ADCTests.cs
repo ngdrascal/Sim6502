@@ -27,10 +27,10 @@ public class ADCTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = operand;
         ExecuteClockCycles(1); // InstADCimm2 - ADC A reg. with operand
 
         if (dIn.IsSet())
@@ -107,13 +107,13 @@ public class ADCTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = operand;
         ExecuteClockCycles(1); // InstADCzpg2 - ADC A reg. with operand
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = memValue;
         ExecuteClockCycles(1); // InstADCzpg3 - fetch the memory value at EA then ADD it with A reg
 
         if (dIn.IsSet())
@@ -192,15 +192,15 @@ public class ADCTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = operand;
         ExecuteClockCycles(1); // InstANDzpgx2 - fetch the operand into EA reg
 
         ExecuteClockCycles(1); // InstANDzpgx3 - EA = EA + X
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = memValue;
         ExecuteClockCycles(1); // InstANDzpgx4 - fetch the memory value at EA into temp then AND Temp reg with
                                // A reg
 
@@ -279,16 +279,16 @@ public class ADCTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = operand1;
         ExecuteClockCycles(1); // InstADCabs2 - fetch the operand into EAL reg
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = operand2;
         ExecuteClockCycles(1); // InstADCabs3 - fetch the operand into EAH reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = memValue;
         ExecuteClockCycles(1); // InstADCabs4 - fetch the memory value at EA into temp then AND Temp reg with A
                                // reg
 
@@ -368,23 +368,23 @@ public class ADCTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = operand1;
         ExecuteClockCycles(1); // InstADCabsx2 - fetch the operand into EAL reg
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = operand2;
         ExecuteClockCycles(1); // InstADCabsx3 - fetch the operand into EAH reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = memValue;
         ExecuteClockCycles(1); // InstADCabsx4 - fetch the memory value at EA into temp then ADC Temp reg with
                                // A reg
 
         // if adding the X reg cause the page to change
         if (!expectedAddr.Msb().Equals(operand2))
         {
-            Pins.SetDataBusPins(memValue);
+            Pins.DataBus = memValue;
             ExecuteClockCycles(1); // InstADDabsx5 - fetch the memory value at EA into temp then ADC Temp reg with
                                    // A reg
         }
@@ -467,23 +467,23 @@ public class ADCTests : UnitTestBase
         Regs.Y.UpdateValue(yValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = operand1;
         ExecuteClockCycles(1); // InstADCabsy2 - fetch the operand into EAL reg
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = operand2;
         ExecuteClockCycles(1); // InstADCabsy3 - fetch the operand into EAH reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = memValue;
         ExecuteClockCycles(1); // InstADCabsy4 - fetch the memory value at EA into temp then ADC Temp reg with
                                // A reg
 
         // if adding the X reg cause the page to change
         if (!expectedAddr.Msb().Equals(operand2))
         {
-            Pins.SetDataBusPins(memValue);
+            Pins.DataBus = memValue;
             ExecuteClockCycles(1); // InstADDabsy5 - fetch the memory value at EA into temp then ADC Temp reg with
                                    // A reg
         }
@@ -567,21 +567,21 @@ public class ADCTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1);// fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = operand;
         ExecuteClockCycles(1); // InstADCidx2 - fetch the second byte of the op-code (EA low)
 
         ExecuteClockCycles(1); // InstADCidx3 - add X reg to the EA
 
-        Pins.SetDataBusPins(indAddrLsb);
+        Pins.DataBus = indAddrLsb;
         ExecuteClockCycles(1); // InstADCidx4 - fetch the value at EA, put in EA2 Low
 
-        Pins.SetDataBusPins(indAddrMsb);
+        Pins.DataBus = indAddrMsb;
         ExecuteClockCycles(1); // InstADCidx5 - fetch the value at EA + 1, put in EA2 High
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = memValue;
         ExecuteClockCycles(1); // InstADCidx6 - load the A reg. with the value at
 
         if (dIn.IsSet())
@@ -663,28 +663,28 @@ public class ADCTests : UnitTestBase
         Regs.Y.UpdateValue(yValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = operand;
         ExecuteClockCycles(1); // InstADCindy2 - fetch the second byte of the op-code (EA low)
         Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
 
-        Pins.SetDataBusPins(indAddrLsb);
+        Pins.DataBus = indAddrLsb;
         ExecuteClockCycles(1); // InstADCindy3 - fetch the value at EA, put in EA2 Low
         Assert.Equal(new UInt16(operand), Pins.AddrBus);
 
-        Pins.SetDataBusPins(indAddrMsb);
+        Pins.DataBus = indAddrMsb;
         ExecuteClockCycles(1); // InstADCindy4 - fetch the value at EA + 1, put in EA2 High
         Assert.Equal(new UInt16(operand).Inc(), Pins.AddrBus);
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = memValue;
         ExecuteClockCycles(1); // InstADCindy5 - load the A reg. with the value at EA + Y
 
         // if adding the Y reg cause the page to change
         if (!indAddrMsb.Equals(expectedAddr.Msb()))
         {
-            Pins.SetDataBusPins(aValue);
+            Pins.DataBus = aValue;
             ExecuteClockCycles(1); // InstADCindy6 - load the A reg. with the value at
         }
 
@@ -767,19 +767,19 @@ public class ADCTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1);// fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = operand;
         ExecuteClockCycles(1); // InstADCid2 - fetch the second byte of the op-code into EA low
 
-        Pins.SetDataBusPins(indAddrLsb);
+        Pins.DataBus = indAddrLsb;
         ExecuteClockCycles(1); // InstADCid3 - fetch the value at EA into EA2 Low
 
-        Pins.SetDataBusPins(indAddrMsb);
+        Pins.DataBus = indAddrMsb;
         ExecuteClockCycles(1); // InstADCid4 - fetch the value at EA + 1 into EA2 High
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = memValue;
         ExecuteClockCycles(1); // InstADCidx5 - load the A reg. with the value at EA2
 
         // ASSERT:
@@ -841,7 +841,8 @@ public class ADCTests : UnitTestBase
         var cFlagOpCode = cFlag.IsSet() ? OpCodes.SECimp.ToByte() : OpCodes.CLCimp.ToByte();
         var dFlagOpCode = dFlag.IsSet() ? OpCodes.SEDimp.ToByte() : OpCodes.CLDimp.ToByte();
 
-        byte[] program = {
+        byte[] program =
+        [
                                 // 0000:        .ORG $0000
             0xA2, 0xFF,         // 0000:        LDX #$FF            ; set the stack pointer
             0x9A,               // 0002:        TXS
@@ -852,8 +853,8 @@ public class ADCTests : UnitTestBase
             cFlagOpCode,        // 0008:        SEC|CLC             ; set|clear the carry flag
             0xA9, acc,          // 0009:        LDA #$'ACC'         ; A = acc
             0x69, operand,      // 000B:        ADC #$'operand'     ; A = A - operand
-            0x00,               // 000D:        BRK
-        };
+            0x00 // 000D:        BRK
+        ];
 
         // ACT:
         ExecuteProgram(program, new UInt16(0x0000));

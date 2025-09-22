@@ -20,7 +20,7 @@ public class STPTests : UnitTestBase
         BootToAddress(BootAddr);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
         ExecuteClockCycles(1); // STPimp2
         ExecuteClockCycles(1); // STPimp3
@@ -39,7 +39,7 @@ public class STPTests : UnitTestBase
         BootToAddress(BootAddr);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
         ExecuteClockCycles(1); // STPimp2
         ExecuteClockCycles(1); // STPimp3
@@ -47,11 +47,11 @@ public class STPTests : UnitTestBase
         Pins.SetRESB(0);       // Assert reset
         ExecuteClockCycles(2); // hold low for 2 or more clock cycles
 
-        Pins.SetDataBusPins(new UInt8(0x21));
+        Pins.DataBus = (new UInt8(0x21));
         Pins.SetRESB(1);       // De-assert reset
         ExecuteClockCycles(2); // Boot1
 
-        Pins.SetDataBusPins(new UInt8(0x43));
+        Pins.DataBus = (new UInt8(0x43));
         ExecuteClockCycles(1); // Boot2
 
         // ASSERT:
@@ -68,7 +68,7 @@ public class STPTests : UnitTestBase
         BootToAddress(BootAddr);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
         ExecuteClockCycles(1); // STPimp2
         ExecuteClockCycles(1); // STPimp3
@@ -76,11 +76,11 @@ public class STPTests : UnitTestBase
         Pins.SetRESB(0); // Assert reset
         ExecuteClockCycles(1); // hold low for only 1 cycle
 
-        Pins.SetDataBusPins(new UInt8(0x21));
+        Pins.DataBus = (new UInt8(0x21));
         Pins.SetRESB(1); // De-assert reset
         ExecuteClockCycles(2); // Boot1
 
-        Pins.SetDataBusPins(new UInt8(0x43));
+        Pins.DataBus = (new UInt8(0x43));
         ExecuteClockCycles(1); // Boot2
 
         // ASSERT:

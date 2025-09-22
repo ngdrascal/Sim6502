@@ -12,7 +12,7 @@ public class IncrementTests : UnitTestBase
     // -------------------------------------------------------------------------
     // INC accumulator
     // -------------------------------------------------------------------------
-    private void ExecuteINCacc(UInt8 accValue, UInt8 expectedValue, BitFlag expectedZFlag,
+    private void ExecuteINCacc(UInt8 accValue, BitFlag expectedZFlag,
                                BitFlag expectedNFlag)
     {
         var opCode = OpCodes.INCacc.ToUInt8();
@@ -24,7 +24,7 @@ public class IncrementTests : UnitTestBase
         Regs.P.Negative.UpdateValue(expectedNFlag.Copy().Not());
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstINCacc2 - increment accumulator and set flags
@@ -32,7 +32,7 @@ public class IncrementTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(new UInt16(0x1000), Pins.AddrBus);
-        Assert.Equal(opCode, Pins.GetDataBusPins());
+        Assert.Equal(opCode, Pins.DataBus);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);
@@ -53,13 +53,13 @@ public class IncrementTests : UnitTestBase
         Regs.P.Negative.UpdateValue(expectedNFlag.Copy().Not());
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstINCzpg2 - fetch address into EA
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstINCzpg3 - fetch value from memory
 
         ExecuteClockCycles(1); // InstINCzpg4 - increment value and update flags
@@ -69,7 +69,7 @@ public class IncrementTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(new UInt16(operand1), Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);
@@ -96,19 +96,19 @@ public class IncrementTests : UnitTestBase
     [Fact]
     public void TestINCaccNeg1ToZero()
     {
-        ExecuteINCacc(new UInt8(0xFF), new UInt8(0x00), High, Low);
+        ExecuteINCacc(new UInt8(0xFF), High, Low);
     }
 
     [Fact]
     public void TestINCaccPosToNeg()
     {
-        ExecuteINCacc(new UInt8(0x7F), new UInt8(0x80), Low, High);
+        ExecuteINCacc(new UInt8(0x7F), Low, High);
     }
 
     [Fact]
     public void TestINCaccPosToPos()
     {
-        ExecuteINCacc(new UInt8(0x01), new UInt8(0x02), Low, Low);
+        ExecuteINCacc(new UInt8(0x01), Low, Low);
     }
 
     // -------------------------------------------------------------------------
@@ -129,15 +129,15 @@ public class IncrementTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstINCzpgx2 - fetch operand1 into EA low
 
         ExecuteClockCycles(1); // InstINCzpgx3 - add X reg to EA
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstINCzpgx4 - fetch value from memory
 
         ExecuteClockCycles(1); // InstINCzpgx5 - increment value and update flags
@@ -147,7 +147,7 @@ public class IncrementTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);
@@ -188,16 +188,16 @@ public class IncrementTests : UnitTestBase
         Regs.P.Negative.UpdateValue(expectedNFlag.Copy().Not());
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstINCabs2 - fetch operand1 into EA low
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // InstINCabs3 - fetch operand2 into EA high
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstINCabs4 - fetch value from memory
 
         ExecuteClockCycles(1); // InstINCabs5 - increment value and update flags
@@ -207,7 +207,7 @@ public class IncrementTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);
@@ -250,18 +250,18 @@ public class IncrementTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // INCabsx2 - fetch operand1 into EA low
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // INCabsx3 - fetch operand2 into EA high
 
         ExecuteClockCycles(1); // INCabsx4 - add X to the EA reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // INCabsx5 - fetch value from memory
 
         ExecuteClockCycles(1); // INCabsx6 - increment value and update flags
@@ -271,7 +271,7 @@ public class IncrementTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);
@@ -310,7 +310,7 @@ public class IncrementTests : UnitTestBase
         Regs.P.Negative.UpdateValue(expectedNFlag.Copy().Not());
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstINXimp2 - increment register and set flags
@@ -356,7 +356,7 @@ public class IncrementTests : UnitTestBase
         Regs.P.Negative.UpdateValue(expectedNFlag.Copy().Not());
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstINYimp2 - increment register and set flags

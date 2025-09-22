@@ -21,7 +21,7 @@ public class TransferTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstTAXimp - transfer the value in the A reg to the X reg
@@ -64,7 +64,7 @@ public class TransferTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstTAYimp - transfer the value in the A reg to the Y reg
@@ -107,7 +107,7 @@ public class TransferTests : UnitTestBase
         Regs.S.UpdateValue(sValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstTSXimp - transfer the value in the S reg to the X reg
@@ -150,7 +150,7 @@ public class TransferTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstTXAimp - transfer the value in the X reg to the A reg
@@ -184,7 +184,7 @@ public class TransferTests : UnitTestBase
     // -------------------------------------------------------------------------
     // TXS
     // -------------------------------------------------------------------------
-    private void ExecuteTXSimp(UInt8 xValue, BitFlag expectedZFlag, BitFlag expectedNFlag)
+    private void ExecuteTXSimp(UInt8 xValue)
     {
         var opCode = OpCodes.TXSimp.ToUInt8();
 
@@ -193,7 +193,7 @@ public class TransferTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstTXSimp - transfer the value in the X reg to the S reg
@@ -207,19 +207,19 @@ public class TransferTests : UnitTestBase
     [Fact]
     public void TestTXSimpWith0()
     {
-        ExecuteTXSimp(new UInt8(0), High, Low);
+        ExecuteTXSimp(new UInt8(0));
     }
 
     [Fact]
     public void TestTXSimpWithNeg()
     {
-        ExecuteTXSimp(new UInt8(0xFF), Low, High);
+        ExecuteTXSimp(new UInt8(0xFF));
     }
 
     [Fact]
     public void TestTXSimpWithNotZeroNotNeg()
     {
-        ExecuteTXSimp(new UInt8(1), Low, Low);
+        ExecuteTXSimp(new UInt8(1));
     }
 
     // -------------------------------------------------------------------------
@@ -234,7 +234,7 @@ public class TransferTests : UnitTestBase
         Regs.Y.UpdateValue(yValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstTYAimp - transfer the value in the Y reg to the A reg

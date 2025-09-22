@@ -9,7 +9,7 @@ namespace Sim6502.Tests.Instructions;
 [ExcludeFromCodeCoverage]
 public class ASLTests : UnitTestBase
 {
-    protected readonly UInt8 Zero = new(0);
+    private readonly UInt8 Zero = new(0);
 
     // -------------------------------------------------------------------------
     // ASLacc
@@ -25,7 +25,7 @@ public class ASLTests : UnitTestBase
         Regs.A.UpdateValue(accValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // ASLacc - shift value and update flags
@@ -89,13 +89,13 @@ public class ASLTests : UnitTestBase
         BootToAddress(BootAddr);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = operand1;
         ExecuteClockCycles(1); // ASLzpg2 - fetch address into EA
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = memValue;
         ExecuteClockCycles(1); // ASLzpg3 - fetch value from memory
 
         ExecuteClockCycles(1); // ASLzpg4 - shift value and update flags
@@ -105,7 +105,7 @@ public class ASLTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(operand1.ToInt(), Pins.AddrBus.ToInt());
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(BootAddr.AddUnsigned(new UInt8(2)), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);
@@ -165,15 +165,15 @@ public class ASLTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = operand1;
         ExecuteClockCycles(1); // ASLzpgx2 - fetch operand1 into EA low
 
         ExecuteClockCycles(1); // ASLzpgx3 - add X reg to EA
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = memValue;
         ExecuteClockCycles(1); // ASLzpgx4 - fetch value from memory
 
         ExecuteClockCycles(1); // ASLzpgx5 - shift value and update flags
@@ -183,7 +183,7 @@ public class ASLTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(BootAddr.AddUnsigned(new UInt8(2)), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);
@@ -242,16 +242,16 @@ public class ASLTests : UnitTestBase
         BootToAddress(BootAddr);
 
         // ACT:
-        Pins.SetDataBusPins(OpCodes.ASLabs.ToUInt8());
+        Pins.DataBus = OpCodes.ASLabs.ToUInt8();
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = operand1;
         ExecuteClockCycles(1); // ASLabs2 - fetch operand1 into EA low
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = operand2;
         ExecuteClockCycles(1); // ASLabs3 - fetch operand2 into EA high
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = memValue;
         ExecuteClockCycles(1); // ASLabs4 - fetch value from memory
 
         ExecuteClockCycles(1); // ASLabs5 - shift value and update flags
@@ -261,7 +261,7 @@ public class ASLTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(BootAddr.AddUnsigned(new UInt8(3)), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);
@@ -322,18 +322,18 @@ public class ASLTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = operand1;
         ExecuteClockCycles(1); // ASLabsx2 - fetch operand1 into EA low
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = operand2;
         ExecuteClockCycles(1); // ASLabsx3 - fetch operand2 into EA high
 
         ExecuteClockCycles(1); // ASLabsx4 - add X to the EA reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = memValue;
         ExecuteClockCycles(1); // ASLabsx5 - fetch value from memory
 
         ExecuteClockCycles(1); // ASLabsx6 - shift value and update flags
@@ -343,7 +343,7 @@ public class ASLTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
         Assert.Equal(expectedAddr, Pins.AddrBus);
-        Assert.Equal(expectedValue, Pins.GetDataBusPins());
+        Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(BootAddr.AddUnsigned(new UInt8(3)), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
         Assert.Equal(expectedNFlag, Regs.P.Negative);

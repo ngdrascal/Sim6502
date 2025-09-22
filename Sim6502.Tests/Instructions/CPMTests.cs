@@ -25,10 +25,10 @@ public class CMPTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstCMPimm2 - load the operand into the temp reg.
 
         // ASSERT:
@@ -92,13 +92,13 @@ public class CMPTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstCMPzpg2 - fetch the second byte of the op-code into EA
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstLDAzpg3 - fetch the value at EA into temp and do the compare
 
         // ASSERT:
@@ -161,15 +161,15 @@ public class CMPTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstCMPzpgx2 - fetch the operand into EA reg
 
         ExecuteClockCycles(1); // InstCMPzpgx3 - EA = EA + X
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstCMPzpgx4 - fetch the memory value at EA into temp then CMP Temp reg with A reg
 
         // ASSERT:
@@ -234,17 +234,17 @@ public class CMPTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstCMPabs2 - fetch the second byte of the op-code (EA low)
 
-        Pins.SetDataBusPins(operand2);
-        ExecuteClockCycles(1); // InstCMPabs3 - fetch the thrid byte of the op-code (EA high)
+        Pins.DataBus = (operand2);
+        ExecuteClockCycles(1); // InstCMPabs3 - fetch the third byte of the op-code (EA high)
 
-        Pins.SetDataBusPins(memValue);
-        ExecuteClockCycles(1); // InstCMPabs4 - fetch the value at EA into Temp and do cmpare
+        Pins.DataBus = (memValue);
+        ExecuteClockCycles(1); // InstCMPabs4 - fetch the value at EA into Temp and do compare
 
         // ASSERT:
         Assert.Equal(opCode, Pins.GetDBGINST());
@@ -307,22 +307,22 @@ public class CMPTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstCMPabsx2 - fetch the operand into EAL reg
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // InstCMPabsx3 - fetch the operand into EAH reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstCMPabsx4 - fetch the memory value at EA into temp then CMP Temp reg with A reg
 
         // if adding the X reg cause the page to change
         if (!expectedAddr.Msb().Equals(operand2))
         {
-            Pins.SetDataBusPins(memValue);
+            Pins.DataBus = (memValue);
             ExecuteClockCycles(1); // InstADDabsx5 - fetch the value at address EA + Y       
         }
 
@@ -429,22 +429,22 @@ public class CMPTests : UnitTestBase
         Regs.Y.UpdateValue(yValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstCMPabsy2 - fetch the operand into EAL reg
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // InstCMPabsy3 - fetch the operand into EAH reg
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstCMPabsy4 - fetch the memory value at EA into temp then CMP Temp reg with A reg
 
         // if adding the X reg cause the page to change
         if (!expectedAddr.Msb().Equals(operand2))
         {
-            Pins.SetDataBusPins(memValue);
+            Pins.DataBus = (memValue);
             ExecuteClockCycles(1); // InstADDabsy5 - fetch the value at address EA + Y       
         }
 
@@ -551,21 +551,21 @@ public class CMPTests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);// fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstCMPidx2 - fetch the second byte of the op-code (EA low)
 
         ExecuteClockCycles(1); // InstCMPidx3 - add X reg to the EA
 
-        Pins.SetDataBusPins(indAddrLsb);
+        Pins.DataBus = (indAddrLsb);
         ExecuteClockCycles(1); // InstCMPidx4 - fetch the value at EA, put in EA2 Low
 
-        Pins.SetDataBusPins(indAddrMsb);
+        Pins.DataBus = (indAddrMsb);
         ExecuteClockCycles(1); // InstCMPidx5 - fetch the value at EA + 1, put in EA2 High
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstCMPidx6 - load the A reg. with the value at 
 
         // ASSERT:
@@ -633,28 +633,28 @@ public class CMPTests : UnitTestBase
         Regs.Y.UpdateValue(yValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstCMPindy2 - fetch the second byte of the op-code (EA low)
         Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
 
-        Pins.SetDataBusPins(indAddrLsb);
+        Pins.DataBus = (indAddrLsb);
         ExecuteClockCycles(1); // InstCMPindy3 - fetch the value at EA, put in EA2 Low
         Assert.Equal(new UInt16(operand), Pins.AddrBus);
 
-        Pins.SetDataBusPins(indAddrMsb);
+        Pins.DataBus = (indAddrMsb);
         ExecuteClockCycles(1); // InstCMPindy4 - fetch the value at EA + 1, put in EA2 High
         Assert.Equal(new UInt16(operand).Inc(), Pins.AddrBus);
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstCMPindy5 - load the A reg. with the value at EA + Y
 
         // if adding the Y reg cause the page to change
         if (!indAddrMsb.Equals(expectedAddr.Msb()))
         {
-            Pins.SetDataBusPins(memValue);
+            Pins.DataBus = (memValue);
             ExecuteClockCycles(1); // InstCMPindy6 - load the A reg. with the value at
         }
 
@@ -760,19 +760,19 @@ public class CMPTests : UnitTestBase
         Regs.A.UpdateValue(aValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);// fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstCMPid2 - fetch the second byte of the op-code into EA low
 
-        Pins.SetDataBusPins(indAddrLsb);
+        Pins.DataBus = (indAddrLsb);
         ExecuteClockCycles(1); // InstCMPid3 - fetch the value at EA into EA2 Low
 
-        Pins.SetDataBusPins(indAddrMsb);
+        Pins.DataBus = (indAddrMsb);
         ExecuteClockCycles(1); // InstCMPid4 - fetch the value at EA + 1 into EA2 High
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstCMPidx5 - load the A reg. with the value at EA2
 
         // ASSERT:

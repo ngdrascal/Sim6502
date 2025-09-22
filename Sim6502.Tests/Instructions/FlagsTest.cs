@@ -17,7 +17,7 @@ public class FlagsTests : UnitTestBase
         Regs.P.Carry.UpdateValue(High);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstCLCimp2 - clear the carry flag
@@ -39,7 +39,7 @@ public class FlagsTests : UnitTestBase
         Regs.P.Decimal.UpdateValue(High);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstCLDimp2 - clear the decimal flag
@@ -61,7 +61,7 @@ public class FlagsTests : UnitTestBase
         Regs.P.IRQDisabled.UpdateValue(High);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstCLIimp2 - clear the IRQ flag
@@ -83,7 +83,7 @@ public class FlagsTests : UnitTestBase
         Regs.P.Overflow.UpdateValue(High);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstCLVimp2 - clear the overflow flag
@@ -105,7 +105,7 @@ public class FlagsTests : UnitTestBase
         Regs.P.Carry.UpdateValue(Low);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstSECimp2 - set the carry flag
@@ -127,7 +127,7 @@ public class FlagsTests : UnitTestBase
         Regs.P.Decimal.UpdateValue(Low);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstSECimp2 - set the decimal flag
@@ -149,7 +149,7 @@ public class FlagsTests : UnitTestBase
         Regs.P.IRQDisabled.UpdateValue(Low);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstSECimp2 - set the IRQ flag

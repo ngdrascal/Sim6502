@@ -25,10 +25,10 @@ public class CPYTests : UnitTestBase
         Regs.Y.UpdateValue(yValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstCPYimm2 - load the operand into the temp reg.
 
         // ASSERT:
@@ -92,13 +92,13 @@ public class CPYTests : UnitTestBase
         Regs.Y.UpdateValue(yValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstCPYzpg2 - fetch the second byte of the op-code (zpg-value)
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstLDAzpg3 - fetch the value at address zpg-value
 
         // ASSERT:
@@ -163,16 +163,16 @@ public class CPYTests : UnitTestBase
         Regs.Y.UpdateValue(yValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstCPYabs2 - fetch the second byte of the op-code (EA low)
 
-        Pins.SetDataBusPins(operand2);
-        ExecuteClockCycles(1); // InstCPYabs3 - fetch the thrid byte of the op-code (EA high)
+        Pins.DataBus = (operand2);
+        ExecuteClockCycles(1); // InstCPYabs3 - fetch the third byte of the op-code (EA high)
 
-        Pins.SetDataBusPins(memValue);
+        Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // InstCPYabs4 - fetch the value at EA
 
         // ASSERT:

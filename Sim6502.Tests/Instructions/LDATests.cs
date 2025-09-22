@@ -20,10 +20,10 @@ public class LDATests : UnitTestBase
         BootToAddress(BootAddr);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstLDAimm - load operand1 into A reg
 
         // ASSERT:
@@ -65,13 +65,13 @@ public class LDATests : UnitTestBase
         BootToAddress(BootAddr);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand);
+        Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstLDAzpg2 - fetch the second byte of the op-code (zpg-value)
 
-        Pins.SetDataBusPins(data);
+        Pins.DataBus = (data);
         ExecuteClockCycles(1); // InstLDAzpg3 - fetch the value at address zpg-value
 
         // ASSERT:
@@ -116,16 +116,16 @@ public class LDATests : UnitTestBase
         BootToAddress(BootAddr);
         Regs.X.UpdateValue(xValue);
 
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);
 
         // ACT:
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstLDAzpgX2 - fetch the second byte of the op-code (zpg-value)
 
         ExecuteClockCycles(1); // InstLDAzpgX3 - zpg-value + X
 
-        Pins.SetDataBusPins(expectedA);
+        Pins.DataBus = (expectedA);
         ExecuteClockCycles(1); // InstLDAzpgX4 - fetch the value at address zpg-value + X
 
         // ASSERT:
@@ -169,16 +169,16 @@ public class LDATests : UnitTestBase
         BootToAddress(BootAddr);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstLDAabs2 - fetch the second byte of the op-code (EA low)
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // InstLDAabs3 - fetch the third byte of the op-code (EA high)
 
-        Pins.SetDataBusPins(data);
+        Pins.DataBus = (data);
         ExecuteClockCycles(1); // InstLDAabs4 - fetch the value at EA
 
         // ASSERT:
@@ -225,23 +225,23 @@ public class LDATests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // fetch the opcode
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
         // ACT:
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstLDAabsx2 - fetch the second byte of the op-code (EA low)
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // InstLDAabsx3 - fetch the third byte of the op-code (EA high)
 
-        Pins.SetDataBusPins(data);
+        Pins.DataBus = (data);
         ExecuteClockCycles(1); // InstLDAabsx4 - fetch the value at address EA + X
 
         // if adding the X reg cause the page to change
         if (!finalAddr.Msb().Equals(operand2))
         {
-            Pins.SetDataBusPins(data);
+            Pins.DataBus = (data);
             ExecuteClockCycles(1); // InstLDAabsx5 - fetch the value at address EA + X
         }
 
@@ -307,23 +307,23 @@ public class LDATests : UnitTestBase
         Regs.Y.UpdateValue(yValue);
 
         // fetch the opcode
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1);
 
         // ACT:
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstLDAabsy2 - fetch the second byte of the op-code (EA low)
 
-        Pins.SetDataBusPins(operand2);
+        Pins.DataBus = (operand2);
         ExecuteClockCycles(1); // InstLDAabsy3 - fetch the third byte of the op-code (EA high)
 
-        Pins.SetDataBusPins(data);
+        Pins.DataBus = (data);
         ExecuteClockCycles(1); // InstLDAabsy4 - fetch the value at address zpg-value + Y
 
         // if adding the Y reg cause the page to change
         if (!opAddr.Msb().Equals(finalAddr.Msb()))
         {
-            Pins.SetDataBusPins(data);
+            Pins.DataBus = (data);
             ExecuteClockCycles(1); // InstLDAabsy5 - fetch the value at address zpg-value + Y
         }
 
@@ -389,21 +389,21 @@ public class LDATests : UnitTestBase
         Regs.X.UpdateValue(xValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstLDAidx2 - fetch the second byte of the op-code (EA low)
 
         ExecuteClockCycles(1); // InstLDAidx3 - add X reg to the EA
 
-        Pins.SetDataBusPins(addrLsb);
+        Pins.DataBus = (addrLsb);
         ExecuteClockCycles(1); // InstLDAidx4 - fetch the value at EA, put in EA2 Low
 
-        Pins.SetDataBusPins(addrMsb);
+        Pins.DataBus = (addrMsb);
         ExecuteClockCycles(1); // InstLDAidx5 - fetch the value at EA + 1, put in EA2 High
 
-        Pins.SetDataBusPins(data);
+        Pins.DataBus = (data);
         ExecuteClockCycles(1); // InstLDAidx6 - load the A reg. with the value at
 
         // ASSERT:
@@ -450,28 +450,28 @@ public class LDATests : UnitTestBase
         Regs.Y.UpdateValue(yValue);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstLDAindy2 - fetch the second byte of the op-code (EA low)
         Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
 
-        Pins.SetDataBusPins(addrLsb);
+        Pins.DataBus = (addrLsb);
         ExecuteClockCycles(1); // InstLDAindy3 - fetch the value at EA, put in EA2 Low
         Assert.Equal(new UInt16(operand1), Pins.AddrBus);
 
-        Pins.SetDataBusPins(addrMsb);
+        Pins.DataBus = (addrMsb);
         ExecuteClockCycles(1); // InstLDAindy4 - fetch the value at EA + 1, put in EA2 High
         Assert.Equal(new UInt16(operand1).Inc(), Pins.AddrBus);
 
-        Pins.SetDataBusPins(data);
+        Pins.DataBus = (data);
         ExecuteClockCycles(1); // InstLDAindy5 - load the A reg. with the value at EA + Y
 
         // if adding the Y reg cause the page to change
         if (!addrMsb.Equals(finalAddr.Msb()))
         {
-            Pins.SetDataBusPins(data);
+            Pins.DataBus = (data);
             ExecuteClockCycles(1); // InstLDAindy6 - load the A reg. with the value at
         }
 
@@ -535,19 +535,19 @@ public class LDATests : UnitTestBase
         BootToAddress(BootAddr);
 
         // ACT:
-        Pins.SetDataBusPins(opCode);
+        Pins.DataBus = (opCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetDataBusPins(operand1);
+        Pins.DataBus = (operand1);
         ExecuteClockCycles(1); // InstLDAid2 - fetch the second byte of the op-code into EA low
 
-        Pins.SetDataBusPins(addrLsb);
+        Pins.DataBus = (addrLsb);
         ExecuteClockCycles(1); // InstLDAid3 - fetch the value at EA into EA2 Low
 
-        Pins.SetDataBusPins(addrMsb);
+        Pins.DataBus = (addrMsb);
         ExecuteClockCycles(1); // InstLDAid4 - fetch the value at EA + 1 into EA2 High
 
-        Pins.SetDataBusPins(data);
+        Pins.DataBus = (data);
         ExecuteClockCycles(1); // InstLDAidx5 - load the A reg. with the value at EA2
 
         // ASSERT:
