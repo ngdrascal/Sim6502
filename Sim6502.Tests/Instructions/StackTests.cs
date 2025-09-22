@@ -30,7 +30,7 @@ public class StackTests : UnitTestBase
         ExecuteClockCycles(1); // InstPHAimp3 - push A reg and decrement S reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(stackTop, Pins.AddrBus);
         Assert.Equal(aValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
@@ -60,7 +60,7 @@ public class StackTests : UnitTestBase
         ExecuteClockCycles(1); // InstPHPimp3 - push P reg and decrement S reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(stackTop, Pins.AddrBus);
         Assert.Equal(pValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
@@ -90,7 +90,7 @@ public class StackTests : UnitTestBase
         ExecuteClockCycles(1); // InstPHAimp3 - push X reg and decrement S reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(stackTop, Pins.AddrBus);
         Assert.Equal(xValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
@@ -120,7 +120,7 @@ public class StackTests : UnitTestBase
         ExecuteClockCycles(1); // InstPHAimp3 - push Y reg and decrement S reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(stackTop, Pins.AddrBus);
         Assert.Equal(yValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
@@ -152,7 +152,7 @@ public class StackTests : UnitTestBase
         ExecuteClockCycles(1); // InstPLAimp4 - pop value into A reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(stackTop.Inc(), Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
@@ -185,7 +185,7 @@ public class StackTests : UnitTestBase
         ExecuteClockCycles(1); // InstPLPimp4 - pop value into P reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(stackTop.Inc(), Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
@@ -218,7 +218,7 @@ public class StackTests : UnitTestBase
         ExecuteClockCycles(1); // InstPLXimp4 - pop value into X reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(stackTop.Inc(), Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
@@ -251,7 +251,7 @@ public class StackTests : UnitTestBase
         ExecuteClockCycles(1); // InstPLYimp4 - pop value into X reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(stackTop.Inc(), Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1001), Regs.PC);

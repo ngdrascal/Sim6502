@@ -46,9 +46,9 @@ public class UnitTestBase
         };
 
         _cpu = new W65C02SEngine(_ctx);
-        _cpu.SubstepChanging+= (_, args) =>
+        _cpu.SubstepChanging += (_, args) =>
         {
-            if (_ctx.GetSubStep()==Constants.P2LastSubstep)
+            if (_ctx.GetSubStep() == Constants.P2LastSubstep)
                 _ctx.CaptureRegs();
             stateLogger.LogTrace("   state: {CtxState} substep: {SubStep} regs: {regs}", args.State, args.Substep, _ctx.Regs);
         };
@@ -56,13 +56,13 @@ public class UnitTestBase
         _phi2 = (byte)Low.ToInt();
 
         // set the inputs
-        Pins.SetIRQB((byte)High.ToInt());
-        Pins.SetNMIB((byte)High.ToInt());
-        Pins.SetBE((byte)High.ToInt());
-        Pins.SetPHI2((byte)Low.ToInt());
-        Pins.SetSOB((byte)High.ToInt());
-        Pins.SetRESB((byte)High.ToInt());
-        Pins.SetRDY((byte)High.ToInt());
+        Pins.IRQB = (byte)High.ToInt();
+        Pins.NMIB = (byte)High.ToInt();
+        Pins.BE = (byte)High.ToInt();
+        Pins.PHI2 = (byte)Low.ToInt();
+        Pins.SOB = (byte)High.ToInt();
+        Pins.RESB = (byte)High.ToInt();
+        Pins.RDY = (byte)High.ToInt();
     }
 
     protected void BootToAddress(UInt16 addr)
@@ -78,7 +78,7 @@ public class UnitTestBase
         Pins.DataBus = addr.Lsb();
         ExecuteClockCycles(1); // Boot1
 
-        Pins.DataBus =addr.Msb();
+        Pins.DataBus = addr.Msb();
         ExecuteClockCycles(1); // Boot2
     }
 
@@ -94,7 +94,7 @@ public class UnitTestBase
     {
         for (int i = 0; i < count; i++)
         {
-            Pins.SetPHI2(_phi2);
+            Pins.PHI2 = _phi2;
             _cpu.Step();
 
             _phi2 = _phi2 == 0 ? (byte)1 : (byte)0;
@@ -122,7 +122,7 @@ public class UnitTestBase
             var addr = Pins.AddrBus.ToInt();
             if (_ctx.GetSubStep() == Constants.P2LastSubstep)
             {
-                if (Pins.GetRWB() == read)
+                if (Pins.RWB == read)
                 {
                     if (addr == 0xFFFE)
                         break;

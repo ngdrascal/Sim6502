@@ -50,7 +50,7 @@ public class InterruptTests : UnitTestBase
         ExecuteClockCycles(1); // InstBRKimp7 - read 0xFFFF into the PCH
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedPC, Regs.PC);
         Assert.Equal(expectedStackTop, Regs.S);
         Assert.Equal(High, Regs.P.Break);
@@ -82,7 +82,7 @@ public class InterruptTests : UnitTestBase
         Pins.DataBus = (interruptedOpCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetNMIB(0);
+        Pins.NMIB = 0;
 
         Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstLDAzpg2 - fetch the second byte of the op-code (zpg-value)
@@ -133,7 +133,7 @@ public class InterruptTests : UnitTestBase
         Pins.DataBus = (interruptedOpCode);
         ExecuteClockCycles(1); // fetch the opcode
 
-        Pins.SetIRQB(0);
+        Pins.IRQB = 0;
 
         Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstLDAzpg2 - fetch the second byte of the op-code (zpg-value)

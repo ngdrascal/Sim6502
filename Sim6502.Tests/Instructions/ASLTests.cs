@@ -31,7 +31,7 @@ public class ASLTests : UnitTestBase
         ExecuteClockCycles(1); // ASLacc - shift value and update flags
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(BootAddr.AddUnsigned(new UInt8(1)), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -103,7 +103,7 @@ public class ASLTests : UnitTestBase
         ExecuteClockCycles(1); // ASLzpg5 - store the value back to EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(operand1.ToInt(), Pins.AddrBus.ToInt());
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(BootAddr.AddUnsigned(new UInt8(2)), Regs.PC);
@@ -181,7 +181,7 @@ public class ASLTests : UnitTestBase
         ExecuteClockCycles(1); // ASLzpgx6 - store the value back to EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(BootAddr.AddUnsigned(new UInt8(2)), Regs.PC);
@@ -259,7 +259,7 @@ public class ASLTests : UnitTestBase
         ExecuteClockCycles(1); // ASLabs6 - store the value back to EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(BootAddr.AddUnsigned(new UInt8(3)), Regs.PC);
@@ -341,7 +341,7 @@ public class ASLTests : UnitTestBase
         ExecuteClockCycles(1); // ASLabsx7 - store the value back to EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(BootAddr.AddUnsigned(new UInt8(3)), Regs.PC);

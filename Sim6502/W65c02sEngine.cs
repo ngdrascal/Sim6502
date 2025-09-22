@@ -120,16 +120,16 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
 
     public void Step()
     {
-        if (_ctx.Pins.GetPHI2() == _lastClock)
+        if (_ctx.Pins.PHI2 == _lastClock)
             return;
 
-        _lastClock = _ctx.Pins.GetPHI2();
+        _lastClock = _ctx.Pins.PHI2;
 
         var substep = _ctx.GetSubStep();
 
         if (substep == 1)
         {
-            if (_ctx.Pins.GetRDY() == Low)
+            if (_ctx.Pins.RDY == Low)
             {
                 // this condition is nested instead of ANDs because we don't want
                 // the interrupts handled until RDY is high
@@ -154,8 +154,8 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         }
         else if (substep == Constants.P1LastStep)
         {
-            _ctx.Pins.SetPHI1O(Low);
-            _ctx.Pins.SetPHI2O(High);
+            _ctx.Pins.PHI1O = Low;
+            _ctx.Pins.PHI2O = High;
         }
 
         if (_ctx.State == States.Fetch)
@@ -169,8 +169,8 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
 
         if (substep == LastSubstep)
         {
-            _ctx.Pins.SetPHI1O(High);
-            _ctx.Pins.SetPHI1O(Low);
+            _ctx.Pins.PHI1O = High;
+            _ctx.Pins.PHI1O = Low;
             CheckForReset(_ctx);
             CheckForNmi(_ctx);
             CheckForIrq(_ctx);
@@ -179,17 +179,17 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
 
         _ctx.IncSubStep();
 
-        _ctx.Pins.SetDBGSUBSTEP((byte)_ctx.GetSubStep());
+        _ctx.Pins.DBGSUBSTEP = (byte)_ctx.GetSubStep();
     }
 
     private void CheckForReset(Context ctx)
     {
         // if the reset pin is asserted
-        if (ctx.Pins.GetRESB() == 0)
+        if (ctx.Pins.RESB == 0)
             _rstClockCount++;
         // else if the reset pin is no longer asserted AND
         // it was asserted for 2 or more clock cycles
-        else if (ctx.Pins.GetRESB() == 1 && _rstClockCount >= 2)
+        else if (ctx.Pins.RESB == 1 && _rstClockCount >= 2)
             ctx.AdvanceState(States.Boot1);
         else
             _rstClockCount = 0;
@@ -197,7 +197,7 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
 
     private void CheckForNmi(Context ctx)
     {
-        var currentNmiState = ctx.Pins.GetNMIB();
+        var currentNmiState = ctx.Pins.NMIB;
         if (_lastNmiState == High && currentNmiState == Low)
             _nmiAsserted = true;
 
@@ -206,13 +206,13 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
 
     private void CheckForIrq(Context ctx)
     {
-        _irqAsserted = ctx.Regs.P.IRQDisabled.IsCleared() && ctx.Pins.GetIRQB() == 0;
+        _irqAsserted = ctx.Regs.P.IRQDisabled.IsCleared() && ctx.Pins.IRQB == 0;
     }
 
     private void WarmUp0(Context ctx)
     {
         // start by syncing with the first clock HIGH signal
-        if (ctx.Pins.GetPHI2() == High)
+        if (ctx.Pins.PHI2 == High)
         {
             ctx.ForwardToLastSubStep();
             ctx.InitState(States.WarmUp1);
@@ -233,14 +233,14 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
 
     private void ResetPins(Context ctx)
     {
-        ctx.Pins.SetPHI1O(High);
-        ctx.Pins.SetPHI1O(High);
-        ctx.Pins.SetPHI1O(High);
-        ctx.Pins.SetPHI1O(Low);
+        ctx.Pins.PHI1O = High;
+        ctx.Pins.PHI1O = High;
+        ctx.Pins.PHI1O = High;
+        ctx.Pins.PHI1O = Low;
         ctx.Pins.SetAddrBusMode(AddrBusMode.Output);
         ctx.Pins.AddrBus = new UInt16(0xFFFF);
         ctx.Pins.SetDataBusMode(DataBusMode.Input);
-        ctx.Pins.SetRWB(Read);
+        ctx.Pins.RWB = Read;
     }
 
     private void ResetFlags(Context ctx)
@@ -260,7 +260,7 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
             ctx.Pins.SetAddrBusMode(AddrBusMode.Output);
             ctx.Pins.SetDataBusMode(DataBusMode.Input);
             ctx.Pins.AddrBus = new UInt16(0xFFFC);
-            ctx.Pins.SetRWB(Read);
+            ctx.Pins.RWB = Read;
         }
         else if (ctx.GetSubStep() == LastSubstep)
         {
@@ -275,7 +275,7 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         if (ctx.GetSubStep() == P1MiddleStep)
         {
             ctx.Pins.AddrBus = new UInt16(0xFFFD);
-            ctx.Pins.SetRWB(Read);
+            ctx.Pins.RWB = Read;
         }
         else if (ctx.GetSubStep() == LastSubstep)
         {
@@ -289,8 +289,8 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
     {
         if (ctx.GetSubStep() == 1)
         {
-            ctx.Pins.SetPHI1O(High);
-            ctx.Pins.SetRWB(Read);
+            ctx.Pins.PHI1O = High;
+            ctx.Pins.RWB = Read;
             ctx.Pins.SetDataBusMode(DataBusMode.Input);
         }
         else if (ctx.GetSubStep() == P1MiddleStep)
@@ -299,13 +299,13 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
             ctx.DbgPC = pc;
             ctx.Pins.AddrBus = pc;
             ctx.Regs.PC.Inc();
-            ctx.Pins.SetRWB(Read);
+            ctx.Pins.RWB = Read;
         }
         else if (ctx.GetSubStep() == LastSubstep)
         {
             ctx.Regs.Inst.UpdateValue(ctx.Pins.DataBus);
-            ctx.Pins.SetDBGINST(ctx.Regs.Inst);
-            ctx.Pins.SetPHI1O(Low);
+            ctx.Pins.DBGINST = ctx.Regs.Inst;
+            ctx.Pins.PHI1O = Low;
             _instCount++;
             var opCode = OpCodesExtensions.FromValue(ctx.Regs.Inst);
             ctx.DbgOpCode = opCode;
@@ -315,7 +315,7 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
 
     private void NotReady(Context ctx)
     {
-        if (ctx.Pins.GetPHI2() == High)
+        if (ctx.Pins.PHI2 == High)
             ctx.AdvanceState(ctx.ReadyState);
     }
 

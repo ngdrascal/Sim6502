@@ -30,7 +30,7 @@ public class InstBase
         {
             ctx.Pins.AddrBus = ctx.Regs.PC;
             ctx.Regs.PC.Inc();
-            ctx.Pins.SetRWB(Read);
+            ctx.Pins.RWB = Read;
         }
     }
 
@@ -43,7 +43,7 @@ public class InstBase
             var addr = regs.PC.Copy();
             regs.PC.Inc();
             pins.AddrBus = addr;
-            pins.SetRWB(Read);
+            pins.RWB = Read;
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
@@ -64,7 +64,7 @@ public class InstBase
             var addr = regs.PC.Copy();
             regs.PC.Inc();
             pins.AddrBus = addr;
-            pins.SetRWB(Read);
+            pins.RWB = Read;
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
@@ -79,7 +79,7 @@ public class InstBase
         if (ctx.GetSubStep() == P1MiddleStep)
         {
             ctx.Pins.AddrBus = ctx.Regs.EA;
-            ctx.Pins.SetRWB(Read);
+            ctx.Pins.RWB = Read;
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
@@ -96,7 +96,7 @@ public class InstBase
             var eaPlus1 = ctx.Regs.EA.Copy();
             eaPlus1.Inc();
             ctx.Pins.AddrBus = eaPlus1;
-            ctx.Pins.SetRWB(Read);
+            ctx.Pins.RWB = Read;
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
@@ -111,7 +111,7 @@ public class InstBase
         {
             var addr = ctx.Regs.PC;
             ctx.Pins.AddrBus = addr;
-            ctx.Pins.SetRWB(Read);
+            ctx.Pins.RWB = Read;
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
@@ -124,7 +124,7 @@ public class InstBase
         if (ctx.GetSubStep() == P1MiddleStep)
         {
             ctx.Pins.AddrBus = ctx.Regs.EA;
-            ctx.Pins.SetRWB(Read);
+            ctx.Pins.RWB = Read;
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
@@ -138,7 +138,7 @@ public class InstBase
         if (ctx.GetSubStep() == P1MiddleStep)
         {
             ctx.Pins.AddrBus = ctx.Regs.EA;
-            ctx.Pins.SetRWB(Write);
+            ctx.Pins.RWB = Write;
             ctx.Pins.SetDataBusMode(DataBusMode.Output);
         }
         else if (ctx.GetSubStep() == P2MiddleStep)
@@ -152,7 +152,7 @@ public class InstBase
         if (ctx.GetSubStep() == P1MiddleStep)
         {
             ctx.Pins.AddrBus = ctx.Regs.PC;
-            ctx.Pins.SetRWB(Read);
+            ctx.Pins.RWB = Read;
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
@@ -173,7 +173,7 @@ public class InstBase
         if (ctx.GetSubStep() == P1MiddleStep)
         {
             ctx.Pins.AddrBus = ctx.Regs.PC;
-            ctx.Pins.SetRWB(Read);
+            ctx.Pins.RWB = Read;
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
@@ -188,7 +188,7 @@ public class InstBase
         {
             var sp = new UInt16(0x100).AddUnsigned(ctx.Regs.S);
             ctx.Pins.AddrBus = sp;
-            ctx.Pins.SetRWB(Write);
+            ctx.Pins.RWB = Write;
         }
         if (ctx.GetSubStep() == P2MiddleStep)
         {
@@ -203,7 +203,7 @@ public class InstBase
             var sp = new UInt16(0x100).AddUnsigned(ctx.Regs.S);
             ctx.Pins.AddrBus = sp;
             ctx.Pins.SetDataBusMode(DataBusMode.Input);
-            ctx.Pins.SetRWB(Read);
+            ctx.Pins.RWB = Read;
         }
     }
 
@@ -214,7 +214,7 @@ public class InstBase
             var sp = new UInt16(0x100).AddUnsigned(ctx.Regs.S);
             ctx.Pins.AddrBus = sp;
             ctx.Pins.SetDataBusMode(DataBusMode.Output);
-            ctx.Pins.SetRWB(Write);
+            ctx.Pins.RWB = Write;
         }
         else if (ctx.GetSubStep() == P2MiddleStep)
         {
@@ -236,7 +236,7 @@ public class InstBase
             var sp = new UInt16(0x100).AddUnsigned(ctx.Regs.S);
             ctx.Pins.AddrBus = sp;
             ctx.Pins.SetDataBusMode(DataBusMode.Input);
-            ctx.Pins.SetRWB(Read);
+            ctx.Pins.RWB = Read;
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {

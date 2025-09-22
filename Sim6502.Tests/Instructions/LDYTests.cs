@@ -27,7 +27,7 @@ public class LDYTests : UnitTestBase
         ExecuteClockCycles(1); // InstLDYabs2 - fetch the first operand into X reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedY, Regs.Y);
@@ -76,7 +76,7 @@ public class LDYTests : UnitTestBase
         ExecuteClockCycles(1); // InstLDYzpg3 - fetch the value at address zpg-value
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedY, Regs.Y);
@@ -129,7 +129,7 @@ public class LDYTests : UnitTestBase
         ExecuteClockCycles(1); // InstLDYzpgx4 - fetch the value at address the effect address
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedY, Regs.Y);
@@ -182,7 +182,7 @@ public class LDYTests : UnitTestBase
         ExecuteClockCycles(1); // InstLDYabs4 - fetch the value at effective address
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedY, Regs.Y);
@@ -245,7 +245,7 @@ public class LDYTests : UnitTestBase
         }
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedY, Regs.Y);

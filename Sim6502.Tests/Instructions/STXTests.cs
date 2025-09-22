@@ -33,11 +33,11 @@ public class STXTests : UnitTestBase
         ExecuteClockCycles(1); // InstSTXzpg3 - store the value in X at address zpg-value
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(xValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
-        Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
+        Assert.Equal((byte)Low.ToInt(), Pins.RWB);
     }
 
     // -------------------------------------------------------------------------
@@ -69,11 +69,11 @@ public class STXTests : UnitTestBase
         ExecuteClockCycles(1); // InstSTXzpgy4 - store the value in X at EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(xValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
-        Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
+        Assert.Equal((byte)Low.ToInt(), Pins.RWB);
     }
 
     // -------------------------------------------------------------------------
@@ -105,10 +105,10 @@ public class STXTests : UnitTestBase
         ExecuteClockCycles(1); // InstSTXabs4 - store the value in X at EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(xValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
-        Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
+        Assert.Equal((byte)Low.ToInt(), Pins.RWB);
     }
 }

@@ -30,7 +30,7 @@ public class DecrementTests : UnitTestBase
         ExecuteClockCycles(1); // InstDECacc2 - decrement accumulator and set flags
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1000), Pins.AddrBus);
         Assert.Equal(opCode, Pins.DataBus);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
@@ -85,7 +85,7 @@ public class DecrementTests : UnitTestBase
         ExecuteClockCycles(1); // InstDECzpg5 - store the value back to EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(operand1), Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
@@ -145,7 +145,7 @@ public class DecrementTests : UnitTestBase
         ExecuteClockCycles(1); // InstDECzpgx6 - store the value back to EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
@@ -205,7 +205,7 @@ public class DecrementTests : UnitTestBase
         ExecuteClockCycles(1); // InstDECabs6 - store the value back to EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
@@ -269,7 +269,7 @@ public class DecrementTests : UnitTestBase
         ExecuteClockCycles(1); // DECabsx7 - store the value back to EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
@@ -316,7 +316,7 @@ public class DecrementTests : UnitTestBase
         ExecuteClockCycles(1); // InstDEXimp2 - increment register and set flags
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(expectedValue, Regs.X);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -362,7 +362,7 @@ public class DecrementTests : UnitTestBase
         ExecuteClockCycles(1); // InstDEYimp2 - increment register and set flags
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(expectedValue, Regs.Y);
         Assert.Equal(expectedZFlag, Regs.P.Zero);

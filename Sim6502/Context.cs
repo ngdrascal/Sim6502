@@ -67,7 +67,7 @@ public class Context
     public void InitState(States value)
     {
         State = value;
-        Pins.SetDBGSTATE((byte)State);
+        Pins.DBGSTATE = (byte)State;
     }
 
     public bool NmiFlag { get; private set; }

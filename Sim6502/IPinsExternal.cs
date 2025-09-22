@@ -1,28 +1,28 @@
+using System.Diagnostics.CodeAnalysis;
 using UInt8 = Sim6502.types.UInt8;
 
 namespace Sim6502;
 
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public interface IPinsExternal
 {
     DataBusMode GetDataBusMode();
 
-    byte GetVPB();
+    byte VPB { get; }
 
     RdyPinMode GetRdyPinMode();
 
-    byte GetRDY();
+    byte RDY { set; }
 
-    void SetRDY(byte value);
+    byte PHI1O { get; }
 
-    byte GetPHI1O();
+    byte IRQB { set; }
 
-    void SetIRQB(byte value);
+    byte MLB { get; }
 
-    byte GetMLB();
+    byte NMIB { set; }
 
-    void SetNMIB(byte value);
-
-    byte GetSYNC();
+    byte SYNC { get; }
 
     AddrBusMode GetAddrBusMode();
 
@@ -90,21 +90,21 @@ public interface IPinsExternal
 
     void SetD0(byte value);
 
-    byte GetRWB();
+    byte RWB { get; }
 
-    void SetBE(byte value);
+    byte BE { set; }
 
-    void SetPHI2(byte value);
+    byte PHI2 { set; }
 
-    void SetSOB(byte value);
+    byte SOB { set; }
 
-    byte GetPHI2O();
+    byte PHI2O { get; }
 
-    void SetRESB(byte value);
+    byte RESB { set; }
 
-    byte GetDBGSTATE();
+    byte DBGSTATE { get; }
 
-    byte GetDBGSUBSTEP();
+    byte DBGSUBSTEP { get; }
 
-    UInt8 GetDBGINST();
+    UInt8 DBGINST { get; }
 }

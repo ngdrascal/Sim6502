@@ -32,7 +32,7 @@ public class CPXTests : UnitTestBase
         ExecuteClockCycles(1); // InstCPXimm2 - load the operand into the temp reg.
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedC, Regs.P.Carry);
         Assert.Equal(expectedZ, Regs.P.Zero);
@@ -102,7 +102,7 @@ public class CPXTests : UnitTestBase
         ExecuteClockCycles(1); // InstLDAzpg3 - fetch the value at address zpg-value
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedC, Regs.P.Carry);
         Assert.Equal(expectedZ, Regs.P.Zero);
@@ -176,7 +176,7 @@ public class CPXTests : UnitTestBase
         ExecuteClockCycles(1); // InstCPXabs4 - fetch the value at EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedC, Regs.P.Carry);
         Assert.Equal(expectedZ, Regs.P.Zero);

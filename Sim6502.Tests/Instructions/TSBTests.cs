@@ -38,7 +38,7 @@ public class TSBTests : UnitTestBase
         ExecuteClockCycles(1); // TSBzpg5 - store the value back to EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
@@ -90,7 +90,7 @@ public class TSBTests : UnitTestBase
         ExecuteClockCycles(1); // TSBabs6 - store the value back to EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);

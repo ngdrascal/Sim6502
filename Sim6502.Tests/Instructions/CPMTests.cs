@@ -32,7 +32,7 @@ public class CMPTests : UnitTestBase
         ExecuteClockCycles(1); // InstCMPimm2 - load the operand into the temp reg.
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedC, Regs.P.Carry);
         Assert.Equal(expectedZ, Regs.P.Zero);
@@ -102,7 +102,7 @@ public class CMPTests : UnitTestBase
         ExecuteClockCycles(1); // InstLDAzpg3 - fetch the value at EA into temp and do the compare
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedC, Regs.P.Carry);
         Assert.Equal(expectedZ, Regs.P.Zero);
@@ -173,7 +173,7 @@ public class CMPTests : UnitTestBase
         ExecuteClockCycles(1); // InstCMPzpgx4 - fetch the memory value at EA into temp then CMP Temp reg with A reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedC, Regs.P.Carry);
         Assert.Equal(expectedZ, Regs.P.Zero);
@@ -247,7 +247,7 @@ public class CMPTests : UnitTestBase
         ExecuteClockCycles(1); // InstCMPabs4 - fetch the value at EA into Temp and do compare
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedC, Regs.P.Carry);
         Assert.Equal(expectedZ, Regs.P.Zero);
@@ -327,7 +327,7 @@ public class CMPTests : UnitTestBase
         }
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedC, Regs.P.Carry);
         Assert.Equal(expectedZ, Regs.P.Zero);
@@ -449,7 +449,7 @@ public class CMPTests : UnitTestBase
         }
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedC, Regs.P.Carry);
         Assert.Equal(expectedZ, Regs.P.Zero);
@@ -569,7 +569,7 @@ public class CMPTests : UnitTestBase
         ExecuteClockCycles(1); // InstCMPidx6 - load the A reg. with the value at 
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedC, Regs.P.Carry);
         Assert.Equal(expectedZ, Regs.P.Zero);
@@ -659,7 +659,7 @@ public class CMPTests : UnitTestBase
         }
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedC, Regs.P.Carry);
         Assert.Equal(expectedZ, Regs.P.Zero);
@@ -776,7 +776,7 @@ public class CMPTests : UnitTestBase
         ExecuteClockCycles(1); // InstCMPidx5 - load the A reg. with the value at EA2
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedC, Regs.P.Carry);
         Assert.Equal(expectedZ, Regs.P.Zero);

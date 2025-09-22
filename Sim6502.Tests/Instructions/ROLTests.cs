@@ -30,7 +30,7 @@ public class ROLTests : UnitTestBase
         ExecuteClockCycles(1); // ROLacc - shift value and update flags
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1000), Pins.AddrBus);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
@@ -110,7 +110,7 @@ public class ROLTests : UnitTestBase
         ExecuteClockCycles(1); // ROLzpg5 - store the value back to EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(operand1), Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
@@ -195,7 +195,7 @@ public class ROLTests : UnitTestBase
         ExecuteClockCycles(1); // ROLzpgx6 - store the value back to EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
@@ -280,7 +280,7 @@ public class ROLTests : UnitTestBase
         ExecuteClockCycles(1); // ROLabs6 - store the value back to EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
@@ -369,7 +369,7 @@ public class ROLTests : UnitTestBase
         ExecuteClockCycles(1); // ROLabsx7 - store the value back to EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);

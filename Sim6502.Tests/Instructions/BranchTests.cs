@@ -37,7 +37,7 @@ public class BranchTests : UnitTestBase
         }
 
         // ASSERT:
-        Assert.Equal(opCodeValue, Pins.GetDBGINST());
+        Assert.Equal(opCodeValue, Pins.DBGINST);
         Assert.Equal(expectedPC, Regs.PC);
     }
 
@@ -67,7 +67,7 @@ public class BranchTests : UnitTestBase
             ExecuteClockCycles(1); // InstBRArel4 - add the carry to the msb of the PC reg
 
         // ASSERT:
-        Assert.Equal(opCodeValue, Pins.GetDBGINST());
+        Assert.Equal(opCodeValue, Pins.DBGINST);
         Assert.Equal(expectedPC, Regs.PC);
     }
 

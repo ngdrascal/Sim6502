@@ -21,7 +21,7 @@ public class NOPTests : UnitTestBase
         ExecuteClockCycles(cycles - 1); // extra cycles needed
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
     }
 
     // -------------------------------------------------------------------------

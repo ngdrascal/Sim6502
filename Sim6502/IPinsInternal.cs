@@ -6,21 +6,19 @@ namespace Sim6502;
 
 public interface IPinsInternal
 {
-    void SetVPB(byte value);
+    byte VPB { set; }
 
-    byte GetRDY();
+    byte RDY { get; }
 
-    void SetRDY(byte value);
+    byte PHI1O { set; }
 
-    void SetPHI1O(byte value);
+    byte IRQB { get; }
 
-    byte GetIRQB();
+    byte MLB { set; }
 
-    void SetMLB(byte value);
+    byte NMIB { get; }
 
-    byte GetNMIB();
-
-    void SetSYNC(byte value);
+    byte SYNC { set; }
 
     void SetAddrBusMode(AddrBusMode mode);
 
@@ -30,21 +28,21 @@ public interface IPinsInternal
 
     UInt8 DataBus { get; set; }
 
-    void SetRWB(byte value);
+    byte RWB { set; }
 
-    byte GetBE();
+    byte BE { get; }
 
-    byte GetPHI2();
+    byte PHI2 { get; }
 
-    byte GetSOB();
+    byte SOB { get; }
 
-    void SetPHI2O(byte value);
+    byte PHI2O { set; }
 
-    byte GetRESB();
+    byte RESB { get; }
 
-    void SetDBGSTATE(byte value);
+    byte DBGSTATE { set; }
 
-    void SetDBGSUBSTEP(byte value);
+    byte DBGSUBSTEP { set; }
 
-    void SetDBGINST(UInt8 value);
+    UInt8 DBGINST { set; }
 }

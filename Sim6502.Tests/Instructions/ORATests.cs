@@ -30,7 +30,7 @@ public class ORATests : UnitTestBase
         ExecuteClockCycles(1); // InstORAimm2 - ORA A reg. with operand
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
@@ -82,7 +82,7 @@ public class ORATests : UnitTestBase
         ExecuteClockCycles(1); // InstORAzpg3 - fetch the memory value at EA then ORA it with A reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
@@ -138,7 +138,7 @@ public class ORATests : UnitTestBase
         ExecuteClockCycles(1); // InstORAzpgx4 - fetch the memory value at EA into temp then ORA Temp reg with A reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
@@ -194,7 +194,7 @@ public class ORATests : UnitTestBase
         ExecuteClockCycles(1); // InstORAabs4 - fetch the memory value at EA into temp then ORA Temp reg with A reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
@@ -258,7 +258,7 @@ public class ORATests : UnitTestBase
         }
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
@@ -340,7 +340,7 @@ public class ORATests : UnitTestBase
         }
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
@@ -421,7 +421,7 @@ public class ORATests : UnitTestBase
         ExecuteClockCycles(1); // InstORAidx6 - load the A reg. with the value at 
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
@@ -492,7 +492,7 @@ public class ORATests : UnitTestBase
         }
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
@@ -570,7 +570,7 @@ public class ORATests : UnitTestBase
         ExecuteClockCycles(1); // InstORAidx5 - load the A reg. with the value at EA2
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);

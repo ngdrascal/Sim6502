@@ -10,8 +10,6 @@ public class Pins : IPinsInternal, IPinsExternal
     private DataBusMode _dataBusMode = DataBusMode.Input;
     private const RdyPinMode RdyPinMode = Sim6502.RdyPinMode.Input;
     private readonly UInt8 _dbgInstReg = new();
-    private byte _dbgState;
-    private byte _dbgSubStep;
 
     public Pins()
     {
@@ -36,35 +34,49 @@ public class Pins : IPinsInternal, IPinsExternal
         _pinValues[pinNumber - 1] = value;
     }
 
-    public byte GetVPB() => ReadPin(PinMap.VPB);
-
-    public void SetVPB(byte value) => WritePin(PinMap.VPB, value);
+    public byte VPB
+    {
+        get => ReadPin(PinMap.VPB);
+        set => WritePin(PinMap.VPB, value);
+    }
 
     public RdyPinMode GetRdyPinMode() => RdyPinMode;
 
-    public byte GetRDY() => ReadPin(PinMap.RDY);
+    public byte RDY
+    {
+        get => ReadPin(PinMap.RDY);
+        set => WritePin(PinMap.RDY, value);
+    }
 
-    public void SetRDY(byte value) => WritePin(PinMap.RDY, value);
+    public byte PHI1O
+    {
+        get => ReadPin(PinMap.PHI1O);
+        set => WritePin(PinMap.PHI1O, value);
+    }
 
-    public byte GetPHI1O() => ReadPin(PinMap.PHI1O);
+    public byte IRQB
+    {
+        get => ReadPin(PinMap.IRQB);
+        set => WritePin(PinMap.IRQB, value);
+    }
 
-    public void SetPHI1O(byte value) => WritePin(PinMap.PHI1O, value);
+    public byte MLB
+    {
+        get => ReadPin(PinMap.MLB);
+        set => WritePin(PinMap.MLB, value);
+    }
 
-    public byte GetIRQB() => ReadPin(PinMap.IRQB);
+    public byte NMIB
+    {
+        get => ReadPin(PinMap.NMIB);
+        set => WritePin(PinMap.NMIB, value);
+    }
 
-    public void SetIRQB(byte value) => WritePin(PinMap.IRQB, value);
-
-    public byte GetMLB() => ReadPin(PinMap.MLB);
-
-    public void SetMLB(byte value) => WritePin(PinMap.MLB, value);
-
-    public byte GetNMIB() => ReadPin(PinMap.NMIB);
-
-    public void SetNMIB(byte value) => WritePin(PinMap.NMIB, value);
-
-    public byte GetSYNC() => ReadPin(PinMap.SYNC);
-
-    public void SetSYNC(byte value) => WritePin(PinMap.SYNC, value);
+    public byte SYNC
+    {
+        get => ReadPin(PinMap.SYNC);
+        set => WritePin(PinMap.SYNC, value);
+    }
 
     public AddrBusMode GetAddrBusMode() => _addrBusMode;
 
@@ -162,23 +174,49 @@ public class Pins : IPinsInternal, IPinsExternal
     public byte GetD0() => ReadPin(PinMap.D0);
     public void SetD0(byte value) => WritePin(PinMap.D0, value);
 
-    public byte GetRWB() => ReadPin(PinMap.RWB);
-    public void SetRWB(byte value) => WritePin(PinMap.RWB, value);
-    public byte GetBE() => ReadPin(PinMap.BE);
-    public void SetBE(byte value) => WritePin(PinMap.BE, value);
-    public byte GetPHI2() => ReadPin(PinMap.PHI2);
-    public void SetPHI2(byte value) => WritePin(PinMap.PHI2, value);
-    public byte GetSOB() => ReadPin(PinMap.SOB);
-    public void SetSOB(byte value) => WritePin(PinMap.SOB, value);
-    public byte GetPHI2O() => ReadPin(PinMap.PHI2O);
-    public void SetPHI2O(byte value) => WritePin(PinMap.PHI2O, value);
-    public byte GetRESB() => ReadPin(PinMap.RESB);
-    public void SetRESB(byte value) => WritePin(PinMap.RESB, value);
+    public byte RWB
+    {
+        get => ReadPin(PinMap.RWB);
+        set => WritePin(PinMap.RWB, value);
+    }
 
-    public byte GetDBGSTATE() => _dbgState;
-    public void SetDBGSTATE(byte value) => _dbgState = value;
-    public byte GetDBGSUBSTEP() => _dbgSubStep;
-    public void SetDBGSUBSTEP(byte value) => _dbgSubStep = value;
-    public UInt8 GetDBGINST() => _dbgInstReg;
-    public void SetDBGINST(UInt8 value) => _dbgInstReg.UpdateValue(value);
+    public byte BE
+    {
+        get => ReadPin(PinMap.BE);
+        set => WritePin(PinMap.BE, value);
+    }
+
+    public byte PHI2
+    {
+        get => ReadPin(PinMap.PHI2);
+        set => WritePin(PinMap.PHI2, value);
+    }
+
+    public byte SOB
+    {
+        get => ReadPin(PinMap.SOB);
+        set => WritePin(PinMap.SOB, value);
+    }
+
+    public byte PHI2O
+    {
+        get => ReadPin(PinMap.PHI2O);
+        set => WritePin(PinMap.PHI2O, value);
+    }
+
+    public byte RESB
+    {
+        get => ReadPin(PinMap.RESB);
+        set => WritePin(PinMap.RESB, value);
+    }
+
+    public byte DBGSTATE { get; set; }
+
+    public byte DBGSUBSTEP { get; set; }
+
+    public UInt8 DBGINST
+    {
+        get => _dbgInstReg;
+        set => _dbgInstReg.UpdateValue(value);
+    }
 }

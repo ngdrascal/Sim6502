@@ -33,7 +33,7 @@ public class ControlTests : UnitTestBase
         ExecuteClockCycles(1); // InstJMPabs3 - fetch the high byte of the target address
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedPC, Regs.PC);
     }
 
@@ -70,7 +70,7 @@ public class ControlTests : UnitTestBase
         ExecuteClockCycles(1); // InstJMPind5 - fetch the high byte of the target address
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedPC, Regs.PC);
     }
 
@@ -111,7 +111,7 @@ public class ControlTests : UnitTestBase
         ExecuteClockCycles(1); // InstJSRabs6 - set PC reg to the subroutine address
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedPC, Regs.PC);
         Assert.Equal(expectedStackTop, Regs.S);
     }
@@ -153,7 +153,7 @@ public class ControlTests : UnitTestBase
         ExecuteClockCycles(1); // InstRTIimp6 - pull the high byte of the PC reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedReturnAddr, Regs.PC);
         Assert.Equal(expectedStackTop, Regs.S);
         Assert.Equal(expectedFlags, Regs.P.GetFlags());
@@ -193,7 +193,7 @@ public class ControlTests : UnitTestBase
         ExecuteClockCycles(1); // InstRTSimp6 - update the PC reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedReturnAddr, Regs.PC);
         Assert.Equal(expectedStackTop, Regs.S);
     }

@@ -27,7 +27,7 @@ public class LDXTests : UnitTestBase
         ExecuteClockCycles(1); // InstLDXabs2 - fetch the first operand into X reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedX, Regs.X);
@@ -75,7 +75,7 @@ public class LDXTests : UnitTestBase
         ExecuteClockCycles(1); // InstLDXzpg3 - fetch the value at address zpg-value
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(operand), Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedX, Regs.X);
@@ -128,7 +128,7 @@ public class LDXTests : UnitTestBase
         ExecuteClockCycles(1); // InstLDXzpgy4 - fetch the value at address the effect address
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedX, Regs.X);
@@ -181,7 +181,7 @@ public class LDXTests : UnitTestBase
         ExecuteClockCycles(1); // InstLDXabs4 - fetch the value at effective address
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedX, Regs.X);
@@ -243,7 +243,7 @@ public class LDXTests : UnitTestBase
         }
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedX, Regs.X);

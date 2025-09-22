@@ -29,7 +29,7 @@ public class LSRTests : UnitTestBase
         ExecuteClockCycles(1); // LSRacc - shift value and update flags
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1000), Pins.AddrBus);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
@@ -91,7 +91,7 @@ public class LSRTests : UnitTestBase
         ExecuteClockCycles(1); // LSRzpg5 - store the value back to EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
@@ -157,7 +157,7 @@ public class LSRTests : UnitTestBase
         ExecuteClockCycles(1); // LSRzpgx6 - store the value back to EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
@@ -223,7 +223,7 @@ public class LSRTests : UnitTestBase
         ExecuteClockCycles(1); // LSRabs6 - store the value back to EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(finalAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
@@ -293,7 +293,7 @@ public class LSRTests : UnitTestBase
         ExecuteClockCycles(1); // LSRabsx7 - store the value back to EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);

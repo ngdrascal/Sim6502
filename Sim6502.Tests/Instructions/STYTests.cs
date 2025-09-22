@@ -33,11 +33,11 @@ public class STYTests : UnitTestBase
         ExecuteClockCycles(1); // InstSTYzpg3 - store the value in Y at address zpg-value
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(yValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
-        Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
+        Assert.Equal((byte)Low.ToInt(), Pins.RWB);
     }
 
     // -------------------------------------------------------------------------
@@ -69,11 +69,11 @@ public class STYTests : UnitTestBase
         ExecuteClockCycles(1); // InstSTYzpgx4 - store the value in Y at EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(yValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
-        Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
+        Assert.Equal((byte)Low.ToInt(), Pins.RWB);
     }
 
     // -------------------------------------------------------------------------
@@ -105,10 +105,10 @@ public class STYTests : UnitTestBase
         ExecuteClockCycles(1); // InstSTYabs4 - store the value in Y at EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(yValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
-        Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
+        Assert.Equal((byte)Low.ToInt(), Pins.RWB);
     }
 }

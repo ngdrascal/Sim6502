@@ -25,7 +25,7 @@ public class WAITests : UnitTestBase
         ExecuteClockCycles(1); // WAIimp3
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
     }
 }

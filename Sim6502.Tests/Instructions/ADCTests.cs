@@ -37,7 +37,7 @@ public class ADCTests : UnitTestBase
             ExecuteClockCycles(1); // InstADCimm3 - internal operation
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
@@ -120,7 +120,7 @@ public class ADCTests : UnitTestBase
             ExecuteClockCycles(1); // InstADCzpg4 - fetch the operand into EA reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
@@ -208,7 +208,7 @@ public class ADCTests : UnitTestBase
             ExecuteClockCycles(1); // InstADCzpgx5 - internal operation
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
@@ -296,7 +296,7 @@ public class ADCTests : UnitTestBase
             ExecuteClockCycles(1); // InstADCabs5 - internal operation
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
@@ -393,7 +393,7 @@ public class ADCTests : UnitTestBase
             ExecuteClockCycles(1); // InstADCabsx6 - internal operation
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
@@ -492,7 +492,7 @@ public class ADCTests : UnitTestBase
             ExecuteClockCycles(1); // InstADCabsy6 - internal operation
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
@@ -588,7 +588,7 @@ public class ADCTests : UnitTestBase
             ExecuteClockCycles(1); // InstADCindx7 - internal operation
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
@@ -692,7 +692,7 @@ public class ADCTests : UnitTestBase
             ExecuteClockCycles(1); // InstADCindy7 - internal operation
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
@@ -783,7 +783,7 @@ public class ADCTests : UnitTestBase
         ExecuteClockCycles(1); // InstADCidx5 - load the A reg. with the value at EA2
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);

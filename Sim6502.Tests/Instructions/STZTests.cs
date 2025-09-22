@@ -31,11 +31,11 @@ public class STZTests : UnitTestBase
         ExecuteClockCycles(1); // InstSTZzpg3 - store the value in Y at address zpg-value
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt8(0), Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
-        Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
+        Assert.Equal((byte)Low.ToInt(), Pins.RWB);
     }
 
     // -------------------------------------------------------------------------
@@ -65,11 +65,11 @@ public class STZTests : UnitTestBase
         ExecuteClockCycles(1); // InstSTZzpgx4 - store the zero at EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt8(0), Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
-        Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
+        Assert.Equal((byte)Low.ToInt(), Pins.RWB);
     }
 
     // -------------------------------------------------------------------------
@@ -99,11 +99,11 @@ public class STZTests : UnitTestBase
         ExecuteClockCycles(1); // InstSTZabs4 - store the zero at EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt8(0), Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
-        Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
+        Assert.Equal((byte)Low.ToInt(), Pins.RWB);
     }
 
     // -------------------------------------------------------------------------
@@ -137,10 +137,10 @@ public class STZTests : UnitTestBase
         ExecuteClockCycles(1); // InstSTZabsx5 - store zero at EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt8(0), Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
-        Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
+        Assert.Equal((byte)Low.ToInt(), Pins.RWB);
     }
 }

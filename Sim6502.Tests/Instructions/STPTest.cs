@@ -26,7 +26,7 @@ public class STPTests : UnitTestBase
         ExecuteClockCycles(1); // STPimp3
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
     }
 
@@ -44,11 +44,11 @@ public class STPTests : UnitTestBase
         ExecuteClockCycles(1); // STPimp2
         ExecuteClockCycles(1); // STPimp3
 
-        Pins.SetRESB(0);       // Assert reset
+        Pins.RESB = 0;       // Assert reset
         ExecuteClockCycles(2); // hold low for 2 or more clock cycles
 
         Pins.DataBus = (new UInt8(0x21));
-        Pins.SetRESB(1);       // De-assert reset
+        Pins.RESB = 1;       // De-assert reset
         ExecuteClockCycles(2); // Boot1
 
         Pins.DataBus = (new UInt8(0x43));
@@ -73,11 +73,11 @@ public class STPTests : UnitTestBase
         ExecuteClockCycles(1); // STPimp2
         ExecuteClockCycles(1); // STPimp3
 
-        Pins.SetRESB(0); // Assert reset
+        Pins.RESB = 0; // Assert reset
         ExecuteClockCycles(1); // hold low for only 1 cycle
 
         Pins.DataBus = (new UInt8(0x21));
-        Pins.SetRESB(1); // De-assert reset
+        Pins.RESB = 1; // De-assert reset
         ExecuteClockCycles(2); // Boot1
 
         Pins.DataBus = (new UInt8(0x43));

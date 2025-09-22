@@ -27,7 +27,7 @@ public class TransferTests : UnitTestBase
         ExecuteClockCycles(1); // InstTAXimp - transfer the value in the A reg to the X reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(aValue, Regs.X);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -70,7 +70,7 @@ public class TransferTests : UnitTestBase
         ExecuteClockCycles(1); // InstTAYimp - transfer the value in the A reg to the Y reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(aValue, Regs.Y);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -113,7 +113,7 @@ public class TransferTests : UnitTestBase
         ExecuteClockCycles(1); // InstTSXimp - transfer the value in the S reg to the X reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(sValue, Regs.X);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -156,7 +156,7 @@ public class TransferTests : UnitTestBase
         ExecuteClockCycles(1); // InstTXAimp - transfer the value in the X reg to the A reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(xValue, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
@@ -199,7 +199,7 @@ public class TransferTests : UnitTestBase
         ExecuteClockCycles(1); // InstTXSimp - transfer the value in the X reg to the S reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(xValue, Regs.S);
     }
@@ -240,7 +240,7 @@ public class TransferTests : UnitTestBase
         ExecuteClockCycles(1); // InstTYAimp - transfer the value in the Y reg to the A reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(yValue, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);

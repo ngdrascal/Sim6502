@@ -92,7 +92,7 @@ public class InstBRK : InstBase, IInstruction
                 ctx.Pins.AddrBus = new UInt16(0xFFFA);
             else
                 ctx.Pins.AddrBus = new UInt16(0xFFFE);
-            ctx.Pins.SetRWB(Read);
+            ctx.Pins.RWB = Read;
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
@@ -112,7 +112,7 @@ public class InstBRK : InstBase, IInstruction
                 ctx.Pins.AddrBus = new UInt16(0xFFFB);
             else
                 ctx.Pins.AddrBus = new UInt16(0xFFFF);
-            ctx.Pins.SetRWB(Read);
+            ctx.Pins.RWB = Read;
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {

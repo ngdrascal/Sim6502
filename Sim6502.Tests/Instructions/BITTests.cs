@@ -30,7 +30,7 @@ public class BITTests : UnitTestBase
         ExecuteClockCycles(1); // InstBITimm2 - AND A reg. with operand, update flags
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(aValue, Regs.A);
@@ -94,7 +94,7 @@ public class BITTests : UnitTestBase
         ExecuteClockCycles(1); // InstBITzpg3 - fetch the memory value at EA then BIT it with A reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(aValue, Regs.A);
@@ -162,7 +162,7 @@ public class BITTests : UnitTestBase
         ExecuteClockCycles(1); // InstBITzpgx4 - fetch the memory value at EA into temp then BIT Temp reg with A reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(aValue, Regs.A);
@@ -230,7 +230,7 @@ public class BITTests : UnitTestBase
         ExecuteClockCycles(1); // InstBITabs4 - fetch the memory value at EA into temp then BIT Temp reg with A reg
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(aValue, Regs.A);
@@ -306,7 +306,7 @@ public class BITTests : UnitTestBase
         }
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(aValue, Regs.A);

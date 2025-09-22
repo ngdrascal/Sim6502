@@ -33,11 +33,11 @@ public class STATests : UnitTestBase
         ExecuteClockCycles(1); // InstSTAzpg3 - store the value in A at address zpg-value
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
-        Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
+        Assert.Equal((byte)Low.ToInt(), Pins.RWB);
     }
 
     // -------------------------------------------------------------------------
@@ -69,11 +69,11 @@ public class STATests : UnitTestBase
         ExecuteClockCycles(1); // InstSTAzpgx4 - store the value in A at address zpg-value,X
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
-        Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
+        Assert.Equal((byte)Low.ToInt(), Pins.RWB);
     }
 
     // -------------------------------------------------------------------------
@@ -105,11 +105,11 @@ public class STATests : UnitTestBase
         ExecuteClockCycles(1); // InstSTAabs4 - store the value in A at absHi,absLo
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
-        Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
+        Assert.Equal((byte)Low.ToInt(), Pins.RWB);
     }
 
     // -------------------------------------------------------------------------
@@ -143,11 +143,11 @@ public class STATests : UnitTestBase
         ExecuteClockCycles(1); // InstLDAabsx5 - store A reg at the effective address       
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
-        Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
+        Assert.Equal((byte)Low.ToInt(), Pins.RWB);
     }
 
     [Fact]
@@ -193,11 +193,11 @@ public class STATests : UnitTestBase
         ExecuteClockCycles(1); // InstLDAabsy5 - store A reg at the effective address
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
-        Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
+        Assert.Equal((byte)Low.ToInt(), Pins.RWB);
     }
 
     [Fact]
@@ -249,11 +249,11 @@ public class STATests : UnitTestBase
         ExecuteClockCycles(1); // InstSTAidx6 - store the A reg. at EA2
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
-        Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
+        Assert.Equal((byte)Low.ToInt(), Pins.RWB);
     }
 
     [Fact]
@@ -307,11 +307,11 @@ public class STATests : UnitTestBase
         ExecuteClockCycles(1); // InstLDAindy6 - store the A reg. at EA
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
-        Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
+        Assert.Equal((byte)Low.ToInt(), Pins.RWB);
     }
 
     [Fact]
@@ -358,11 +358,11 @@ public class STATests : UnitTestBase
         ExecuteClockCycles(1); // InstSTAidx5 - store the A reg. with the value at EA2
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.GetDBGINST());
+        Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedAddr, Pins.AddrBus);
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
-        Assert.Equal((byte)Low.ToInt(), Pins.GetRWB());
+        Assert.Equal((byte)Low.ToInt(), Pins.RWB);
     }
 
     [Fact]
