@@ -6,9 +6,6 @@ namespace Sim6502;
 public class Pins : IPinsInternal, IPinsExternal
 {
     private readonly byte[] _pinValues;
-    private AddrBusMode _addrBusMode = AddrBusMode.HighZ;
-    private DataBusMode _dataBusMode = DataBusMode.Input;
-    private const RdyPinMode RdyPinMode = Sim6502.RdyPinMode.Input;
     private readonly UInt8 _dbgInstReg = new();
 
     public Pins()
@@ -40,7 +37,7 @@ public class Pins : IPinsInternal, IPinsExternal
         set => WritePin(PinMap.VPB, value);
     }
 
-    public RdyPinMode GetRdyPinMode() => RdyPinMode;
+    public RdyPinMode RdyPinMode { get; } = RdyPinMode.Input;
 
     public byte RDY
     {
@@ -78,9 +75,7 @@ public class Pins : IPinsInternal, IPinsExternal
         set => WritePin(PinMap.SYNC, value);
     }
 
-    public AddrBusMode GetAddrBusMode() => _addrBusMode;
-
-    public void SetAddrBusMode(AddrBusMode mode) => _addrBusMode = mode;
+    public AddrBusMode AddrBusMode { get; set; } = AddrBusMode.HighZ;
 
     public byte GetA0() => ReadPin(PinMap.A0);
     public byte GetA1() => ReadPin(PinMap.A1);
@@ -124,9 +119,7 @@ public class Pins : IPinsInternal, IPinsExternal
         }
     }
 
-    public DataBusMode GetDataBusMode() => _dataBusMode;
-
-    public void SetDataBusMode(DataBusMode mode) => _dataBusMode = mode;
+    public DataBusMode DataBusMode { get; set; } = DataBusMode.Input;
 
     public UInt8 DataBus
     {

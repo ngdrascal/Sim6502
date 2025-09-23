@@ -237,9 +237,9 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         ctx.Pins.PHI1O = High;
         ctx.Pins.PHI1O = High;
         ctx.Pins.PHI1O = Low;
-        ctx.Pins.SetAddrBusMode(AddrBusMode.Output);
+        ctx.Pins.AddrBusMode = AddrBusMode.Output;
         ctx.Pins.AddrBus = new UInt16(0xFFFF);
-        ctx.Pins.SetDataBusMode(DataBusMode.Input);
+        ctx.Pins.DataBusMode = DataBusMode.Input;
         ctx.Pins.RWB = Read;
     }
 
@@ -257,8 +257,8 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         }
         else if (ctx.GetSubStep() == P1MiddleStep)
         {
-            ctx.Pins.SetAddrBusMode(AddrBusMode.Output);
-            ctx.Pins.SetDataBusMode(DataBusMode.Input);
+            ctx.Pins.AddrBusMode = AddrBusMode.Output;
+            ctx.Pins.DataBusMode = DataBusMode.Input;
             ctx.Pins.AddrBus = new UInt16(0xFFFC);
             ctx.Pins.RWB = Read;
         }
@@ -291,7 +291,7 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         {
             ctx.Pins.PHI1O = High;
             ctx.Pins.RWB = Read;
-            ctx.Pins.SetDataBusMode(DataBusMode.Input);
+            ctx.Pins.DataBusMode = DataBusMode.Input;
         }
         else if (ctx.GetSubStep() == P1MiddleStep)
         {

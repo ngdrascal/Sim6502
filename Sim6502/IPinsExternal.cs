@@ -6,11 +6,11 @@ namespace Sim6502;
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 public interface IPinsExternal
 {
-    DataBusMode GetDataBusMode();
+    DataBusMode DataBusMode { get; }
 
     byte VPB { get; }
 
-    RdyPinMode GetRdyPinMode();
+    RdyPinMode RdyPinMode { get; }
 
     byte RDY { set; }
 
@@ -24,7 +24,7 @@ public interface IPinsExternal
 
     byte SYNC { get; }
 
-    AddrBusMode GetAddrBusMode();
+    AddrBusMode AddrBusMode { get; }
 
     byte GetA0();
 

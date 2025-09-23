@@ -127,7 +127,7 @@ public class UnitTestBase
                     if (addr == 0xFFFE)
                         break;
 
-                    Pins.SetDataBusMode(DataBusMode.Input);
+                    Pins.DataBusMode = DataBusMode.Input;
                     Pins.DataBus = new UInt8(Memory[addr]);
                 }
                 else

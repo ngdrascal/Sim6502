@@ -1,6 +1,8 @@
+#pragma warning disable IDE0051
 // ReSharper disable InconsistentNaming
 using UInt8 = Sim6502.types.UInt8;
 using UInt16 = Sim6502.types.UInt16;
+
 
 namespace Sim6502;
 
@@ -20,11 +22,11 @@ public interface IPinsInternal
 
     byte SYNC { set; }
 
-    void SetAddrBusMode(AddrBusMode mode);
+    AddrBusMode AddrBusMode { set; }
 
     UInt16 AddrBus { get; set; }
 
-    void SetDataBusMode(DataBusMode mode);
+    DataBusMode DataBusMode { set; }
 
     UInt8 DataBus { get; set; }
 

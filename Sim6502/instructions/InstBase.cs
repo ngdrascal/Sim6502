@@ -139,7 +139,7 @@ public class InstBase
         {
             ctx.Pins.AddrBus = ctx.Regs.EA;
             ctx.Pins.RWB = Write;
-            ctx.Pins.SetDataBusMode(DataBusMode.Output);
+            ctx.Pins.DataBusMode = DataBusMode.Output;
         }
         else if (ctx.GetSubStep() == P2MiddleStep)
         {
@@ -192,7 +192,7 @@ public class InstBase
         }
         if (ctx.GetSubStep() == P2MiddleStep)
         {
-            ctx.Pins.SetDataBusMode(DataBusMode.Output);
+            ctx.Pins.DataBusMode = DataBusMode.Output;
         }
     }
 
@@ -202,7 +202,7 @@ public class InstBase
         {
             var sp = new UInt16(0x100).AddUnsigned(ctx.Regs.S);
             ctx.Pins.AddrBus = sp;
-            ctx.Pins.SetDataBusMode(DataBusMode.Input);
+            ctx.Pins.DataBusMode = DataBusMode.Input;
             ctx.Pins.RWB = Read;
         }
     }
@@ -213,7 +213,7 @@ public class InstBase
         {
             var sp = new UInt16(0x100).AddUnsigned(ctx.Regs.S);
             ctx.Pins.AddrBus = sp;
-            ctx.Pins.SetDataBusMode(DataBusMode.Output);
+            ctx.Pins.DataBusMode = DataBusMode.Output;
             ctx.Pins.RWB = Write;
         }
         else if (ctx.GetSubStep() == P2MiddleStep)
@@ -235,7 +235,7 @@ public class InstBase
             ctx.Regs.S.Inc();
             var sp = new UInt16(0x100).AddUnsigned(ctx.Regs.S);
             ctx.Pins.AddrBus = sp;
-            ctx.Pins.SetDataBusMode(DataBusMode.Input);
+            ctx.Pins.DataBusMode = DataBusMode.Input;
             ctx.Pins.RWB = Read;
         }
         else if (ctx.GetSubStep() == P2LastSubstep)

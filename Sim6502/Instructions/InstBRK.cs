@@ -86,8 +86,8 @@ public class InstBRK : InstBase, IInstruction
         // read 0xFFFE into the PCL
         if (ctx.GetSubStep() == P1MiddleStep)
         {
-            ctx.Pins.SetAddrBusMode(AddrBusMode.Output);
-            ctx.Pins.SetDataBusMode(DataBusMode.Input);
+            ctx.Pins.AddrBusMode = AddrBusMode.Output;
+            ctx.Pins.DataBusMode = DataBusMode.Input;
             if (ctx.NmiFlag)
                 ctx.Pins.AddrBus = new UInt16(0xFFFA);
             else

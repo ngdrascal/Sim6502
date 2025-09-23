@@ -58,7 +58,7 @@ public class InstSTA : InstBase, IInstruction
         {
             ctx.Pins.AddrBus = ctx.Regs.EA;
             ctx.Pins.RWB = Constants.Write;
-            ctx.Pins.SetDataBusMode(DataBusMode.Output);
+            ctx.Pins.DataBusMode = DataBusMode.Output;
         }
         else if (ctx.GetSubStep() == Constants.P2MiddleStep)
         {
