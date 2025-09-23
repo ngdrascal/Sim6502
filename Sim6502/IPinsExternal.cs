@@ -26,69 +26,53 @@ public interface IPinsExternal
 
     AddrBusMode AddrBusMode { get; }
 
-    byte GetA0();
+    byte A0 { get; }
 
-    byte GetA1();
+    byte A1 { get; }
 
-    byte GetA2();
+    byte A2 { get; }
 
-    byte GetA3();
+    byte A3 { get; }
 
-    byte GetA4();
+    byte A4 { get; }
 
-    byte GetA5();
+    byte A5 { get; }
 
-    byte GetA6();
+    byte A6 { get; }
 
-    byte GetA7();
+    byte A7 { get; }
 
-    byte GetA8();
+    byte A8 { get; }
 
-    byte GetA9();
+    byte A9 { get; }
 
-    byte GetA10();
+    byte A10 { get; }
 
-    byte GetA11();
+    byte A11 { get; }
 
-    byte GetA12();
+    byte A12 { get; }
 
-    byte GetA13();
+    byte A13 { get; }
 
-    byte GetA14();
+    byte A14 { get; }
 
-    byte GetA15();
+    byte A15 { get; }
 
-    byte GetD7();
+    byte D7 { get; set; }
 
-    void SetD7(byte value);
+    byte D6 { get; set; }
 
-    byte GetD6();
+    byte D5 { get; set; }
 
-    void SetD6(byte value);
+    byte D4 { get; set; }
 
-    byte GetD5();
+    byte D3 { get; set; }
 
-    void SetD5(byte value);
+    byte D2 { get; set; }
 
-    byte GetD4();
+    byte D1 { get; set; }
 
-    void SetD4(byte value);
-
-    byte GetD3();
-
-    void SetD3(byte value);
-
-    byte GetD2();
-
-    void SetD2(byte value);
-
-    byte GetD1();
-
-    void SetD1(byte value);
-
-    byte GetD0();
-
-    void SetD0(byte value);
+    byte D0 { get; set; }
 
     byte RWB { get; }
 

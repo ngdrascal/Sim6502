@@ -77,22 +77,37 @@ public class Pins : IPinsInternal, IPinsExternal
 
     public AddrBusMode AddrBusMode { get; set; } = AddrBusMode.HighZ;
 
-    public byte GetA0() => ReadPin(PinMap.A0);
-    public byte GetA1() => ReadPin(PinMap.A1);
-    public byte GetA2() => ReadPin(PinMap.A2);
-    public byte GetA3() => ReadPin(PinMap.A3);
-    public byte GetA4() => ReadPin(PinMap.A4);
-    public byte GetA5() => ReadPin(PinMap.A5);
-    public byte GetA6() => ReadPin(PinMap.A6);
-    public byte GetA7() => ReadPin(PinMap.A7);
-    public byte GetA8() => ReadPin(PinMap.A8);
-    public byte GetA9() => ReadPin(PinMap.A9);
-    public byte GetA10() => ReadPin(PinMap.A10);
-    public byte GetA11() => ReadPin(PinMap.A11);
-    public byte GetA12() => ReadPin(PinMap.A12);
-    public byte GetA13() => ReadPin(PinMap.A13);
-    public byte GetA14() => ReadPin(PinMap.A14);
-    public byte GetA15() => ReadPin(PinMap.A15);
+    public byte A0 => ReadPin(PinMap.VPB);
+
+    public byte A1 => ReadPin(PinMap.A1);
+
+    public byte A2 => ReadPin(PinMap.A2);
+
+    public byte A3 => ReadPin(PinMap.A3);
+
+    public byte A4 => ReadPin(PinMap.A4);
+
+    public byte A5 => ReadPin(PinMap.A5);
+
+    public byte A6 => ReadPin(PinMap.A6);
+
+    public byte A7 => ReadPin(PinMap.A7);
+
+    public byte A8 => ReadPin(PinMap.A8);
+
+    public byte A9 => ReadPin(PinMap.A9);
+
+    public byte A10 => ReadPin(PinMap.A10);
+
+    public byte A11 => ReadPin(PinMap.A11);
+
+    public byte A12 => ReadPin(PinMap.A12);
+
+    public byte A13 => ReadPin(PinMap.A13);
+
+    public byte A14 => ReadPin(PinMap.A14);
+
+    public byte A15 => ReadPin(PinMap.A15);
 
     public UInt16 AddrBus
     {
@@ -126,14 +141,14 @@ public class Pins : IPinsInternal, IPinsExternal
         get
         {
             var data = 0;
-            data |= GetD0();
-            data |= GetD1() << 1;
-            data |= GetD2() << 2;
-            data |= GetD3() << 3;
-            data |= GetD4() << 4;
-            data |= GetD5() << 5;
-            data |= GetD6() << 6;
-            data |= GetD7() << 7;
+            data |= D0;
+            data |= D1 << 1;
+            data |= D2 << 2;
+            data |= D3 << 3;
+            data |= D4 << 4;
+            data |= D5 << 5;
+            data |= D6 << 6;
+            data |= D7 << 7;
             return new UInt8(data);
         }
         set
@@ -150,22 +165,53 @@ public class Pins : IPinsInternal, IPinsExternal
         }
     }
 
-    public byte GetD7() => ReadPin(PinMap.D7);
-    public void SetD7(byte value) => WritePin(PinMap.D7, value);
-    public byte GetD6() => ReadPin(PinMap.D6);
-    public void SetD6(byte value) => WritePin(PinMap.D6, value);
-    public byte GetD5() => ReadPin(PinMap.D5);
-    public void SetD5(byte value) => WritePin(PinMap.D5, value);
-    public byte GetD4() => ReadPin(PinMap.D4);
-    public void SetD4(byte value) => WritePin(PinMap.D4, value);
-    public byte GetD3() => ReadPin(PinMap.D3);
-    public void SetD3(byte value) => WritePin(PinMap.D3, value);
-    public byte GetD2() => ReadPin(PinMap.D2);
-    public void SetD2(byte value) => WritePin(PinMap.D2, value);
-    public byte GetD1() => ReadPin(PinMap.D1);
-    public void SetD1(byte value) => WritePin(PinMap.D1, value);
-    public byte GetD0() => ReadPin(PinMap.D0);
-    public void SetD0(byte value) => WritePin(PinMap.D0, value);
+    public byte D7
+    {
+        get => ReadPin(PinMap.D7);
+        set => WritePin(PinMap.D7, value);
+    }
+
+    public byte D6
+    {
+        get => ReadPin(PinMap.D6);
+        set => WritePin(PinMap.D6, value);
+    }
+
+    public byte D5
+    {
+        get => ReadPin(PinMap.D5);
+        set => WritePin(PinMap.D5, value);
+    }
+
+    public byte D4
+    {
+        get => ReadPin(PinMap.D4);
+        set => WritePin(PinMap.D4, value);
+    }
+
+    public byte D3
+    {
+        get => ReadPin(PinMap.D3);
+        set => WritePin(PinMap.D3, value);
+    }
+
+    public byte D2
+    {
+        get => ReadPin(PinMap.D2);
+        set => WritePin(PinMap.D2, value);
+    }
+
+    public byte D1
+    {
+        get => ReadPin(PinMap.D1);
+        set => WritePin(PinMap.D1, value);
+    }
+
+    public byte D0
+    {
+        get => ReadPin(PinMap.D0);
+        set => WritePin(PinMap.D0, value);
+    }
 
     public byte RWB
     {
