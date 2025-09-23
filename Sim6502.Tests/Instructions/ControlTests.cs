@@ -251,6 +251,6 @@ public class ControlTests : UnitTestBase
         ExecuteProgram(program, new UInt16(0x0000));
 
         // ASSERT:
-        // Assert.Equal(true, Regs.P.Carry.IsSet());      
+        Assert.False(Regs.P.Carry.IsSet());      
     }
 }

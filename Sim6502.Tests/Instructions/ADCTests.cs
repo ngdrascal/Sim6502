@@ -853,7 +853,7 @@ public class ADCTests : UnitTestBase
             cFlagOpCode,        // 0008:        SEC|CLC             ; set|clear the carry flag
             0xA9, acc,          // 0009:        LDA #$'ACC'         ; A = acc
             0x69, operand,      // 000B:        ADC #$'operand'     ; A = A - operand
-            0x00 // 000D:        BRK
+            0x00                // 000D:        BRK
         ];
 
         // ACT:
