@@ -1,3 +1,5 @@
+// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedMemberInSuper.Global
 using System.Diagnostics.CodeAnalysis;
 using UInt8 = Sim6502.types.UInt8;
 
