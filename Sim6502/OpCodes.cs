@@ -303,7 +303,7 @@ public static class OpCodesExtensions
     public static int ToInt(this OpCodes opCode) => (int)opCode;
 
     public static UInt8 ToUInt8(this OpCodes opCode) => new((int)opCode);
-    
+
     public static OpCodes FromValue(int value)
     {
         if (value < 0 || value > 255)

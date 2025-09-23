@@ -1,6 +1,7 @@
 namespace Sim6502;
 
-public enum AddrBusMode {
+public enum AddrBusMode
+{
     Output,
     HighZ
 }

@@ -1,8 +1,8 @@
-// ReSharper disable InconsistentNaming
+#pragma warning disable IDE0051
 namespace Sim6502;
 
 /// <summary>
-/// Pin mapping for W65c02s. Converted from PinMap.java
+/// Pin mapping for W65c02s.
 /// </summary>
 /// <remarks>
 ///      +----------------+
@@ -70,8 +70,8 @@ public static class PinMap {
     public const byte PHI2O = 39;
     public const byte RESB = 40;
 
-    public static readonly byte[] DataPins = { D0, D1, D2, D3, D4, D5, D6, D7 };
+    public static readonly byte[] DataPins = [D0, D1, D2, D3, D4, D5, D6, D7];
 
-    public static readonly byte[] AddrPins = { A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15 };
+    public static readonly byte[] AddrPins = [A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15];
 
 }
