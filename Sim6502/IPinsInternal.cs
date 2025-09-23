@@ -3,7 +3,6 @@
 using UInt8 = Sim6502.types.UInt8;
 using UInt16 = Sim6502.types.UInt16;
 
-
 namespace Sim6502;
 
 public interface IPinsInternal
