@@ -27,7 +27,7 @@ public class UnitTestBase
         var loggerFactory = LoggerFactory.Create(builder =>
         {
             builder.AddConsoleIndentLogger(_ => { })
-                .SetMinimumLevel(LogLevel.Debug);
+                .SetMinimumLevel(LogLevel.Trace);
         });
         var instLogger = loggerFactory.CreateLogger("W65c02s.inst_");
         var stateLogger = loggerFactory.CreateLogger("W65c02s.state");
@@ -50,7 +50,7 @@ public class UnitTestBase
         {
             if (_ctx.GetSubStep() == Constants.P2LastSubstep)
                 _ctx.CaptureRegs();
-            stateLogger.LogTrace("   state: {CtxState} substep: {SubStep} regs: {regs}", args.State, args.Substep, _ctx.Regs);
+            stateLogger.LogTrace("   state: {CtxState} substep: {SubStep} regs: {regs} addr-bus: {addrBus}", args.State, args.Substep, _ctx.Regs, _ctx.Pins.AddrBus);
         };
 
         _phi2 = (byte)Low.ToInt();

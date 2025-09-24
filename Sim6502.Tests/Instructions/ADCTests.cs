@@ -3,6 +3,8 @@ using Sim6502.types;
 using UInt16 = Sim6502.types.UInt16;
 using UInt8 = Sim6502.types.UInt8;
 
+[assembly: CaptureConsole]
+
 namespace Sim6502.Tests.Instructions;
 
 [ExcludeFromCodeCoverage]
