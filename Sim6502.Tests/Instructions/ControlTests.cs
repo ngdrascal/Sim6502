@@ -219,7 +219,7 @@ public class ControlTests : UnitTestBase
         ];
 
         // ACT:
-        ExecuteProgram(program, new UInt16(0x0000));
+        ExecuteProgram(program, 0, 0);
 
         // ASSERT:
         Assert.True(Regs.P.Carry.IsSet());
@@ -248,7 +248,7 @@ public class ControlTests : UnitTestBase
         ];
 
         // ACT:
-        ExecuteProgram(program, new UInt16(0x0000));
+        ExecuteProgram(program, 0, 0);
 
         // ASSERT:
         Assert.False(Regs.P.Carry.IsSet());      

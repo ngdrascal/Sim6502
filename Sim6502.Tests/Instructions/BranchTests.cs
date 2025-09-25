@@ -714,7 +714,7 @@ public class BranchTests : UnitTestBase
         ];
 
         // ACT:
-        ExecuteProgram(program, BootAddr);
+        ExecuteProgram(program, 0, 0);
 
         // ASSERT:
         Assert.Equal(0x00, Memory[BootAddr.ToInt() + 0x4C]);
