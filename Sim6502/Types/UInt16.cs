@@ -19,6 +19,10 @@ public class UInt16
 
     public UInt16(UInt8 lsb) => UpdateValue(lsb.ToInt());
 
+    public static implicit operator UInt16(ushort value) => new UInt16(value);
+
+    public static implicit operator ushort(UInt16 value) => (ushort)value.ToInt();
+    
     public UInt16 Copy() => new UInt16(_lsb, _msb);
 
     public override bool Equals(object? o)
