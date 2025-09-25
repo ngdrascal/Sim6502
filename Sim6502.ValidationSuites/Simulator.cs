@@ -1,4 +1,5 @@
-﻿using UInt16 = Sim6502.types.UInt16;
+﻿using static System.Console;
+using UInt16 = Sim6502.types.UInt16;
 using UInt8 = Sim6502.types.UInt8;
 
 namespace Sim6502.ValidationSuites;
@@ -27,12 +28,20 @@ internal class Simulator
         _ctx = new Context(pins, regs);
         _engine = new W65C02SEngine(_ctx);
 
+        _pinsExt.IRQB = 1;
+        _pinsExt.NMIB = 1;
+        _pinsExt.BE = 1;
+        _pinsExt.PHI2 = 1;
+        _pinsExt.SOB = 1;
+        _pinsExt.RESB = 1;
+        _pinsExt.RDY = 1;
+
         _memory = new byte[MaxMemory];
 
         _phi2 = 0;
     }
 
-    public void LoadAndRunProgram(byte[] program,ushort loadAtAddress, ushort startFromAddr)
+    public void LoadAndRunProgram(byte[] program, ushort loadAtAddress, ushort startFromAddr)
     {
         const byte read = 1;
 
@@ -91,7 +100,7 @@ internal class Simulator
 
     private void ExecuteMicroSteps(int count)
     {
-        for (int i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             _pinsExt.PHI2 = _phi2;
             _engine.Step();

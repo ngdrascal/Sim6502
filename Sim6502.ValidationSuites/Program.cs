@@ -5,8 +5,8 @@
         static void Main()
         {
             var testSuite = new ValidationTests();
-            testSuite.RunBruceClarkBcdTest();
-            // testSuite.RunKlausDormannTest();
+            // testSuite.RunBruceClarkBcdTest();
+            testSuite.RunKlausDormannTest();
         }
     }
 }

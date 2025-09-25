@@ -53,10 +53,7 @@ public class ValidationTests
         WriteLine($"   flags : {BuildNvzcString(simulator.Peek(HNVZC))}");
         WriteLine($"Instruction count: {simulator.InstCount}");
 
-        if (simulator.Peek(ERROR) == 0x00)
-            WriteLine("BruceClarkBCDTest: PASS");
-        else
-            WriteLine("BruceClarkBCDTest: FAIL");
+        WriteLine("BruceClarkBCDTest: " + (simulator.Peek(ERROR) == 0x00 ? "PASS" : "FAIL"));
     }
 
     private string BuildNvzcString(byte nValue, byte vValue, byte zValue, byte cValue)

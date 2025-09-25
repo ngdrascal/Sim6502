@@ -10,7 +10,7 @@ public class UnitTestBase
 {
     private readonly Context _ctx;
     private byte _phi2;
-    private readonly W65C02SEngine _cpu;
+    private readonly W65C02SEngine _engine;
 
     protected readonly Pins Pins;
     protected readonly Registers Regs;
@@ -25,7 +25,7 @@ public class UnitTestBase
         var statusReg = new StatusRegister();
         Regs = new Registers(statusReg);
         _ctx = new Context(Pins, Regs);
-        _cpu = new W65C02SEngine(_ctx);
+        _engine = new W65C02SEngine(_ctx);
         _phi2 = (byte)Low.ToInt();
 
         // set the inputs
@@ -40,7 +40,7 @@ public class UnitTestBase
         var loggerFactory = LoggerFactory.Create(builder =>
         {
             builder.AddConsoleIndentLogger(_ => { })
-                .SetMinimumLevel(LogLevel.None);
+                .SetMinimumLevel(LogLevel.Trace);
         });
         var instLogger = loggerFactory.CreateLogger("W65c02s.inst_");
         var stateLogger = loggerFactory.CreateLogger("W65c02s.state");
@@ -57,7 +57,7 @@ public class UnitTestBase
             stateLogger.LogDebug("advanceState(): {newState}", args.NewState);
         };
 
-        _cpu.SubstepChanging += (_, args) =>
+        _engine.SubstepChanging += (_, args) =>
         {
             if (_ctx.GetSubStep() == Constants.P2LastSubstep)
                 _ctx.CaptureRegs();
@@ -95,7 +95,7 @@ public class UnitTestBase
         for (int i = 0; i < count; i++)
         {
             Pins.PHI2 = _phi2;
-            _cpu.Step();
+            _engine.Step();
 
             _phi2 = _phi2 == 0 ? (byte)1 : (byte)0;
         }
