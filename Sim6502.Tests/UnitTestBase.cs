@@ -9,8 +9,8 @@ namespace Sim6502.Tests;
 public class UnitTestBase
 {
     private readonly Context _ctx;
-    private readonly W65C02SEngine _cpu;
     private byte _phi2;
+    private readonly W65C02SEngine _cpu;
 
     protected readonly Pins Pins;
     protected readonly Registers Regs;
@@ -24,15 +24,27 @@ public class UnitTestBase
         Pins = new Pins();
         var statusReg = new StatusRegister();
         Regs = new Registers(statusReg);
+        _ctx = new Context(Pins, Regs);
+        _cpu = new W65C02SEngine(_ctx);
+        _phi2 = (byte)Low.ToInt();
+
+        // set the inputs
+        Pins.IRQB = (byte)High.ToInt();
+        Pins.NMIB = (byte)High.ToInt();
+        Pins.BE = (byte)High.ToInt();
+        Pins.PHI2 = (byte)Low.ToInt();
+        Pins.SOB = (byte)High.ToInt();
+        Pins.RESB = (byte)High.ToInt();
+        Pins.RDY = (byte)High.ToInt();
+
         var loggerFactory = LoggerFactory.Create(builder =>
         {
             builder.AddConsoleIndentLogger(_ => { })
-                .SetMinimumLevel(LogLevel.Trace);
+                .SetMinimumLevel(LogLevel.None);
         });
         var instLogger = loggerFactory.CreateLogger("W65c02s.inst_");
         var stateLogger = loggerFactory.CreateLogger("W65c02s.state");
 
-        _ctx = new Context(Pins, Regs);
         _ctx.StateChanging += (_, args) =>
         {
             if (args.NewState == States.Fetch && _ctx.DbgOpCode != null)
@@ -45,24 +57,12 @@ public class UnitTestBase
             stateLogger.LogDebug("advanceState(): {newState}", args.NewState);
         };
 
-        _cpu = new W65C02SEngine(_ctx);
         _cpu.SubstepChanging += (_, args) =>
         {
             if (_ctx.GetSubStep() == Constants.P2LastSubstep)
                 _ctx.CaptureRegs();
             stateLogger.LogTrace("   state: {CtxState} substep: {SubStep} regs: {regs} addr-bus: {addrBus}", args.State, args.Substep, _ctx.Regs, _ctx.Pins.AddrBus);
         };
-
-        _phi2 = (byte)Low.ToInt();
-
-        // set the inputs
-        Pins.IRQB = (byte)High.ToInt();
-        Pins.NMIB = (byte)High.ToInt();
-        Pins.BE = (byte)High.ToInt();
-        Pins.PHI2 = (byte)Low.ToInt();
-        Pins.SOB = (byte)High.ToInt();
-        Pins.RESB = (byte)High.ToInt();
-        Pins.RDY = (byte)High.ToInt();
     }
 
     protected void BootToAddress(UInt16 addr)
@@ -103,16 +103,15 @@ public class UnitTestBase
 
     protected readonly byte[] Memory = new byte[64 * 1024];
 
-    protected void ExecuteProgram(byte[] program, UInt16 startAddr)
+    protected void ExecuteProgram(byte[] program, int loadToAddr, int runFromAddr)
     {
         // ARRANGE:
         const byte read = 1;
 
-        var startAddrInt = startAddr.ToInt();
         for (var i = 0; i < program.Length; i++)
-            Memory[startAddrInt + i] = program[i];
+            Memory[loadToAddr + i] = program[i];
 
-        BootToAddress(startAddr);
+        BootToAddress(new UInt16(runFromAddr));
 
         // ACT:
         while (true)
