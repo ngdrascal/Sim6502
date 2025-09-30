@@ -1,5 +1,4 @@
-﻿using static System.Console;
-using UInt16 = Sim6502.types.UInt16;
+﻿using UInt16 = Sim6502.types.UInt16;
 using UInt8 = Sim6502.types.UInt8;
 
 namespace Sim6502.ValidationSuites;
@@ -31,7 +30,7 @@ internal class Simulator
         _pinsExt.IRQB = 1;
         _pinsExt.NMIB = 1;
         _pinsExt.BE = 1;
-        _pinsExt.PHI2 = 1;
+        _pinsExt.PHI2 = 0;
         _pinsExt.SOB = 1;
         _pinsExt.RESB = 1;
         _pinsExt.RDY = 1;
@@ -39,6 +38,19 @@ internal class Simulator
         _memory = new byte[MaxMemory];
 
         _phi2 = 0;
+
+        _ctx.StateChanging += (_, args) =>
+        {
+            if (args.NewState == States.Fetch && _ctx.DbgOpCode != null)
+            {
+                Console.WriteLine($"{Disassembler.Disassemble(_ctx),-24} {_ctx.Regs}");
+            }
+        };
+
+        // _engine.SubstepChanging += (_, args) =>
+        // {
+        //     Console.WriteLine($"   state: {args.State} substep: {args.Substep} regs: {_ctx.Regs} addr-bus: { _ctx.Pins.AddrBus}");
+        // };
     }
 
     public void LoadAndRunProgram(byte[] program, ushort loadAtAddress, ushort startFromAddr)

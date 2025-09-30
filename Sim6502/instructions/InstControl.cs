@@ -181,7 +181,7 @@ public class InstControl : InstBase, IInstruction
     private void RtiImp4(Context ctx)
     {
         // pull status register
-        var flags = ctx.Regs.P.GetFlags();
+        var flags = ctx.Regs.P.ToUInt8();
         PullFromStack(ctx, flags);
         ctx.Regs.P.SetFlags(flags);
 

@@ -6,7 +6,6 @@ namespace Sim6502;
 public class Context
 {
     private int _subStep;
-    private Registers? _debugCapture;
 
     public Context(IPinsInternal pins, Registers registers)
     {
@@ -91,11 +90,4 @@ public class Context
     public UInt8 DbgOperand1 { get; set; }
 
     public UInt8 DbgOperand2 { get; set; }
-
-    public void CaptureRegs()
-    {
-        _debugCapture = new Registers(Regs);
-    }
-
-    public Registers? DebugCapture => _debugCapture;
 }

@@ -859,7 +859,7 @@ public class ADCTests : UnitTestBase
         ];
 
         // ACT:
-        ExecuteProgram(program, 0, 0);
+        ExecuteProgram(program, 0x1000, 0x1000);
 
         // ASSERT:
         Assert.Equal(expected.Value(), Regs.A);

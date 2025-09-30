@@ -22,7 +22,7 @@ public class StackTests : UnitTestBase
         Regs.S.UpdateValue(spValue);
 
         // ACT:
-        Pins.DataBus = (opCode);
+        Pins.DataBus= opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstPHAimp2 - read the next instruction and discard
@@ -41,17 +41,17 @@ public class StackTests : UnitTestBase
     public void TestPHPimp()
     {
         var opCode = OpCodes.PHPimp.ToUInt8();
-        var pValue = new UInt8(0b10101010);
+        var pValue = "NvbdiZc";
         var spValue = new UInt8(0xFF);
         var stackTop = new UInt16(0x100).AddUnsigned(spValue);
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.P.SetFlags(pValue);
+        Regs.P.LoadFlags(pValue);
         Regs.S.UpdateValue(spValue);
 
         // ACT:
-        Pins.DataBus = (opCode);
+        Pins.DataBus= opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstPHPimp2 - read the next instruction and discard
@@ -62,7 +62,7 @@ public class StackTests : UnitTestBase
         // ASSERT:
         Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(stackTop, Pins.AddrBus);
-        Assert.Equal(pValue, Pins.DataBus);
+        Assert.Equal(Regs.P.ToUInt8(), Pins.DataBus);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(spValue.Dec(), Regs.S);
     }
@@ -81,7 +81,7 @@ public class StackTests : UnitTestBase
         Regs.S.UpdateValue(spValue);
 
         // ACT:
-        Pins.DataBus = (opCode);
+        Pins.DataBus= opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstPHAimp2 - read the next instruction and discard
@@ -111,7 +111,7 @@ public class StackTests : UnitTestBase
         Regs.S.UpdateValue(spValue);
 
         // ACT:
-        Pins.DataBus = (opCode);
+        Pins.DataBus= opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstPHAimp2 - read the next instruction and discard
@@ -140,7 +140,7 @@ public class StackTests : UnitTestBase
         Regs.S.UpdateValue(spValue);
 
         // ACT:
-        Pins.DataBus = (opCode);
+        Pins.DataBus= opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstPLAimp2 - read the next instruction and discard
@@ -164,16 +164,17 @@ public class StackTests : UnitTestBase
     public void TestPLP()
     {
         var opCode = OpCodes.PLPimp.ToUInt8();
-        var expectedValue = new UInt8(0xAA);
+        var expectedValue = UInt8FromFlags("NvbDiZc");
         var spValue = new UInt8(0xFE);
         var stackTop = new UInt16(0x100).AddUnsigned(spValue);
 
         // ARRANGE:
         BootToAddress(BootAddr);
         Regs.S.UpdateValue(spValue);
+        Regs.P.LoadFlags("nvbdizc");
 
         // ACT:
-        Pins.DataBus = (opCode);
+        Pins.DataBus= opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstPLPimp2 - read the next instruction and discard
@@ -181,7 +182,7 @@ public class StackTests : UnitTestBase
 
         ExecuteClockCycles(1); // InstPLPimp3 - increment S reg
 
-        Pins.DataBus = (expectedValue);
+        Pins.DataBus = expectedValue;
         ExecuteClockCycles(1); // InstPLPimp4 - pop value into P reg
 
         // ASSERT:
@@ -190,7 +191,7 @@ public class StackTests : UnitTestBase
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(spValue.Inc(), Regs.S);
-        Assert.Equal(expectedValue, Regs.P.GetFlags());
+        Assert.Equal(expectedValue, Regs.P.ToUInt8());
     }
 
     [Fact]
@@ -206,7 +207,7 @@ public class StackTests : UnitTestBase
         Regs.S.UpdateValue(spValue);
 
         // ACT:
-        Pins.DataBus = (opCode);
+        Pins.DataBus= opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstPLXimp2 - read the next instruction and discard
@@ -239,7 +240,7 @@ public class StackTests : UnitTestBase
         Regs.S.UpdateValue(spValue);
 
         // ACT:
-        Pins.DataBus = (opCode);
+        Pins.DataBus= opCode;
         ExecuteClockCycles(1); // fetch the opcode
 
         ExecuteClockCycles(1); // InstPLYimp2 - read the next instruction and discard

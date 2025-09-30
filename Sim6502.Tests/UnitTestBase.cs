@@ -40,7 +40,7 @@ public class UnitTestBase
         var loggerFactory = LoggerFactory.Create(builder =>
         {
             builder.AddConsoleIndentLogger(_ => { })
-                .SetMinimumLevel(LogLevel.Trace);
+                .SetMinimumLevel(LogLevel.Debug);
         });
         var instLogger = loggerFactory.CreateLogger("W65c02s.inst_");
         var stateLogger = loggerFactory.CreateLogger("W65c02s.state");
@@ -49,18 +49,16 @@ public class UnitTestBase
         {
             if (args.NewState == States.Fetch && _ctx.DbgOpCode != null)
             {
-                instLogger.LogDebug("{Disassemble,-24} {DebugRegisters}", Disassembler.Disassemble(_ctx),
-                    _ctx.DebugCapture?.ToString());
+                instLogger.LogDebug("{Disassemble,-24} --> {DebugRegisters}", Disassembler.Disassemble(_ctx),
+                    _ctx.Regs);
 
-                instLogger.LogDebug("---------------------------------------------------------------");
+                instLogger.LogTrace("-------------------------------------------------------------------");
             }
-            stateLogger.LogDebug("advanceState(): {newState}", args.NewState);
+            stateLogger.LogTrace("advanceState(): {newState}", args.NewState);
         };
 
         _engine.SubstepChanging += (_, args) =>
         {
-            if (_ctx.GetSubStep() == Constants.P2LastSubstep)
-                _ctx.CaptureRegs();
             stateLogger.LogTrace("   state: {CtxState} substep: {SubStep} regs: {regs} addr-bus: {addrBus}", args.State, args.Substep, _ctx.Regs, _ctx.Pins.AddrBus);
         };
     }
@@ -84,15 +82,15 @@ public class UnitTestBase
 
     protected void ExecuteClockCycles(int count)
     {
-        for (int i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             ExecuteMicroSteps(Constants.P2LastSubstep);
         }
     }
 
-    protected void ExecuteMicroSteps(int count)
+    private void ExecuteMicroSteps(int count)
     {
-        for (int i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             Pins.PHI2 = _phi2;
             _engine.Step();
@@ -147,5 +145,22 @@ public class UnitTestBase
             'C' or 'c' => nvzc.ToCharArray()[3] == 'C' ? BitFlag.High() : BitFlag.Low(),
             _ => BitFlag.Low()
         };
+    }
+
+    protected UInt8 UInt8FromFlags(string nvbdizc)
+    {
+        if (nvbdizc == null || nvbdizc.ToLower() != "nvbdizc")
+            throw new ArgumentException("Invalid flag string. Must be in the format 'nvbdizc' with appropriate letters uppercase to indicate set flags.");
+
+        byte result = 0b00100000; // bit 5 is always 1
+        if (nvbdizc[0] == 'N') result |= 0b10100000; else result &= 0b01111111;
+        if (nvbdizc[1] == 'V') result |= 0b01100000; else result &= 0b10111111;
+        if (nvbdizc[2] == 'B') result |= 0b00110000; else result &= 0b11101111;
+        if (nvbdizc[3] == 'D') result |= 0b00101000; else result &= 0b11110111;
+        if (nvbdizc[4] == 'I') result |= 0b00100100; else result &= 0b11111011;
+        if (nvbdizc[5] == 'Z') result |= 0b00100010; else result &= 0b11111101;
+        if (nvbdizc[6] == 'C') result |= 0b00100001; else result &= 0b11111110;
+
+        return result;
     }
 }

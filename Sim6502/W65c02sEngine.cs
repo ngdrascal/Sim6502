@@ -1,5 +1,4 @@
 using Sim6502.Instructions;
-using UInt8 = Sim6502.types.UInt8;
 using UInt16 = Sim6502.types.UInt16;
 
 namespace Sim6502;
@@ -174,7 +173,6 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
             CheckForReset(_ctx);
             CheckForNmi(_ctx);
             CheckForIrq(_ctx);
-            _ctx.CaptureRegs();
         }
 
         _ctx.IncSubStep();
@@ -227,7 +225,7 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
     private void WarmUp2(Context ctx)
     {
         if (ctx.GetSubStep() == LastSubstep)
-            ResetFlags(ctx);
+            ctx.Regs.P.ResetFlags();
         ctx.AdvanceState(States.Boot1);
     }
 
@@ -241,11 +239,6 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         ctx.Pins.AddrBus = new UInt16(0xFFFF);
         ctx.Pins.DataBusMode = DataBusMode.Input;
         ctx.Pins.RWB = Read;
-    }
-
-    private void ResetFlags(Context ctx)
-    {
-        ctx.Regs.P.SetFlags(new UInt8(0b00110100));
     }
 
     private void Boot1(Context ctx)

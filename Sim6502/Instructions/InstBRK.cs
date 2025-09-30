@@ -65,7 +65,7 @@ public class InstBRK : InstBase, IInstruction
     private void BrkImp5(Context ctx)
     {
         // push the status register
-        PushOnStack(ctx, ctx.Regs.P.GetFlags());
+        PushOnStack(ctx, ctx.Regs.P.ToUInt8());
 
         if (ctx.GetSubStep() == P2LastSubstep)
         {

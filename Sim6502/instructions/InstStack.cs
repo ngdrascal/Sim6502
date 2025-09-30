@@ -240,7 +240,7 @@ public class InstStack : InstBase, IInstruction
     // PLP - Pull Processor Status From Stack
     // pull P
     // N V B D I Z C
-    // + + + + + + +
+    // + + - + + + +
     //
     // addressing     assembler     opc   bytes  cycles
     // ------------------------------------------------

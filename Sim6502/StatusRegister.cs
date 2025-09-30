@@ -17,17 +17,6 @@ public class StatusRegister
         Carry = new BitFlag(false);
     }
 
-    public StatusRegister(StatusRegister source)
-    {
-        Negative = new BitFlag(source.Negative.IsSet());
-        Overflow = new BitFlag(source.Overflow.IsSet());
-        Break = new BitFlag(source.Break.IsSet());
-        Decimal = new BitFlag(source.Decimal.IsSet());
-        IRQDisabled = new BitFlag(source.IRQDisabled.IsSet());
-        Zero = new BitFlag(source.Zero.IsSet());
-        Carry = new BitFlag(source.Carry.IsSet());
-    }
-
     public override string ToString()
     {
         var result = Negative.IsSet() ? "N" : "n";
@@ -55,25 +44,23 @@ public class StatusRegister
         return new UInt8(result);
     }
 
-    public UInt8 GetFlags()
+    public void ResetFlags()
     {
-        var result = new UInt8(0);
-        if (Negative.IsSet()) result.SetBit(7);
-        if (Overflow.IsSet()) result.SetBit(6);
-        result.SetBit(5);
-        if (Break.IsSet()) result.SetBit(4);
-        if (Decimal.IsSet()) result.SetBit(3);
-        if (IRQDisabled.IsSet()) result.SetBit(2);
-        if (Zero.IsSet()) result.SetBit(1);
-        if (Carry.IsSet()) result.SetBit(0);
-        return result;
+        // n v 1 B d I z c
+        ClearNegative();
+        ClearOverflow();
+        SetBreak();
+        ClearDecimal();
+        SetIRQDisabled();
+        ClearZero();
+        ClearCarry();
     }
 
     public void SetFlags(UInt8 value)
     {
         Negative.UpdateValue(value.IsBitSet(7));
         Overflow.UpdateValue(value.IsBitSet(6));
-        Break.UpdateValue(value.IsBitSet(4));
+        // NOTE: Bit 5 is unused and always set to 1
         Decimal.UpdateValue(value.IsBitSet(3));
         IRQDisabled.UpdateValue(value.IsBitSet(2));
         Zero.UpdateValue(value.IsBitSet(1));

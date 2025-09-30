@@ -7,6 +7,7 @@
             var testSuite = new ValidationTests();
             // testSuite.RunBruceClarkBcdTest();
             testSuite.RunKlausDormannTest();
+            // testSuite.RunExtendedOpCodeTest();
         }
     }
 }

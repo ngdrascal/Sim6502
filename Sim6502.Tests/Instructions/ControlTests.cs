@@ -129,11 +129,11 @@ public class ControlTests : UnitTestBase
         var expectedReturnAddr = new UInt16(returnAddrLsb, returnAddrMsb);
         var stackTop = new UInt8(0xFC);
         var expectedStackTop = stackTop.Copy().Inc().Inc().Inc();
-        var expectedFlags = new UInt8(0b10100001);
+        var expectedFlags = UInt8FromFlags("NvbdizC");
 
         BootToAddress(BootAddr);
         Regs.S.UpdateValue(stackTop);
-        Regs.P.GetFlags().UpdateValue(new UInt8(1));
+        Regs.P.LoadFlags("nvbdizc");
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -143,7 +143,7 @@ public class ControlTests : UnitTestBase
 
         ExecuteClockCycles(1); // InstRTIimp3 - internal operation
 
-        Pins.DataBus = (expectedFlags);
+        Pins.DataBus = expectedFlags;
         ExecuteClockCycles(1); // InstRTIimp4 - pull the status register
 
         Pins.DataBus = (returnAddrLsb);
@@ -156,7 +156,7 @@ public class ControlTests : UnitTestBase
         Assert.Equal(opCode, Pins.DBGINST);
         Assert.Equal(expectedReturnAddr, Regs.PC);
         Assert.Equal(expectedStackTop, Regs.S);
-        Assert.Equal(expectedFlags, Regs.P.GetFlags());
+        Assert.Equal(expectedFlags, Regs.P.ToUInt8());
     }
 
     // -------------------------------------------------------------------------

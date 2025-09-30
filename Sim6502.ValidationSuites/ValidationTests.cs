@@ -1,4 +1,5 @@
-﻿using static System.Console;
+﻿using System.Diagnostics;
+using static System.Console;
 
 namespace Sim6502.ValidationSuites;
 
@@ -26,7 +27,7 @@ public class ValidationTests
         const int N2H = 0x01BB;
         // ReSharper restore InconsistentNaming
 
-        var program = LoadBinaryFromFile(@".\BruceClarkBCDTest.bin");
+        var program = LoadBinaryFromFile(@".\Tests\BruceClarkBCDTest.bin");
 
         var simulator = new Simulator();
         simulator.LoadAndRunProgram(program, 0, 0);
@@ -58,7 +59,7 @@ public class ValidationTests
 
     private string BuildNvzcString(byte nValue, byte vValue, byte zValue, byte cValue)
     {
-        String result = "";
+        var result = "";
         result += (nValue & 0b10000000) == 0 ? 'n' : 'N';
         result += (vValue & 0b01000000) == 0 ? 'v' : 'V';
         result += (zValue & 0b00000010) == 0 ? 'z' : 'Z';
@@ -74,9 +75,22 @@ public class ValidationTests
 
     public void RunKlausDormannTest()
     {
-        var program = LoadBinaryFromFile(@".\6502_functional_test.bin");
+        var program = LoadBinaryFromFile(@".\Tests\6502_functional_test.bin");
         var simulator = new Simulator();
         simulator.LoadAndRunProgram(program, 0x0000, 0x0400);
+    }
+
+
+    public void RunExtendedOpCodeTest()
+    {
+        var program = LoadBinaryFromFile(@".\Tests\65C02_extended_opcodes_test.bin");
+        var simulator = new Simulator();
+
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+        simulator.LoadAndRunProgram(program, 0x0000, 0x0400);
+        stopwatch.Stop();
+        WriteLine($"Extended OpCode Test completed in {stopwatch.ElapsedMilliseconds} ms");
     }
 
     private byte[] LoadBinaryFromFile(string fileName)
