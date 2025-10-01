@@ -28,6 +28,10 @@ public class MathResult
 
     private BitFlag FlagValue(string nvzc, char flag)
     {
+        if (string.IsNullOrEmpty(nvzc) || nvzc.ToLower() != "nvzc")
+            throw new ArgumentException(
+                "Flags string must be in the format 'NVZC' with uppercase for set flags and lowercase for cleared flags.");
+
         return flag switch
         {
             'N' or 'n' => nvzc.ToCharArray()[0] == 'N' ? BitFlag.High() : BitFlag.Low(),
@@ -47,14 +51,4 @@ public class MathResult
     public BitFlag Zero() => _zero;
 
     public BitFlag Carry() => _carry;
-
-    public override string ToString()
-    {
-        var flags = "";
-        flags += _negative.IsSet() ? "N" : "n";
-        flags += _overflow.IsSet() ? "V" : "v";
-        flags += _zero.IsSet() ? "Z" : "z";
-        flags += _carry.IsSet() ? "C" : "c";
-        return $"{_value.ToInt():X2} {flags}";
-    }
 }

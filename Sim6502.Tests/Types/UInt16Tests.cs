@@ -1,8 +1,10 @@
-﻿using UInt8 = Sim6502.types.UInt8;
+﻿using System.Diagnostics.CodeAnalysis;
 using UInt16 = Sim6502.types.UInt16;
+using UInt8 = Sim6502.types.UInt8;
 
 namespace Sim6502.Tests.Types;
 
+[ExcludeFromCodeCoverage]
 public class UInt16Tests : UnitTestBase
 {
     [Fact]

@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using static System.Console;
 
 namespace Sim6502.ValidationSuites;
 
+[ExcludeFromCodeCoverage]
 public class ValidationTests
 {
     public void RunBruceClarkBcdTest()

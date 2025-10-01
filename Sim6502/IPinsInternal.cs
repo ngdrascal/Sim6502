@@ -5,7 +5,7 @@ using UInt16 = Sim6502.types.UInt16;
 
 namespace Sim6502;
 
-internal interface IPinsInternal
+public interface IPinsInternal
 {
     byte VPB { set; }
 

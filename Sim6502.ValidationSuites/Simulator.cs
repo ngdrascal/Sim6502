@@ -1,8 +1,10 @@
-﻿using UInt16 = Sim6502.types.UInt16;
+﻿using System.Diagnostics.CodeAnalysis;
+using UInt16 = Sim6502.types.UInt16;
 using UInt8 = Sim6502.types.UInt8;
 
 namespace Sim6502.ValidationSuites;
 
+[ExcludeFromCodeCoverage]
 internal class Simulator
 {
     private readonly IPinsExternal _pinsExt;

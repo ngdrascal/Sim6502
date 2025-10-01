@@ -1,11 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
-using Sim6502.types;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
 using Sim6502.Tests.Logging;
+using Sim6502.types;
 using UInt16 = Sim6502.types.UInt16;
 using UInt8 = Sim6502.types.UInt8;
 
 namespace Sim6502.Tests;
 
+[ExcludeFromCodeCoverage]
 public class UnitTestBase
 {
     private readonly Context _ctx;

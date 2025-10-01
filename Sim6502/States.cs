@@ -1,7 +1,7 @@
 // ReSharper disable InconsistentNaming
 namespace Sim6502;
 
-internal enum States
+public enum States
 {
     WarmUp0, WarmUp1, WarmUp2, // Warmup
     Boot1, Boot2, // Reboot
@@ -51,10 +51,10 @@ internal enum States
     InstSTYzpgx2, InstSTYzpgx3, InstSTYzpgx4, // STY zeropage,X
     InstSTYabs2, InstSTYabs3, InstSTYabs4, // STX absolute
 
-    InstSTZzpg2, InstSTZzpg3, // STY zeropage
-    InstSTZzpgx2, InstSTZzpgx3, InstSTZzpgx4, // STY zeropage,X
-    InstSTZabs2, InstSTZabs3, InstSTZabs4, // STX absolute
-    InstSTZabsx2, InstSTZabsx3, InstSTZabsx4, InstSTZabsx5, // STX absolute,X
+    InstSTZzpg2, InstSTZzpg3, // STZ zeropage
+    InstSTZzpgx2, InstSTZzpgx3, InstSTZzpgx4, // STZ zeropage,X
+    InstSTZabs2, InstSTZabs3, InstSTZabs4, // STZ absolute
+    InstSTZabsx2, InstSTZabsx3, InstSTZabsx4, InstSTZabsx5, // STZ absolute,X
 
     InstTAXimp2, // TAX implied
     InstTAYimp2, // TAY implied

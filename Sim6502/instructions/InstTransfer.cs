@@ -124,7 +124,7 @@ internal class InstTransfer : InstBase, IInstruction
     //
     // addressing     assembler     opc   bytes  cycles
     // ------------------------------------------------
-    // implied        TSX           BA      1      2
+    // implied        TYA           BA      1      2
     /////////////////////////////////////////////////////////////////////////////
     private void InstTYAimp2(Context ctx)
     {

@@ -29,6 +29,7 @@ public class UnitTestFormatter : ConsoleFormatter
     }
 }
 
+[ExcludeFromCodeCoverage]
 public class UnitTestFormatterOptions : ConsoleFormatterOptions
 {
     public static char DefaultPrefixChar = ' ';
@@ -37,6 +38,7 @@ public class UnitTestFormatterOptions : ConsoleFormatterOptions
     public char PrefixChar { get; set; } = DefaultPrefixChar;
 }
 
+[ExcludeFromCodeCoverage]
 public static class ConsoleLoggerExtensions
 {
     public static ILoggingBuilder AddConsoleIndentLogger(this ILoggingBuilder builder, Action<UnitTestFormatterOptions> configure) =>

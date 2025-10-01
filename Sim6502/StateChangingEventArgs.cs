@@ -1,6 +1,6 @@
 ﻿namespace Sim6502;
 
-internal class StateChangingEventArgs : EventArgs
+public class StateChangingEventArgs : EventArgs
 {
     public States NewState { get; }
 
