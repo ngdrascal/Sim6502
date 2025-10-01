@@ -1,12 +1,12 @@
 # Sim6502
 
 ## Does the world really need another 6502 simulator?
-No, but I have a deep affinity for simulations, particularly for ones that simulate hardware.  Think of robot simulations that include real world physics or old timey CPUs and their support chips.  I built this for my own edification.  I'll share it on the off chance someone finds it interesting or maybe even helpful.  Want to get a deep understanding of how something works?  Write a simulator for it.
+No, but I have a deep affinity for simulations, particularly for ones that simulate hardware.  Think of robot simulations that include real world physics or old timey CPUs and their support chips.  I built this for my own edification.  I'm sharing it on the off chance someone finds it interesting or maybe even helpful.  Want to get a deep understanding of how something works?  Write a simulator for it.
 
 ## History
 The original version was written in Java.  I intended to publish it as a plugin to the digital circuit simulator called (of all things) "Digital".  If you are into designing digital circuits then check it out here https://github.com/hneemann/Digital. It’s a very powerful tool.  And it’s open source.
 
-So why port it to C#?  Well, I'm a C# programmer by profession and I was curious about 1) could I take advantage of some of the C# language features to make the design and code more succinct and 2) how long could it possibly take?  After all the two languages are cousins.  Even with GitHub Copilot who came along for the right it still took a month of evening and weekends.
+So why port it to C#?  Well, I'm a C# programmer by profession and I was curious about 1) could I take advantage of some of the C# language features to make the design and code more succinct and 2) how long could it possibly take?  After all the two languages are cousins.  Even with GitHub Copilot who came along for the ride it still took a month of evening and weekends.
 
 ## Key Design Goals
 

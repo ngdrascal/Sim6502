@@ -32,14 +32,14 @@ The simulator models real hardware behavior including:
 ### System Components
 
 ```
-???????????????????    ???????????????????    ???????????????????
-?   W65C02SEngine ??????     Context     ??????   Instructions  ?
-???????????????????    ???????????????????    ???????????????????
-         ?                       ?                       ?
-         ?                       ?                       ?
-???????????????????    ???????????????????    ???????????????????
-?      Pins       ?    ?   Registers     ?    ?     States      ?
-???????????????????    ???????????????????    ???????????????????
+-------------------    -------------------    -------------------
+|   W65C02SEngine |--->|     Context     |--->|   Instructions  |
+-------------------    -------------------    -------------------
+         |                       |                       |
+        \ /                     \ /                     \ /
+-------------------    -------------------    -------------------
+|      Pins       |    |   Registers     |    |     States      |
+-------------------    -------------------    -------------------
 ```
 
 ### Core Classes
@@ -56,8 +56,8 @@ The main simulation engine that orchestrates the entire system:
 public class W65C02SEngine : IT2Registry, IStateRegistry
 {
     private readonly Context _ctx;
-    private readonly States[] _t2Map;           // Opcode ? State mapping
-    private readonly Action<Context>[] _stateMethodMap;  // State ? Method mapping
+    private readonly States[] _t2Map;                    // Opcode - State mapping
+    private readonly Action<Context>[] _stateMethodMap;  // State - Method mapping
 }
 ```
 
@@ -100,13 +100,13 @@ Each instruction family has its own set of states representing the individual cy
 ### State Transition Flow
 
 ```
-Power On ? WarmUp0 ? WarmUp1 ? WarmUp2 ? Boot1 ? Boot2 ? Fetch ?
-                                                            ?
-                                                            ?
+Power On - WarmUp0 - WarmUp1 - WarmUp2 - Boot1 - Boot2 - Fetch -
+                                                            -
+                                                            -
                                                    Instruction States
-                                                            ?
-                                                            ?
-                                                         Fetch ?
+                                                            -
+                                                            -
+                                                         Fetch -
 ```
 
 ### Substep System
@@ -129,8 +129,8 @@ The simulator uses custom types that model the behavior of actual hardware regis
 public class UInt8
 {
     // Arithmetic with proper overflow/underflow
-    public UInt8 Inc()  // Wraps 255 ? 0
-    public UInt8 Dec()  // Wraps 0 ? 255
+    public UInt8 Inc()  // Wraps 255 - 0
+    public UInt8 Dec()  // Wraps 0 - 255
     
     // Bitwise operations
     public bool IsBitSet(int bitIndex)
@@ -310,7 +310,7 @@ public UInt8 Inst { get; }   // Current instruction
 
 1. **RESET**: Hardware reset
    - Detected by RESB pin low for 2+ cycles
-   - Triggers Boot1 ? Boot2 sequence
+   - Triggers Boot1 - Boot2 sequence
    - Loads PC from $FFFC/$FFFD
 
 2. **NMI**: Non-Maskable Interrupt  
