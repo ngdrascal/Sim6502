@@ -3,7 +3,7 @@ using UInt16 = Sim6502.types.UInt16;
 
 namespace Sim6502;
 
-public class Context
+internal class Context
 {
     private int _subStep;
 

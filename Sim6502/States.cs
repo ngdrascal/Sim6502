@@ -1,7 +1,7 @@
 // ReSharper disable InconsistentNaming
 namespace Sim6502;
 
-public enum States
+internal enum States
 {
     WarmUp0, WarmUp1, WarmUp2, // Warmup
     Boot1, Boot2, // Reboot
@@ -237,7 +237,7 @@ public enum States
     InstNOP2, InstNOP3, InstNOP4, InstNOP5, InstNOP6, InstNOP7, InstNOP8 // NOP
 }
 
-public class StateExtensions
+internal class StateExtensions
 {
     public static States FromValue(int value)
     {

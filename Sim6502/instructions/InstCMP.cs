@@ -1,6 +1,6 @@
 namespace Sim6502.Instructions;
 
-public class InstCMP : InstBase, IInstruction
+internal class InstCMP : InstBase, IInstruction
 {
     public IInstruction RegisterT2State(IT2Registry registry)
     {

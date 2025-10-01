@@ -1,6 +1,6 @@
 namespace Sim6502;
 
-public interface IStateRegistry
+internal interface IStateRegistry
 {
     void Map(States state, Action<Context> method);
 }

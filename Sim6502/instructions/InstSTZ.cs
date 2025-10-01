@@ -2,7 +2,7 @@ using Sim6502.types;
 
 namespace Sim6502.Instructions;
 
-public class InstSTZ : InstBase, IInstruction
+internal class InstSTZ : InstBase, IInstruction
 {
     public IInstruction RegisterT2State(IT2Registry registry)
     {

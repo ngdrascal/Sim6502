@@ -1,7 +1,7 @@
 ﻿// File-scoped namespace for Sim6502.Instructions
 namespace Sim6502.Instructions;
 
-public class InstNOP : InstBase, IInstruction
+internal class InstNOP : InstBase, IInstruction
 {
     public IInstruction RegisterT2State(IT2Registry registry)
     {

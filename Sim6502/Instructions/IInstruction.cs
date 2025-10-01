@@ -1,6 +1,6 @@
 ﻿namespace Sim6502.Instructions;
 
-public interface IInstruction
+internal interface IInstruction
 {
     IInstruction RegisterT2State(IT2Registry registry);
 

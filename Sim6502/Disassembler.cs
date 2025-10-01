@@ -5,7 +5,7 @@ namespace Sim6502;
 /// <summary>
 /// Disassembler for W65c02s instructions. Converts opcode and operands to human-readable assembly.
 /// </summary>
-public static class Disassembler
+internal static class Disassembler
 {
     /// <summary>
     /// Disassembles the current instruction in the context.

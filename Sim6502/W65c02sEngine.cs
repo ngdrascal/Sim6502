@@ -3,7 +3,7 @@ using UInt16 = Sim6502.types.UInt16;
 
 namespace Sim6502;
 
-public class W65C02SEngine : IT2Registry, IStateRegistry
+internal class W65C02SEngine : IT2Registry, IStateRegistry
 {
     private const byte Low = Constants.Low;
     private const byte High = Constants.High;

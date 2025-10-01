@@ -1,6 +1,6 @@
 ﻿namespace Sim6502;
 
-public class SubstepChangingEventArgs : EventArgs
+internal class SubstepChangingEventArgs : EventArgs
 {
     public States State { get; }
 

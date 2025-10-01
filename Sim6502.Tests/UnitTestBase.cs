@@ -13,7 +13,7 @@ public class UnitTestBase
     private readonly W65C02SEngine _engine;
 
     protected readonly Pins Pins;
-    protected readonly Registers Regs;
+    protected internal readonly Registers Regs;
 
     protected readonly BitFlag Low = new(false);
     protected readonly BitFlag High = new(true);

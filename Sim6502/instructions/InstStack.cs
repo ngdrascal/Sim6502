@@ -1,7 +1,7 @@
 // ReSharper disable InconsistentNaming
 namespace Sim6502.Instructions;
 
-public class InstStack : InstBase, IInstruction
+internal class InstStack : InstBase, IInstruction
 {
     /***********************************************************************************************
       The 65C02 microprocessor, like its predecessor the 6502, utilizes a hardware stack located on

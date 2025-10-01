@@ -3,7 +3,7 @@ using UInt16 = Sim6502.types.UInt16;
 
 namespace Sim6502.Instructions;
 
-public class InstBase
+internal class InstBase
 {
     // Logger stub (replace with your logging framework if needed)
     // private readonly Logger _logger;

@@ -1,6 +1,6 @@
 namespace Sim6502.Instructions;
 
-public class InstWAI : InstBase, IInstruction
+internal class InstWAI : InstBase, IInstruction
 {
     public IInstruction RegisterT2State(IT2Registry registry)
     {
