@@ -42,17 +42,23 @@ internal class Simulator
 
         _phi2 = 0;
 
-        _ctx.StateChanging += (_, args) =>
+        _engine.OnInstructionComplete += (_, args) =>
         {
-            if (args.NewState == States.Fetch && _ctx.DbgOpCode != null)
-            {
-                Console.WriteLine($"{Disassembler.Disassemble(_ctx),-24} {_ctx.Regs}");
-            }
+            Console.WriteLine(string.Format("{0,-24} --> {1}",
+                Disassembler.Disassemble(args.Address, args.OpCode, args.Operand1, args.Operand2), args.Registers));
         };
 
-        // _engine.SubstepChanging += (_, args) =>
+        // _ctx.OnStateChanging += (_, args) =>
         // {
-        //     Console.WriteLine($"   state: {args.State} substep: {args.Substep} regs: {_ctx.Regs} addr-bus: { _ctx.Pins.AddrBus}");
+        //     if (args.NewState == States.Fetch && _ctx.DbgOpCode != null)
+        //     {
+        //         Console.WriteLine($"{Disassembler.Disassemble(_ctx),-24} {_ctx.Regs}");
+        //     }
+        // };
+        //
+        // _engine.OnSubstepChanging += (_, args) =>
+        // {
+        //     Console.WriteLine($"   state: {args.State} substep: {args.Substep} regs: {_ctx.Regs} addr-bus: {_ctx.Pins.AddrBus}");
         // };
     }
 

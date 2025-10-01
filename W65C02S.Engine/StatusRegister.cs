@@ -61,10 +61,26 @@ public class StatusRegister
         Negative.UpdateValue(value.IsBitSet(7));
         Overflow.UpdateValue(value.IsBitSet(6));
         // NOTE: Bit 5 is unused and always set to 1
+        // NOTE: Bit 4 is the Break flag.  It is not affected by this method.
         Decimal.UpdateValue(value.IsBitSet(3));
         IRQDisabled.UpdateValue(value.IsBitSet(2));
         Zero.UpdateValue(value.IsBitSet(1));
         Carry.UpdateValue(value.IsBitSet(0));
+    }
+
+    public StatusRegister Copy()
+    {
+        var result = new StatusRegister();
+
+        result.Negative.UpdateValue(Negative);
+        result.Overflow.UpdateValue(Overflow);
+        result.Break.UpdateValue(Break);
+        result.Decimal.UpdateValue(Decimal);
+        result.IRQDisabled.UpdateValue(IRQDisabled);
+        result.Zero.UpdateValue(Zero);
+        result.Carry.UpdateValue(Carry);
+
+        return result;
     }
 
     public BitFlag Carry { get; }

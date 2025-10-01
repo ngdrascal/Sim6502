@@ -19,11 +19,11 @@ public class Context
         DbgOperand2 = new UInt8(0);
     }
 
-    public event EventHandler<StateChangingEventArgs>? StateChanging;
+    public event EventHandler<StateChangingEventArgs>? OnStateChanging;
 
-    private void OnStateChanging(StateChangingEventArgs args)
+    private void DoStateChanging(StateChangingEventArgs args)
     {
-        StateChanging?.Invoke(this, args);
+        OnStateChanging?.Invoke(this, args);
     }
 
     public IPinsInternal Pins { get; }
@@ -52,7 +52,7 @@ public class Context
     {
         if (_subStep == Constants.P2LastSubstep)
         {
-            OnStateChanging(new StateChangingEventArgs(nextState));
+            DoStateChanging(new StateChangingEventArgs(nextState));
 
             InitState(nextState);
         }

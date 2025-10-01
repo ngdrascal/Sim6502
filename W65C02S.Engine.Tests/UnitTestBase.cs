@@ -48,19 +48,15 @@ public class UnitTestBase
         var instLogger = loggerFactory.CreateLogger("W65c02s.inst_");
         var stateLogger = loggerFactory.CreateLogger("W65c02s.state");
 
-        _ctx.StateChanging += (_, args) =>
+        _engine.OnInstructionComplete += (_, args) =>
         {
-            if (args.NewState == States.Fetch && _ctx.DbgOpCode != null)
-            {
-                instLogger.LogDebug("{Disassemble,-24} --> {DebugRegisters}", Disassembler.Disassemble(_ctx),
-                    _ctx.Regs);
+                instLogger.LogDebug("{Disassemble,-24} --> {Registers}",
+                    Disassembler.Disassemble(args.Address, args.OpCode, args.Operand1, args.Operand2), args.Registers);
 
                 instLogger.LogTrace("-------------------------------------------------------------------");
-            }
-            stateLogger.LogTrace("advanceState(): {newState}", args.NewState);
         };
 
-        _engine.SubstepChanging += (_, args) =>
+        _engine.OnSubstepChanging += (_, args) =>
         {
             stateLogger.LogTrace("   state: {CtxState} substep: {SubStep} regs: {regs} addr-bus: {addrBus}", args.State, args.Substep, _ctx.Regs, _ctx.Pins.AddrBus);
         };

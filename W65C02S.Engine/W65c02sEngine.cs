@@ -79,11 +79,23 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         _ = new Interrupts().RegisterT2State(this).RegisterStates(this);
     }
 
-    public event EventHandler<SubstepChangingEventArgs>? SubstepChanging;
+    public event EventHandler<SubstepChangingEventArgs>? OnSubstepChanging;
 
-    private void OnStateChanging(SubstepChangingEventArgs args)
+    private void OnSubstateChanging(SubstepChangingEventArgs args)
     {
-        SubstepChanging?.Invoke(this, args);
+        OnSubstepChanging?.Invoke(this, args);
+    }
+
+    public event EventHandler<InstructionCompletedArgs>? OnInstructionComplete;
+
+    private void DoInstructionComplete(Context ctx)
+    {
+        if (_ctx.DbgOpCode.HasValue)
+        {
+            OnInstructionComplete?.Invoke(this,
+                new InstructionCompletedArgs(_ctx.DbgPC, _ctx.DbgOpCode.Value,
+                    ctx.DbgOperand1, ctx.DbgOperand2, ctx.Regs));
+        }
     }
 
     public long InstCount => _instCount;
@@ -160,7 +172,7 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
             if (_ctx.NmiFlag || _ctx.IrqFlag)
                 _ctx.InitState(States.Interrupt1);
 
-        OnStateChanging(new SubstepChangingEventArgs(_ctx.State, substep));
+        OnSubstateChanging(new SubstepChangingEventArgs(_ctx.State, substep));
 
         var method = _stateMethodMap[(int)_ctx.State];
         method(_ctx);
@@ -281,6 +293,8 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
     {
         if (ctx.GetSubStep() == 1)
         {
+            DoInstructionComplete(ctx);
+
             ctx.Pins.PHI1O = High;
             ctx.Pins.RWB = Read;
             ctx.Pins.DataBusMode = DataBusMode.Input;

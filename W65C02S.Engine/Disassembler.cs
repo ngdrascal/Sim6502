@@ -1,4 +1,5 @@
-using W65C02S.Engine.Types;
+using UInt8 = W65C02S.Engine.Types.UInt8;
+using UInt16 = W65C02S.Engine.Types.UInt16;
 
 namespace W65C02S.Engine;
 
@@ -8,17 +9,19 @@ namespace W65C02S.Engine;
 public static class Disassembler
 {
     /// <summary>
-    /// Disassembles the current instruction in the context.
+    /// 
     /// </summary>
-    /// <param name="ctx">CPU context containing opcode and operands.</param>
-    /// <returns>Disassembled instruction string.</returns>
-
-    public static string Disassemble(Context ctx)
+    /// <param name="address"></param>
+    /// <param name="opCode"></param>
+    /// <param name="operand1"></param>
+    /// <param name="operand2"></param>
+    /// <returns></returns>
+    public static string Disassemble(UInt16 address, OpCodes opCode, UInt8 operand1, UInt8 operand2)
     {
-        var opCodeStr = ctx.DbgOpCode?.ToString()[..3];
+        var opCodeStr = opCode.ToString()[..3];
         string operandStr;
 
-        switch (ctx.DbgOpCode)
+        switch (opCode)
         {
             case OpCodes.ADCimm:
             case OpCodes.ANDimm:
@@ -32,7 +35,7 @@ public static class Disassembler
             case OpCodes.LDYimm:
             case OpCodes.ORAimm:
             case OpCodes.SBCimm:
-                operandStr = BuildImm(ctx.DbgOperand1);
+                operandStr = BuildImm(operand1);
                 break;
 
             case OpCodes.ADCzpg:
@@ -59,7 +62,7 @@ public static class Disassembler
             case OpCodes.STZzpg:
             case OpCodes.TRBzpg:
             case OpCodes.TSBzpg:
-                operandStr = BuildZpg(ctx.DbgOperand1);
+                operandStr = BuildZpg(operand1);
                 break;
 
             case OpCodes.ADCzpgx:
@@ -80,12 +83,12 @@ public static class Disassembler
             case OpCodes.STAzpgx:
             case OpCodes.STYzpgx:
             case OpCodes.STZzpgx:
-                operandStr = BuildZpgx(ctx.DbgOperand1);
+                operandStr = BuildZpgx(operand1);
                 break;
 
             case OpCodes.LDXzpgy:
             case OpCodes.STXzpgy:
-                operandStr = BuildZpgy(ctx.DbgOperand1);
+                operandStr = BuildZpgy(operand1);
                 break;
 
             case OpCodes.ADCabs:
@@ -114,7 +117,7 @@ public static class Disassembler
             case OpCodes.STZabs:
             case OpCodes.TRBabs:
             case OpCodes.TSBabs:
-                operandStr = BuildAbs(ctx.DbgOperand1, ctx.DbgOperand2);
+                operandStr = BuildAbs(operand1, operand2);
                 break;
 
             case OpCodes.ADCabsx:
@@ -134,7 +137,7 @@ public static class Disassembler
             case OpCodes.SBCabsx:
             case OpCodes.STAabsx:
             case OpCodes.STZabsx:
-                operandStr = BuildAbsX(ctx.DbgOperand1, ctx.DbgOperand2);
+                operandStr = BuildAbsX(operand1, operand2);
                 break;
 
             case OpCodes.ADCabsy:
@@ -146,7 +149,7 @@ public static class Disassembler
             case OpCodes.ORAabsy:
             case OpCodes.SBCabsy:
             case OpCodes.STAabsy:
-                operandStr = BuildAbsY(ctx.DbgOperand1, ctx.DbgOperand2);
+                operandStr = BuildAbsY(operand1, operand2);
                 break;
 
             case OpCodes.ADCindx:
@@ -157,7 +160,7 @@ public static class Disassembler
             case OpCodes.ORAindx:
             case OpCodes.SBCindx:
             case OpCodes.STAindx:
-                operandStr = BuildIndX(ctx.DbgOperand1);
+                operandStr = BuildIndX(operand1);
                 break;
 
             case OpCodes.ADCindy:
@@ -168,7 +171,7 @@ public static class Disassembler
             case OpCodes.ORAindy:
             case OpCodes.SBCindy:
             case OpCodes.STAindy:
-                operandStr = BuildIndY(ctx.DbgOperand1);
+                operandStr = BuildIndY(operand1);
                 break;
 
             case OpCodes.ADCind:
@@ -179,7 +182,7 @@ public static class Disassembler
             case OpCodes.ORAind:
             case OpCodes.SBCind:
             case OpCodes.STAind:
-                operandStr = BuildInd(ctx.DbgOperand1);
+                operandStr = BuildInd(operand1);
                 break;
 
             case OpCodes.BCCrel:
@@ -191,7 +194,7 @@ public static class Disassembler
             case OpCodes.BRArel:
             case OpCodes.BVCrel:
             case OpCodes.BVSrel:
-                operandStr = BuildRel(ctx.DbgOperand1);
+                operandStr = BuildRel(operand1);
                 break;
 
             case OpCodes.ASLacc:
@@ -286,7 +289,7 @@ public static class Disassembler
                 break;
         }
 
-        return $"{ctx.DbgPC.ToInt():X4}: {opCodeStr} {operandStr}";
+        return $"{address.ToInt():X4}: {opCodeStr} {operandStr}";
     }
 
     private static string BuildImm(UInt8 value)
