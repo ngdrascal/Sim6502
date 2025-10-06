@@ -322,50 +322,45 @@ public class UInt8
         // N1H = N1 & $F0
         var N1H = (sbyte)(N1 & 0xF0);
 
-        int C;
-        int A;
-        int X;
-        int oldA;
         // ReSharper restore InconsistentNaming
+        var c = carryIn.ToInt();
+        int a = N1L;
 
-        C = carryIn.ToInt();
-        A = N1L;
+        var oldA = (a & 0xFF);
+        a = a - N2L - (1 - c);
+        c = CalcCarry(oldA, N2L, c);
+        var x = 0;
 
-        oldA = (A & 0xFF);
-        A = A - N2L - (1 - C);
-        C = CalcCarry(oldA, N2L, C);
-        X = 0;
-
-        if (C == 0)
+        if (c == 0)
         {
-            X++;
-            A &= 0x0F;
-            C = 0;
+            x++;
+            a &= 0x0F;
+            c = 0;
         }
 
-        A |= (byte)(N1H);
+        a |= (byte)(N1H);
 
-        oldA = (A & 0xFF);
-        A = A - N2H[X] - (1 - C);
-        C = CalcCarry(oldA, N2H[X], C);
+        oldA = (a & 0xFF);
+        a = a - N2H[x] - (1 - c);
+        c = CalcCarry(oldA, N2H[x], c);
 
-        if (C == 0)
+        if (c == 0)
         {
-            oldA = (A & 0xFF);
-            A = A - 0x5F - (1 - C);
-            C = CalcCarry(oldA, 0x5F, C);
+            oldA = (a & 0xFF);
+            a = a - 0x5F - 1;
+            CalcCarry(oldA, 0x5F, c);
         }
 
-        if (X != 0)
+        if (x != 0)
         {
-            C = 1;
-            oldA = (A & 0xFF);
-            A = A - 0x06 - (1 - C);
-            C = CalcCarry(oldA, 0x06, C);
+            c = 1;
+            oldA = (a & 0xFF);
+            a = a - 0x06;
+            CalcCarry(oldA, 0x06, c);
         }
 
-        A &= 0xFF;
-        _value = A;
+        a &= 0xFF;
+        _value = a;
 
         var cFlag = CalcCarry(N1, N2, carryIn.ToInt()) == 1;
         var vFlag = CalcSBCOverflow(N1, N2, carryIn.ToInt());
