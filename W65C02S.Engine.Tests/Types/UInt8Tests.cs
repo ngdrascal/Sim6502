@@ -1,12 +1,17 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Sim6502.Tests;
 using W65C02S.Engine.Types;
 using UInt8 = W65C02S.Engine.Types.UInt8;
 
-namespace Sim6502.Tests.Types;
+namespace W65C02S.Engine.Tests;
 
 [ExcludeFromCodeCoverage]
 public class UInt8Tests : UnitTestBase
 {
+    ////////////////////////////////////////////////////////////////////////////
+    // Constructor
+    ////////////////////////////////////////////////////////////////////////////
+
     private void ExecuteCtorReturnExpectedValue(int expectedValue)
     {
         // ARRANGE:
@@ -25,13 +30,84 @@ public class UInt8Tests : UnitTestBase
         ExecuteCtorReturnExpectedValue(255);
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+    // UpdateValue
+    ////////////////////////////////////////////////////////////////////////////
+
     [Fact]
-    public void TestEqOverrideWhenEq()
+    public void TestUpdateValueOutOfRange()
     {
         // ARRANGE:
-        const int testValue = 3;
-        var left = new UInt8(testValue);
-        var right = new UInt8(testValue);
+        var value = new UInt8(0);
+
+        // ACT:
+        void TooLow() => value.UpdateValue(-1);
+        void TooHigh() => value.UpdateValue(UInt8.Max + 1);
+
+        // ASSERT:
+        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
+        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Implicit conversion
+    ////////////////////////////////////////////////////////////////////////////
+
+    [Fact]
+    public void TestImplicitConversionFromInt()
+    {
+        // ARRANGE:
+        const int expected = 123;
+        
+        // ACT:
+        UInt8 test = expected; // Implicit conversion from int to UInt8
+        var actual = test.ToInt();
+
+        // ASSERT:
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void TestImplicitConversionToInt()
+    {
+        // ARRANGE:
+        const int initial = 123;
+        var test = new UInt8(initial);
+        
+        // ACT:
+        int actual = test; // Implicit conversion from UInt8 to int
+        
+        // ASSERT:
+        Assert.Equal(initial, actual);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Equals
+    ////////////////////////////////////////////////////////////////////////////
+
+    [Theory]
+    [InlineData(3, 3, true)]
+    [InlineData(3, 4, false)]
+    [InlineData(4, 3, false)]
+    public void TestEqualsValue(byte leftValue, byte rightValue, bool expected)
+    {
+        // ARRANGE:
+        var left = new UInt8(leftValue);
+        var right = new UInt8(rightValue);
+
+        // ACT:
+        var actual = left.Equals(right);
+
+        // ASSERT:
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void TestEqualsReference()
+    {
+        // ARRANGE:
+        var left = new UInt8(3);
+        var right = left;
 
         // ACT:
         var actual = left.Equals(right);
@@ -39,25 +115,28 @@ public class UInt8Tests : UnitTestBase
         // ASSERT:
         Assert.True(actual);
     }
-
+    
     [Fact]
-    public void TestEqOverrideWhenNEq()
+    public void TestEqualsNotUInt8()
     {
         // ARRANGE:
-        const int leftValue = 3;
-        const int rightValue = leftValue + 1;
-        var left = new UInt8(leftValue);
-        var right = new UInt8(rightValue);
+        var left = new UInt8(3);
+        var right = new BitFlag(false);
 
         // ACT:
-        var areEqual = left.Equals(right);
+        // ReSharper disable once SuspiciousTypeConversion.Global
+        var actual = left.Equals(right);
 
         // ASSERT:
-        Assert.False(areEqual);
+        Assert.False(actual);
     }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // EqualsZero
+    ////////////////////////////////////////////////////////////////////////////
 
     [Fact]
-    public void TestEqualZeroWhenZero()
+    public void TestEqualsZeroWhenZero()
     {
         // ARRANGE:
         var test = new UInt8(0);
@@ -81,6 +160,10 @@ public class UInt8Tests : UnitTestBase
         // ASSERT:
         Assert.False(actual);
     }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // And
+    ////////////////////////////////////////////////////////////////////////////
 
     private void ExecuteAnd(UInt8 left, UInt8 right)
     {
@@ -124,6 +207,10 @@ public class UInt8Tests : UnitTestBase
         ExecuteOr(new UInt8(0b00000001), new UInt8(0b00000010));
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+    // Xor
+    ////////////////////////////////////////////////////////////////////////////
+
     private void ExecuteXor(UInt8 left, UInt8 right)
     {
         // ARRANGE:
@@ -148,6 +235,10 @@ public class UInt8Tests : UnitTestBase
         ExecuteXor(new UInt8(0b00000001), new UInt8(0b00000001));
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+    // Not
+    ////////////////////////////////////////////////////////////////////////////
+
     private void ExecuteNot(UInt8 left)
     {
         // ARRANGE:
@@ -171,6 +262,10 @@ public class UInt8Tests : UnitTestBase
     {
         ExecuteNot(new UInt8(0));
     }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // ADC
+    ////////////////////////////////////////////////////////////////////////////
 
     //      c6                   cIn
     //      m7 m6 m5 m4 m3 m2 m1 m0
@@ -383,6 +478,10 @@ public class UInt8Tests : UnitTestBase
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+    // SBC
+    ////////////////////////////////////////////////////////////////////////////
+
     // +---+------------+--------------+----------------------------------------------------------+
     // |   |   Inputs   |   Outputs    |                           Examples                       |
     // |---|------------+--------------+---------------------+-----------------+------------------|
@@ -555,5 +654,305 @@ public class UInt8Tests : UnitTestBase
         {
             Assert.Fail("IO Exception: " + csvFile);
         }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // GetBitFlag
+    ////////////////////////////////////////////////////////////////////////////
+
+    [Fact]
+    public void TestGetBitFlag()
+    {
+        // ARRANGE:
+        var value = new UInt8(0b1010_1100);
+
+        // ACT:
+
+        // ASSERT:
+        Assert.Equal(Low, value.GetBitFlag(0));
+        Assert.Equal(Low, value.GetBitFlag(1));
+        Assert.Equal(High, value.GetBitFlag(2));
+        Assert.Equal(High, value.GetBitFlag(3));
+        Assert.Equal(Low, value.GetBitFlag(4));
+        Assert.Equal(High, value.GetBitFlag(5));
+        Assert.Equal(Low, value.GetBitFlag(6));
+        Assert.Equal(High, value.GetBitFlag(7));
+    }
+
+    [Fact]
+    public void TestGetBitFlagIndexOutOfRange()
+    {
+        // ARRANGE:
+        var value = new UInt8(0xFF);
+
+        // ACT:
+
+        // ASSERT:
+        Assert.Throws<ArgumentOutOfRangeException>(() => value.GetBitFlag(-1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => value.GetBitFlag(UInt8.MaxBit));
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // GetBitValue
+    ////////////////////////////////////////////////////////////////////////////
+
+    [Fact]
+    public void TestGetBitValue()
+    {
+        // ARRANGE:
+        var value = new UInt8(0b1010_1100);
+
+        // ACT:
+
+        // ASSERT:
+        Assert.Equal(0, value.GetBitValue(0));
+        Assert.Equal(0, value.GetBitValue(1));
+        Assert.Equal(1, value.GetBitValue(2));
+        Assert.Equal(1, value.GetBitValue(3));
+        Assert.Equal(0, value.GetBitValue(4));
+        Assert.Equal(1, value.GetBitValue(5));
+        Assert.Equal(0, value.GetBitValue(6));
+        Assert.Equal(1, value.GetBitValue(7));
+    }
+
+    [Fact]
+    public void TestGetBitValueIndexOutOfRange()
+    {
+        // ARRANGE:
+        var value = new UInt8(0x00);
+
+        // ACT:
+        void TooLow() => value.GetBitValue(-1);
+        void TooHigh() => value.GetBitValue(UInt8.MaxBit);
+
+        // // ASSERT:
+        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
+        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // IsBitSet
+    ////////////////////////////////////////////////////////////////////////////
+
+    [Theory]
+    [InlineData(0b11111110, 0, false)]
+    [InlineData(0b00000001, 0, true)]
+    [InlineData(0b01111111, 7, false)]
+    [InlineData(0b10000000, 7, true)]
+    public void TestIsBitSet(byte initialValue, byte bitIndex, bool expectedValue)
+    {
+        // ARRANGE:
+        var value = new UInt8(initialValue);
+
+        // ACT:
+        var actualValue = value.IsBitSet(bitIndex);
+        
+        // ASSERT:
+        Assert.Equal(expectedValue, actualValue);
+    }
+
+    [Fact]
+    public void TestIsBitSetIndexOutOfRange()
+    {
+        // ARRANGE:
+        var value = new UInt8(0);
+
+        // ACT:
+        void TooLow() => value.IsBitSet(-1);
+        void TooHigh() => value.IsBitSet(UInt8.MaxBit);
+
+        // ASSERT:
+        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
+        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // SetBit
+    ////////////////////////////////////////////////////////////////////////////
+
+    [Theory]
+    [InlineData(0b00000000, 0, 0b00000001)]
+    [InlineData(0b00000000, 1, 0b00000010)]
+    [InlineData(0b00000000, 2, 0b00000100)]
+    [InlineData(0b00000000, 3, 0b00001000)]
+    [InlineData(0b00000000, 4, 0b00010000)]
+    [InlineData(0b00000000, 5, 0b00100000)]
+    [InlineData(0b00000000, 6, 0b01000000)]
+    [InlineData(0b00000000, 7, 0b10000000)]
+    public void TestSetBit(byte initialValue, byte bitIndex, byte expectedValue)
+    {
+        // ARRANGE:
+        var value = new UInt8(initialValue);
+
+        // ACT:
+        value.SetBit(bitIndex);
+
+        // ASSERT:
+        Assert.Equal(expectedValue, value.ToInt());
+    }
+
+    [Fact]
+    public void TestSetBitIndexOutOfRange()
+    {
+        // ARRANGE:
+        var value = new UInt8(0);
+
+        // ACT:
+        void TooLow() => value.SetBit(-1);
+        void TooHigh() => value.SetBit(UInt8.MaxBit);
+
+        // ASSERT:
+        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
+        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // ClearBit
+    ////////////////////////////////////////////////////////////////////////////
+
+    [Theory]
+    [InlineData(0b11111111, 0, 0b11111110)]
+    [InlineData(0b11111111, 1, 0b11111101)]
+    [InlineData(0b11111111, 2, 0b11111011)]
+    [InlineData(0b11111111, 3, 0b11110111)]
+    [InlineData(0b11111111, 4, 0b11101111)]
+    [InlineData(0b11111111, 5, 0b11011111)]
+    [InlineData(0b11111111, 6, 0b10111111)]
+    [InlineData(0b11111111, 7, 0b01111111)]
+
+    [InlineData(0b11101111, 4, 0b11101111)] // idempotent
+    public void TestClearBit(byte initialValue, byte bitIndex, byte expectedValue)
+    {
+        // ARRANGE:
+        var value = new UInt8(initialValue);
+
+        // ACT:
+        value.ClearBit(bitIndex);
+
+        // ASSERT:
+        Assert.Equal(expectedValue, value.ToInt());
+    }
+
+    [Fact]
+    public void TestClearBitIndexOutOfRange()
+    {
+        // ARRANGE:
+        var value = new UInt8(0);
+
+        // ACT:
+        void TooLow() => value.ClearBit(-1);
+        void TooHigh() => value.ClearBit(UInt8.MaxBit);
+
+        // ASSERT:
+        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
+        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // SetBitValue
+    ////////////////////////////////////////////////////////////////////////////
+
+    [Theory]
+    [InlineData(0b11111111, 0, 0, 0b11111110)]
+    [InlineData(0b11111111, 1, 0, 0b11111101)]
+    [InlineData(0b11111111, 2, 0, 0b11111011)]
+    [InlineData(0b11111111, 3, 0, 0b11110111)]
+    [InlineData(0b11111111, 4, 0, 0b11101111)]
+    [InlineData(0b11111111, 5, 0, 0b11011111)]
+    [InlineData(0b11111111, 6, 0, 0b10111111)]
+    [InlineData(0b11111111, 7, 0, 0b01111111)]
+
+    [InlineData(0b00000000, 0, 1, 0b00000001)]
+    [InlineData(0b00000000, 1, 1, 0b00000010)]
+    [InlineData(0b00000000, 2, 1, 0b00000100)]
+    [InlineData(0b00000000, 3, 1, 0b00001000)]
+    [InlineData(0b00000000, 4, 1, 0b00010000)]
+    [InlineData(0b00000000, 5, 1, 0b00100000)]
+    [InlineData(0b00000000, 6, 1, 0b01000000)]
+    [InlineData(0b00000000, 7, 1, 0b10000000)]
+    public void TestSetBitValue(byte initialValue, byte bitIndex, byte bitValue, byte expectedValue)
+    {
+        // ARRANGE:
+        var value = new UInt8(initialValue);
+
+        // ACT:
+        value.SetBitValue(bitIndex, bitValue);
+
+        // ASSERT:
+        Assert.Equal(expectedValue, value.ToInt());
+    }
+
+    [Fact]
+    public void TestSetBitValueOutOfRangeIndex()
+    {
+        // ARRANGE:
+        var value = new UInt8(0);
+
+        // ACT:
+        void TooLow() => value.SetBitValue(-1, 1);
+        void TooHigh() => value.SetBitValue(8, 1);
+
+        // ASSERT:
+        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
+        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
+    }
+
+    [Fact]
+    public void TestSetBitValueBitValueOutOfRange()
+    {
+        // ARRANGE:
+        var value = new UInt8(0);
+
+        // ACT:
+        void TooLow() => value.SetBitValue(0, -1);
+        void TooHigh() => value.SetBitValue(0, 2);
+
+        // ASSERT:
+        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
+        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Parity
+    ////////////////////////////////////////////////////////////////////////////
+
+    [Theory]
+    [InlineData(0b00000000, 0)]
+    [InlineData(0b00000001, 1)]
+    [InlineData(0b00000011, 0)]
+    [InlineData(0b00000111, 1)]
+    [InlineData(0b00001111, 0)]
+    [InlineData(0b00011111, 1)]
+    [InlineData(0b00111111, 0)]
+    [InlineData(0b01111111, 1)]
+    [InlineData(0b11111111, 0)]
+    public void TestParity(byte value, int parity)
+    {
+        // ARRANGE:
+        var v = new UInt8(value);
+
+        // ACT:
+        var actual = v.Parity();
+
+        // ASSERT:
+        Assert.Equal(parity, actual);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // ToString
+    ////////////////////////////////////////////////////////////////////////////
+
+    [Fact]
+    public void TestToString()
+    {
+        // ARRANGE:
+        var value = new UInt8(0xAB);
+        const string expected = "0xAB";
+
+        // ACT:
+        var actual = value.ToString();
+
+        // ASSERT:
+        Assert.Equal(expected, actual);
     }
 }
