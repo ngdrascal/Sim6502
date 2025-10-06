@@ -9,6 +9,7 @@ public class UInt16
     private readonly UInt8 _msb = new UInt8();
 
     public const int Max = 65535;
+
     public const int MaxBit = 16;
 
     public UInt16() { }
@@ -27,8 +28,12 @@ public class UInt16
 
     public override bool Equals(object? o)
     {
-        if (ReferenceEquals(this, o)) return true;
-        if (o is not UInt16 that) return false;
+        if (ReferenceEquals(this, o))
+            return true;
+
+        if (o is not UInt16 that)
+            return false;
+
         return ToInt() == that.ToInt();
     }
 
@@ -40,8 +45,9 @@ public class UInt16
 
     public void UpdateValue(int toValue)
     {
-        if (toValue < 0 || toValue > Max)
+        if (toValue is < 0 or > Max)
             throw new ArgumentOutOfRangeException(nameof(toValue));
+
         _lsb.UpdateValue(toValue & 0xFF);
         _msb.UpdateValue((toValue & 0xFF00) >> 8);
     }
@@ -52,41 +58,47 @@ public class UInt16
 
     public bool IsBitSet(int bitIndex)
     {
-        if (bitIndex < 0 || bitIndex >= MaxBit)
+        if (bitIndex is < 0 or >= MaxBit)
             throw new ArgumentOutOfRangeException(nameof(bitIndex));
-        int mask = 1 << bitIndex;
+
+        var mask = 1 << bitIndex;
         return (ToInt() & mask) > 0;
     }
 
     public void SetBit(int bitIndex)
     {
-        if (bitIndex < 0 || bitIndex >= MaxBit)
+        if (bitIndex is < 0 or >= MaxBit)
             throw new ArgumentOutOfRangeException(nameof(bitIndex));
-        int mask = 1 << bitIndex;
+
+        var mask = 1 << bitIndex;
         UpdateValue(ToInt() | mask);
     }
 
     public void ClearBit(int bitIndex)
     {
-        if (bitIndex < 0 || bitIndex >= MaxBit)
+        if (bitIndex is < 0 or >= MaxBit)
             throw new ArgumentOutOfRangeException(nameof(bitIndex));
-        int mask = ~(1 << bitIndex);
+
+        var mask = ~(1 << bitIndex);
         UpdateValue(ToInt() & mask);
     }
 
     public int GetBitValue(int bitIndex)
     {
-        if (bitIndex < 0 || bitIndex >= MaxBit)
+        if (bitIndex is < 0 or >= MaxBit)
             throw new ArgumentOutOfRangeException(nameof(bitIndex));
+
         return IsBitSet(bitIndex) ? 1 : 0;
     }
 
     public void SetBitValue(int bitIndex, int toValue)
     {
-        if (bitIndex < 0 || bitIndex >= MaxBit)
+        if (bitIndex is < 0 or >= MaxBit)
             throw new ArgumentOutOfRangeException(nameof(bitIndex));
-        if (toValue < 0 || toValue > 1)
+
+        if (toValue is < 0 or > 1)
             throw new ArgumentOutOfRangeException(nameof(toValue));
+
         if (toValue == 0)
             ClearBit(bitIndex);
         else
@@ -94,6 +106,7 @@ public class UInt16
     }
 
     public UInt8 Lsb() => _lsb;
+
     public UInt8 Msb() => _msb;
 
     public UInt16 Inc()
