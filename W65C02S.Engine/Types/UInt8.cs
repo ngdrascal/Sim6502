@@ -15,11 +15,11 @@ public class UInt8
 
     public UInt8(int value) => UpdateValue(value);
 
-    public static implicit operator UInt8(byte value) => new UInt8(value);
+    public static implicit operator UInt8(byte value) => new(value);
 
     public static implicit operator byte(UInt8 value) => (byte)value._value;
 
-    public UInt8 Copy() => new UInt8(_value);
+    public UInt8 Copy() => new(_value);
 
     public override bool Equals(object? o)
     {
