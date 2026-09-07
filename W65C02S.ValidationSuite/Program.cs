@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Sim6502.ValidationSuites;
+namespace W65C02S.ValidationSuite;
 
 [ExcludeFromCodeCoverage]
 internal static class Program

@@ -3,7 +3,7 @@ using W65C02S.Engine;
 using UInt16 = W65C02S.Engine.Types.UInt16;
 using UInt8 = W65C02S.Engine.Types.UInt8;
 
-namespace Sim6502.ValidationSuites;
+namespace W65C02S.ValidationSuite;
 
 [ExcludeFromCodeCoverage]
 internal class Simulator

@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using static System.Console;
 
-namespace Sim6502.ValidationSuites;
+namespace W65C02S.ValidationSuite;
 
 [ExcludeFromCodeCoverage]
 public class ValidationTests
