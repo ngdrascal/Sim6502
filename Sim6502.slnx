@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/Docs/">
+    <File Path="Docs/ARCHITECTURE.md" />
+  </Folder>
+  <Folder Name="/Solution Items/Docs/DataSheets/">
+    <File Path="Docs/DataSheets/w65c02s.pdf" />
+  </Folder>
+  <Folder Name="/Solution Items/Docs/Images/">
+    <File Path="Docs/Images/InterruptTiming.png" />
+    <File Path="Docs/Images/ReadTiming.png" />
+    <File Path="Docs/Images/WriteTiming.png" />
+  </Folder>
+  <Project Path="W65C02S.Engine.Tests/W65C02S.Engine.Tests.csproj" />
+  <Project Path="W65C02S.Engine/W65C02S.Engine.csproj" />
+  <Project Path="W65C02S.ValidationSuite/W65C02S.ValidationSuite.csproj" />
+</Solution>
