@@ -42,6 +42,10 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         _nmiAsserted = false;
         _irqAsserted = false;
 
+        ctx.Pins.SYNC = Low;
+        ctx.Pins.VPB = High;
+        ctx.Pins.MLB = High;
+
         // Instantiate all instruction classes
         _ = new InstADC().RegisterT2State(this).RegisterStates(this);
         _ = new InstAND().RegisterT2State(this).RegisterStates(this);
@@ -177,6 +181,10 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         var method = _stateMethodMap[(int)_ctx.State];
         method(_ctx);
 
+        // status outputs change with the address bus; while not ready they hold
+        if (substep == P1MiddleStep && _ctx.State != States.NotReady)
+            UpdateStatusPins(_ctx);
+
         if (substep == LastSubstep)
         {
             _ctx.Pins.PHI1O = High;
@@ -189,6 +197,13 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         _ctx.IncSubStep();
 
         _ctx.Pins.DBGSUBSTEP = (byte)_ctx.GetSubStep();
+    }
+
+    private static void UpdateStatusPins(Context ctx)
+    {
+        ctx.Pins.SYNC = BusStatusSignals.IsOpcodeFetch(ctx.State) ? High : Low;
+        ctx.Pins.VPB = BusStatusSignals.IsVectorPull(ctx.State) ? Low : High;
+        ctx.Pins.MLB = BusStatusSignals.IsReadModifyWrite(ctx.State) ? Low : High;
     }
 
     private void CheckForReset(Context ctx)

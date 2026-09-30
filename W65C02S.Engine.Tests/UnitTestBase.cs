@@ -62,7 +62,7 @@ public class UnitTestBase
         };
     }
 
-    protected void BootToAddress(UInt16 addr)
+    protected void WarmUp()
     {
         _phi2 = 1;
 
@@ -71,6 +71,11 @@ public class UnitTestBase
 
         ExecuteClockCycles(1); // Warmup1
         ExecuteClockCycles(1); // Warmup2
+    }
+
+    protected void BootToAddress(UInt16 addr)
+    {
+        WarmUp();
 
         Pins.DataBus = addr.Lsb();
         ExecuteClockCycles(1); // Boot1

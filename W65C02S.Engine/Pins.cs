@@ -77,7 +77,7 @@ public class Pins : IPinsInternal, IPinsExternal
 
     public AddrBusMode AddrBusMode { get; set; } = AddrBusMode.HighZ;
 
-    public byte A0 => ReadPin(PinMap.VPB);
+    public byte A0 => ReadPin(PinMap.A0);
 
     public byte A1 => ReadPin(PinMap.A1);
 
