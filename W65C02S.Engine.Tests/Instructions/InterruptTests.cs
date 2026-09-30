@@ -160,4 +160,49 @@ public class InterruptTests : UnitTestBase
         Assert.Equal(Low, Regs.P.Decimal);
         Assert.Equal(High, Regs.P.IRQDisabled);
     }
+
+    /*
+       TITLE: After an NMI or IRQ has been serviced the handler runs instead of re-entering the interrupt
+       GIVEN: a 7-cycle interrupt sequence into a handler that starts with NOPs, with NMIB or IRQB left low
+       WHEN: 3 more cycles run
+       THEN: the handler's NOPs execute (PC advances by 2) and nothing more is pushed on the stack
+     */
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void ServicedInterruptIsNotReentered(bool nmi)
+    {
+        // ARRANGE:
+        var nop = OpCodes.NOP.ToUInt8();
+        var handlerAddr = new UInt16(0x0480);
+        var stackTop = new UInt8(0xFF);
+        var expectedStackTop = stackTop.Copy().Dec().Dec().Dec();
+        var expectedPC = handlerAddr.Copy().AddUnsigned(new UInt8(2));
+
+        BootToAddress(BootAddr);
+        Regs.P.IRQDisabled.UpdateValue(Low);
+        Regs.S.UpdateValue(stackTop);
+
+        Pins.DataBus = nop;
+        ExecuteClockCycles(1); // fetch NOP
+        if (nmi)
+            Pins.NMIB = 0;
+        else
+            Pins.IRQB = 0;
+        ExecuteClockCycles(1); // NOP 2
+
+        ExecuteClockCycles(5); // Interrupt1, InstBRKimp2..5
+        Pins.DataBus = handlerAddr.Lsb();
+        ExecuteClockCycles(1); // InstBRKimp6
+        Pins.DataBus = handlerAddr.Msb();
+        ExecuteClockCycles(1); // InstBRKimp7
+
+        // ACT:
+        Pins.DataBus = nop;
+        ExecuteClockCycles(3); // fetch NOP, NOP 2, fetch NOP
+
+        // ASSERT:
+        Assert.Equal(expectedPC, Regs.PC);
+        Assert.Equal(expectedStackTop, Regs.S);
+    }
 }

@@ -13,6 +13,8 @@
     <File Path="Docs/Images/ReadTiming.png" />
     <File Path="Docs/Images/WriteTiming.png" />
   </Folder>
+  <Project Path="W65C02S.DigisimPlugin.Tests/W65C02S.DigisimPlugin.Tests.csproj" />
+  <Project Path="W65C02S.DigisimPlugin/W65C02S.DigisimPlugin.csproj" />
   <Project Path="W65C02S.Engine.Tests/W65C02S.Engine.Tests.csproj" />
   <Project Path="W65C02S.Engine/W65C02S.Engine.csproj" />
   <Project Path="W65C02S.ValidationSuite/W65C02S.ValidationSuite.csproj" />

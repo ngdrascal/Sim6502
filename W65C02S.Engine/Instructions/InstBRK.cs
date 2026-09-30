@@ -118,6 +118,10 @@ internal class InstBRK : InstBase, IInstruction
         {
             var data = ctx.Pins.DataBus;
             ctx.Regs.PC.Msb().UpdateValue(data);
+
+            // the interrupt has been serviced; without this every following fetch re-enters it
+            ctx.ClearNmiFlag();
+            ctx.ClearIrqFlag();
         }
 
         ctx.AdvanceState(States.Fetch);
