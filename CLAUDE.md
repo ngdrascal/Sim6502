@@ -50,7 +50,47 @@ At `Fetch`, a pending NMI/IRQ flag diverts to `Interrupt1` (`Instructions/Interr
 
 **Debug output.** `OnInstructionComplete` (with `Disassembler.Disassemble`) and `OnSubstepChanging` events are used for tracing.
 
-## Tests
+## Unit testing
+
+Tests use **xUnit v3** with **NSubstitute** for mocking and coverlet for coverage. Every test
+project mirrors a source project 1:1 (e.g. `Digisim.Engine` ↔ `Digisim.Engine.Tests`), and
+production assemblies grant `InternalsVisibleTo` to their matching test project. Shared test
+helpers (base classes, prebuilt simulation models, fakes) live in `Digisim.Tests.Shared`, which
+every test project references.
+
+Every unit test has comment that preceeds it.  Use the following format:
+```
+   /*
+      TITLE: <clear text description of the test>
+      GIVEN: <precondition before running the test>
+      WHEN: <action trigging the code under test to execute>
+      THEN: <expect post-execution states>
+    */
+```
+An example:
+```
+   /*
+      TITLE: Writing to THR invokes TxSink with the written byte
+      GIVEN: an Uart16550 with TxSink capturing output
+      WHEN: 0x41 is written to offset 0 (THR, DLAB clear by default)
+      THEN: TxSink is invoked once with 0x41
+    */
+```
+The body of each unit test follow the arrange, act, assert pattern.
+
+An example:
+```
+   {
+      // ARRANGE:
+
+      // ACT:
+
+      // ASSERT:
+   }
+```
+The minimum code coverage for every project is 90%
+
+## W65C02S Tests
 
 Engine tests derive from `UnitTestBase`, which builds Pins/Registers/Context/Engine and provides `BootToAddress(addr)` (warm-up + reset vector fed through the data bus), `ExecuteClockCycles(n)`, and `ExecuteProgram(program, loadAddr, runAddr)` against a 64KB `Memory` array. Typical pattern: put an opcode/operand on `Pins.DataBus`, run one cycle, assert on `Pins.AddrBus`, `Regs`, and flags. ADC/SBC tests read `Types/adc.csv` and `sbc.csv`.
 
@@ -63,3 +103,6 @@ One external PHI2 period = one CPU cycle; each external edge runs several engine
 - Remove unused usings; build must be warning-free.
 - `return` statements on their own line.
 - ASCII `-` only in comments (no em/en dashes).
+
+** IMPORTANT **
+When working in the context of a multi-milestone plan, aways stop between milestones for a code review.  After the review the human will either commit the changes or ask you to do that for them.
