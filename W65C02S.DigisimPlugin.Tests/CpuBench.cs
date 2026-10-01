@@ -5,8 +5,8 @@ using Microsoft.Extensions.Logging;
 namespace W65C02S.DigisimPlugin.Tests;
 
 /// <summary>
-/// A W65C02S wired to a clock, a 64K memory and (optionally) sources on RESB, IRQB, NMIB, RDY and
-/// BE, all in a real Digisim <see cref="SimulationModel"/>. The reset vector points at
+/// A W65C02S wired to a clock, a 64K memory and (optionally) sources on RESB, IRQB, NMIB, RDY, BE
+/// and SOB, all in a real Digisim <see cref="SimulationModel"/>. The reset vector points at
 /// <see cref="ProgramStart"/>.
 /// </summary>
 [ExcludeFromCodeCoverage]
@@ -36,6 +36,7 @@ internal sealed class CpuBench
         Nmib = Control("nmib", Cpu.NMIB, connectControls);
         Rdy = Control("rdy", Cpu.RDY, connectControls);
         Be = Control("be", Cpu.BE, connectControls);
+        Sob = Control("sob", Cpu.SOB, connectControls);
 
         SetVector(0xFFFC, ProgramStart);
     }
@@ -61,6 +62,8 @@ internal sealed class CpuBench
     public SignalSource Rdy { get; }
 
     public SignalSource Be { get; }
+
+    public SignalSource Sob { get; }
 
     /// <summary>Every half cycle run so far, sampled after the model settled.</summary>
     public List<BusSample> Samples { get; } = [];

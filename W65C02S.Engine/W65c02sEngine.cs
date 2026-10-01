@@ -22,6 +22,7 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
     private long _cycleCount;
     private int _rstClockCount;
     private byte _lastNmiState = 1;
+    private byte _lastSobState = 1;
     private bool _nmiAsserted;
     private bool _irqAsserted;
 
@@ -192,6 +193,7 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
             CheckForReset(_ctx);
             CheckForNmi(_ctx);
             CheckForIrq(_ctx);
+            CheckForSetOverflow(_ctx);
         }
 
         _ctx.IncSubStep();
@@ -231,6 +233,17 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
     private void CheckForIrq(Context ctx)
     {
         _irqAsserted = ctx.Regs.P.IRQDisabled.IsCleared() && ctx.Pins.IRQB == 0;
+    }
+
+    // a falling SOB sets V; sampled with the other inputs at the end of the cycle, after the
+    // instruction's own flag updates, so it wins over a flag write in the same cycle
+    private void CheckForSetOverflow(Context ctx)
+    {
+        var currentSobState = ctx.Pins.SOB;
+        if (_lastSobState == High && currentSobState == Low)
+            ctx.Regs.P.SetOverflow();
+
+        _lastSobState = currentSobState;
     }
 
     private void WarmUp0(Context ctx)

@@ -16,6 +16,9 @@ public class W65C02SCpuTests
     // LDX #5 / loop: INC $10 / DEX / BNE loop / STP
     private static readonly byte[] CountProgram = [0xA2, 0x05, 0xE6, 0x10, 0xCA, 0xD0, 0xFB, 0xDB];
 
+    // CLV / wait: BVC wait / LDA #$42 / STA $10 / STP
+    private static readonly byte[] WaitForOverflowProgram = [0xB8, 0x50, 0xFE, 0xA9, 0x42, 0x85, 0x10, 0xDB];
+
     /*
        TITLE: The descriptor registers the W65C02S in the Processors category with every logical pin
        GIVEN: nothing
@@ -282,6 +285,31 @@ public class W65C02SCpuTests
 
         // ASSERT:
         Assert.Single(stalled);
+        Assert.Equal(0x42, bench.Memory[Zp10]);
+    }
+
+    /*
+       TITLE: A falling SOB sets V, releasing a BVC wait loop
+       GIVEN: a CPU spinning in CLV / BVC * with SOB high
+       WHEN: SOB is pulled low
+       THEN: the loop exits and the following STA writes $42 to $10
+     */
+    [Fact]
+    public void FallingSobReleasesBvcWaitLoop()
+    {
+        // ARRANGE:
+        var bench = new CpuBench();
+        bench.Memory.Load(CpuBench.ProgramStart, WaitForOverflowProgram);
+        bench.Start();
+        bench.RunCycles(30);
+        var storedWhileWaiting = bench.Memory[Zp10];
+
+        // ACT:
+        bench.Sob.Value = 0;
+        bench.RunUntil(() => bench.Memory[Zp10] == 0x42);
+
+        // ASSERT:
+        Assert.Equal(0, storedWhileWaiting);
         Assert.Equal(0x42, bench.Memory[Zp10]);
     }
 

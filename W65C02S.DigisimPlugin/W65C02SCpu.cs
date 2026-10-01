@@ -22,7 +22,7 @@ namespace W65C02S.DigisimPlugin;
 /// D is driven only while RWB is low (write) and PHI2 is high, as on the real part; that keeps the
 /// CPU and a memory that is still decoding the previous read cycle from driving D at the same time.
 /// BE low floats A, D and RWB. A control input that is not connected (high-Z) reads as high
-/// (inactive). SOB is accepted but ignored.
+/// (inactive). A falling SOB sets the V flag.
 /// </remarks>
 public class W65C02SCpu : LogicNode, IRegisterComponent
 {
