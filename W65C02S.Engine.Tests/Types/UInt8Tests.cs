@@ -433,7 +433,7 @@ public class UInt8Tests : UnitTestBase
         // If the flag is set then the letter is upper case, otherwise it is lower case.
         // The input-1, input-2, and expected-result is in hex format.
 
-        const string csvFile = ".\\types\\adc.csv";
+        var csvFile = Path.Combine(AppContext.BaseDirectory, "Types", "adc.csv");
         try
         {
             var lines = File.ReadAllLines(csvFile);
@@ -610,7 +610,7 @@ public class UInt8Tests : UnitTestBase
     [Fact]
     public void TestSbcDecimalAllCombinations()
     {
-        const string csvFile = @".\types\sbc.csv";
+        var csvFile = Path.Combine(AppContext.BaseDirectory, "Types", "sbc.csv");
         try
         {
             var lines = File.ReadAllLines(csvFile);
