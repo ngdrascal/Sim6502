@@ -1,0 +1,65 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Overview
+
+Cycle-accurate, pin-level simulator of the WDC W65C02S CPU in C# (.NET 10, `net10.0`). Ported from an earlier Java version. Solution file is `Sim6502.slnx` (XML format).
+
+Projects:
+- `W65C02S.Engine` - the simulator library.
+- `W65C02S.Engine.Tests` - xUnit v3 unit tests (namespace is still `Sim6502.Tests`).
+- `W65C02S.ValidationSuite` - console exe that runs Klaus Dormann functional, 65C02 extended opcode, and Bruce Clark BCD test binaries (`Tests/*.bin`). Not an xUnit project; pick which suite runs by editing `Program.cs`.
+- `W65C02S.DigisimPlugin` - wraps the engine as a component (`W65C02SCpu`) for the Digisim circuit simulator.
+- `W65C02S.DigisimPlugin.Tests` - xUnit v3 tests driving the plugin through the real Digisim scheduler.
+
+## Commands
+
+```
+dotnet build Sim6502.slnx
+dotnet test Sim6502.slnx
+dotnet test W65C02S.Engine.Tests --filter "FullyQualifiedName~LDATests"
+dotnet test W65C02S.Engine.Tests --filter "FullyQualifiedName~LDATests.TestLDAimmWith0"
+dotnet run --project W65C02S.ValidationSuite
+```
+
+The Digisim projects depend on `Digisim.Sdk` / `Digisim.Engine` 1.0.0 from a local NuGet feed at `C:\nuget-local` (see `nuget.config`), produced by Digisim's `scripts/pack-sdk.ps1`. If restore fails for those, the feed is missing; the engine projects build without it. The plugin references `Digisim.Sdk` with `ExcludeAssets="runtime"` because the host supplies it.
+
+Note: `.github/workflows` CI still sets up .NET 9 while projects target net10.0.
+
+## Engine architecture
+
+Key files: `W65c02sEngine.cs`, `Context.cs`, `States.cs`, `Instructions/`, `Pins.cs`, `Constants.cs`. More detail in `Docs/ARCHITECTURE.md` (partly outdated on substep numbering and project names). Datasheet: `Docs/DataSheets/w65c02s.pdf`.
+
+**Clocking.** The caller toggles `Pins.PHI2` and calls `engine.Step()`; `Step()` does nothing unless PHI2 changed. Each toggle advances one substep. A CPU cycle is substeps 1..6 (`Constants.P1MiddleStep`=2, `P1LastStep`=3, `P2FirstStep`=4, `P2MiddleStep`=5, `P2LastSubstep`=6). Comments elsewhere naming other substep values (4, 8, 10) are stale.
+- Substep 1: RDY check (enters `NotReady`), pending NMI/IRQ latched into `Context` flags, cycle count.
+- Substep 2 (`P1MiddleStep`): states typically drive address bus / RWB; status pins SYNC/VPB/MLB updated from `BusStatusSignals`.
+- Substep 6 (`P2LastSubstep`): states latch read data from `Pins.DataBus` and call `AdvanceState`; engine then samples RESB (low >= 2 cycles -> `Boot1`), NMIB (falling edge), IRQB (level, masked by I), SOB (falling edge sets V, after the instruction's own flag writes).
+
+**State machine.** `States` enum holds one value per instruction cycle (e.g. `InstLDAabsx4`) plus system states (`WarmUp0-2`, `Boot1-2`, `Fetch`, `NotReady`, `Stop`, `Interrupt*`). Two lookup tables in the engine:
+- `_t2Map[opcode] -> States` - the state entered after `Fetch` (cycle T2).
+- `_stateMethodMap[state] -> Action<Context>` - the method run on every substep while in that state.
+
+Each instruction family class in `Instructions/` (derives `InstBase`, implements `IInstruction`) fills both tables via `RegisterT2State(IT2Registry)` and `RegisterStates(IStateRegistry)`. The engine constructor instantiates every family; a new family must be added there. State methods branch on `ctx.GetSubStep()` and end with `ctx.AdvanceState(next)`, which only takes effect at the last substep. Page-cross penalties use `ctx.CrossedPageBoundary` to choose an extra state.
+
+At `Fetch`, a pending NMI/IRQ flag diverts to `Interrupt1` (`Instructions/Interrupts.cs`, shared with BRK sequence).
+
+**Types.** Registers and buses use custom reference types `Types.UInt8`, `Types.UInt16`, `Types.BitFlag` (not the BCL types); files alias them with `using UInt8 = W65C02S.Engine.Types.UInt8;`. ADC/SBC (incl. decimal mode) live on `UInt8` returning `MathResult`.
+
+**Pins.** `Pins` implements both `IPinsExternal` (what a host drives/reads) and `IPinsInternal` (what the engine uses). `DBG*` pins (e.g. `DBGINST`, `DBGSUBSTEP`) expose internals for tests.
+
+**Debug output.** `OnInstructionComplete` (with `Disassembler.Disassemble`) and `OnSubstepChanging` events are used for tracing.
+
+## Tests
+
+Engine tests derive from `UnitTestBase`, which builds Pins/Registers/Context/Engine and provides `BootToAddress(addr)` (warm-up + reset vector fed through the data bus), `ExecuteClockCycles(n)`, and `ExecuteProgram(program, loadAddr, runAddr)` against a 64KB `Memory` array. Typical pattern: put an opcode/operand on `Pins.DataBus`, run one cycle, assert on `Pins.AddrBus`, `Regs`, and flags. ADC/SBC tests read `Types/adc.csv` and `sbc.csv`.
+
+## Digisim plugin
+
+One external PHI2 period = one CPU cycle; each external edge runs several engine substeps (falling: 6,1,2,3; rising: 4,5) by toggling a private engine clock. D is driven only while RWB low and PHI2 high; BE low floats A/D/RWB; unconnected control inputs read high. Build output folder is what Digisim's `Digisim:PluginPaths` points at.
+
+## Code style
+
+- Remove unused usings; build must be warning-free.
+- `return` statements on their own line.
+- ASCII `-` only in comments (no em/en dashes).
