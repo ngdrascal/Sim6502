@@ -30,7 +30,7 @@ dotnet run --project W65C02S.ValidationSuite
 
 The Digisim projects depend on `Digisim.Sdk` / `Digisim.Engine` 1.0.0 from a local NuGet feed at `C:\nuget-local` (see `nuget.config`), produced by Digisim's `scripts/pack-sdk.ps1`. If restore fails for those, the feed is missing; the engine projects build without it. The plugin references `Digisim.Sdk` with `ExcludeAssets="runtime"` because the host supplies it.
 
-Note: CI (`.github/workflows`) sets up .NET 10 but cannot restore the Digisim packages, which exist only in the local feed.
+CI (`.github/workflows/dotnet.yml`, .NET 10) swaps the local feed for the private GitHub Packages feed `nuget.pkg.github.com/ngdrascal`. After a Digisim version bump, push the new packages there too (`dotnet nuget push <pkg> --source https://nuget.pkg.github.com/ngdrascal/index.json --api-key $(gh auth token)`, token needs `write:packages`) (a brand-new package also needs Sim6502 added under its Manage Actions access settings).
 
 ## Engine architecture
 

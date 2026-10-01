@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+  packages: read
+
 jobs:
   build:
 
@@ -17,6 +21,14 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 10.0.x
+    # The Digisim packages come from the local folder feed on a dev machine and from the owner's
+    # GitHub Packages feed in CI (published from the Digisim repo; this repo needs read access).
+    - name: Use GitHub Packages for Digisim
+      run: |
+        dotnet nuget remove source digisim-local
+        dotnet nuget add source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
+          --name digisim-github --username "${{ github.actor }}" \
+          --password "${{ secrets.GITHUB_TOKEN }}" --store-password-in-clear-text
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
