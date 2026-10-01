@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Test doubles shared by the Digisim plugin test projects: signal drivers, a 6502-bus memory and
+       a capturing logger, all built on the real Digisim engine. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>false</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Digisim.Engine" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>

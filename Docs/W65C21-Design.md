@@ -27,7 +27,7 @@ correct PHI2 edge or input transition as shown in datasheet Figures 5-8.
 | `W65C21.Engine.Tests` | xUnit v3 unit tests for the engine. Namespace `W65C21.Engine.Tests`. |
 | `W65C21.DigisimPlugin` | `W65C21Pia` component; pin marshalling only. |
 | `W65C21.DigisimPlugin.Tests` | Tests through the real Digisim scheduler. Namespace `W65C21.DigisimPlugin.Tests`. |
-| shared plugin test helpers project | `SignalSource`, `CapturingLogger` (and similar) moved out of `W65C02S.DigisimPlugin.Tests`; referenced by both plugin test projects. |
+| `DigisimPlugin.TestHelpers` | `SignalSource`, `CapturingLogger`, `FakeMemory` moved out of `W65C02S.DigisimPlugin.Tests`; referenced by both plugin test projects. |
 
 Engine and plugin grant `InternalsVisibleTo` to their test projects. Coverage >= 90% per project.
 

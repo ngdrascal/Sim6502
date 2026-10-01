@@ -1,11 +1,11 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
-namespace W65C02S.DigisimPlugin.Tests;
+namespace DigisimPlugin.TestHelpers;
 
 /// <summary>Records every message at or above <see cref="MinLevel"/>.</summary>
 [ExcludeFromCodeCoverage]
-internal sealed class CapturingLogger(LogLevel minLevel) : ILogger
+public sealed class CapturingLogger(LogLevel minLevel) : ILogger
 {
     public LogLevel MinLevel { get; } = minLevel;
 

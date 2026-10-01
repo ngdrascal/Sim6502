@@ -1,14 +1,14 @@
 using System.Diagnostics.CodeAnalysis;
 using Digisim.Engine;
 
-namespace W65C02S.DigisimPlugin.Tests;
+namespace DigisimPlugin.TestHelpers;
 
 /// <summary>
 /// 64K x 8 memory on a 6502 bus: drives D with the addressed byte while RWB is high and stores D
 /// while RWB is low and PHI2 is high. Floats D when A or RWB is high-Z.
 /// </summary>
 [ExcludeFromCodeCoverage]
-internal sealed class FakeMemory : LogicNode
+public sealed class FakeMemory : LogicNode
 {
     private readonly byte[] _bytes = new byte[0x10000];
     private long _address;

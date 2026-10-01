@@ -30,6 +30,8 @@ public class W65C21Engine
 
     public W65C21Pins Pins { get; } = new();
 
+    public event Action<RegisterAccess>? RegisterAccessed;
+
     internal byte CRA => _a.Cr;
     internal byte CRB => _b.Cr;
     internal byte DDRA => _a.Ddr;
@@ -77,8 +79,10 @@ public class W65C21Engine
         if (!_cycleSelected || !_cycleRead)
             return;
 
+        var name = RegisterName(_cycleRegister, isWrite: false);
         _dataOut = ReadRegister(_cycleRegister);
         _driveData = true;
+        RegisterAccessed?.Invoke(new RegisterAccess(name, false, _dataOut));
     }
 
     private void OnPhi2Fall()
@@ -86,10 +90,24 @@ public class W65C21Engine
         _driveData = false;
 
         if (_cycleSelected && !_cycleRead)
+        {
+            RegisterAccessed?.Invoke(new RegisterAccess(RegisterName(_cycleRegister, isWrite: true), true, Pins.DataIn));
             WriteRegister(_cycleRegister, Pins.DataIn);
+        }
 
         _cycleSelected = false;
         _a.ClockStrobe();
+    }
+
+    private string RegisterName(int register, bool isWrite)
+    {
+        return register switch
+        {
+            PortARegister => !_a.DataSelected ? "DDRA" : isWrite ? "ORA" : "PA",
+            CraRegister => "CRA",
+            PortBRegister => !_b.DataSelected ? "DDRB" : isWrite ? "ORB" : "PB",
+            _ => "CRB"
+        };
     }
 
     private byte ReadRegister(int register)

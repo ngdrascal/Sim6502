@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Digisim.Components;
 using Digisim.Shared;
+using DigisimPlugin.TestHelpers;
 using Microsoft.Extensions.Logging;
 
 namespace W65C02S.DigisimPlugin.Tests;
