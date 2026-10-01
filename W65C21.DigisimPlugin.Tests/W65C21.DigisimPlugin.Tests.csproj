@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DigisimPlugin.TestHelpers\DigisimPlugin.TestHelpers.csproj" />
+    <ProjectReference Include="..\W65C02S.DigisimPlugin\W65C02S.DigisimPlugin.csproj" />
     <ProjectReference Include="..\W65C21.DigisimPlugin\W65C21.DigisimPlugin.csproj" />
   </ItemGroup>
 

@@ -1,6 +1,6 @@
 # W65C21 PIA - Digisim Component Design
 
-Status: agreed 2026-10-01, not yet implemented. Datasheet: `Docs/DataSheets/w65c21.pdf`.
+Status: agreed and implemented 2026-10-01. Datasheet: `Docs/DataSheets/w65c21.pdf`.
 Vocabulary: see `CONTEXT.md` (W65C21 PIA section). Template to follow: `W65C02S.DigisimPlugin/W65C02SCpu.cs`.
 
 ## Goal

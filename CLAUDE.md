@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-Cycle-accurate, pin-level simulator of the WDC W65C02S CPU in C# (.NET 10, `net10.0`). Ported from an earlier Java version. Solution file is `Sim6502.slnx` (XML format).
+Cycle-accurate, pin-level simulator of the WDC W65C02S CPU, plus a pin-waveform-accurate W65C21 PIA, in C# (.NET 10, `net10.0`). Ported from an earlier Java version. Solution file is `Sim6502.slnx` (XML format).
 
 Projects:
 - `W65C02S.Engine` - the simulator library.
@@ -12,6 +12,11 @@ Projects:
 - `W65C02S.ValidationSuite` - console exe that runs Klaus Dormann functional, 65C02 extended opcode, and Bruce Clark BCD test binaries (`Tests/*.bin`). Not an xUnit project; pick which suite runs by editing `Program.cs`.
 - `W65C02S.DigisimPlugin` - wraps the engine as a component (`W65C02SCpu`) for the Digisim circuit simulator.
 - `W65C02S.DigisimPlugin.Tests` - xUnit v3 tests driving the plugin through the real Digisim scheduler.
+- `W65C21.Engine` - the PIA simulator library (no dependencies). Design: `Docs/W65C21-Design.md`; vocabulary: `CONTEXT.md`.
+- `W65C21.Engine.Tests` - xUnit v3 unit tests for the PIA engine.
+- `W65C21.DigisimPlugin` - wraps the PIA engine as a component (`W65C21Pia`) for Digisim.
+- `W65C21.DigisimPlugin.Tests` - plugin tests through the real Digisim scheduler, plus CPU+memory+PIA integration tests (`SystemBench`).
+- `DigisimPlugin.TestHelpers` - test doubles shared by both plugin test projects (`SignalSource`, `FakeMemory`, `CapturingLogger`).
 
 ## Commands
 
@@ -25,7 +30,7 @@ dotnet run --project W65C02S.ValidationSuite
 
 The Digisim projects depend on `Digisim.Sdk` / `Digisim.Engine` 1.0.0 from a local NuGet feed at `C:\nuget-local` (see `nuget.config`), produced by Digisim's `scripts/pack-sdk.ps1`. If restore fails for those, the feed is missing; the engine projects build without it. The plugin references `Digisim.Sdk` with `ExcludeAssets="runtime"` because the host supplies it.
 
-Note: `.github/workflows` CI still sets up .NET 9 while projects target net10.0.
+Note: CI (`.github/workflows`) sets up .NET 10 but cannot restore the Digisim packages, which exist only in the local feed.
 
 ## Engine architecture
 
@@ -97,6 +102,12 @@ Engine tests derive from `UnitTestBase`, which builds Pins/Registers/Context/Eng
 ## Digisim plugin
 
 One external PHI2 period = one CPU cycle; each external edge runs several engine substeps (falling: 6,1,2,3; rising: 4,5) by toggling a private engine clock. D is driven only while RWB low and PHI2 high; BE low floats A/D/RWB; unconnected control inputs read high. Build output folder is what Digisim's `Digisim:PluginPaths` points at.
+
+## W65C21 PIA
+
+`W65C21Engine` owns a `W65C21Pins` object. The host sets inputs and calls `Evaluate()` after any change; the engine detects PHI2 edges, control-line transitions and RESB (a level) itself. Outputs are a value plus a drive flag/mask; IRQAB/IRQBB are open drain (drive flag means low). Edge mapping: PHI2 rise samples select/RS/RWB/ports, starts driving D on reads, clears flags on Read A/B Data, and clocks CB2 strobes; PHI2 fall latches writes and clocks CA2 strobes. `PiaSide` holds one Side's registers and control-line logic. `RegisterAccessed` reports each selected bus cycle (used for Debug logging). Engine tests derive from `PiaTestBase` (`Write`, `Read`, `Rise`, `Fall`, `IdleCycle`).
+
+The `W65C21Pia` component (TypeUid `W65C21`, category Peripherals) only marshals pins. Floating control inputs read high; floating Port lines read 1 but are never driven (no pull-ups). Because a Digisim `InOutPin` that drives any bit stops receiving, Port/CA2/CB2/D input levels are resolved in `NetLevels` from `ConnectedOutputs` (normal over weak). Add the plugin's build output folder as a second entry in `Digisim:PluginPaths`.
 
 ## Code style
 

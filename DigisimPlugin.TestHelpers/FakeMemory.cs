@@ -5,7 +5,8 @@ namespace DigisimPlugin.TestHelpers;
 
 /// <summary>
 /// 64K x 8 memory on a 6502 bus: drives D with the addressed byte while RWB is high and stores D
-/// while RWB is low and PHI2 is high. Floats D when A or RWB is high-Z.
+/// while RWB is low and PHI2 is high. Floats D when A or RWB is high-Z, or when
+/// <see cref="Decode"/> rejects the address (leaving it to another device on the bus).
 /// </summary>
 [ExcludeFromCodeCoverage]
 public sealed class FakeMemory : LogicNode
@@ -34,6 +35,9 @@ public sealed class FakeMemory : LogicNode
 
     public InOutPin D { get; }
 
+    /// <summary>True for the addresses this memory answers; all of them by default.</summary>
+    public Func<int, bool> Decode { get; set; } = _ => true;
+
     public byte this[int address]
     {
         get => _bytes[address];
@@ -48,7 +52,7 @@ public sealed class FakeMemory : LogicNode
         RWB.UpdateFromDrivers();
         PHI2.UpdateFromDrivers();
 
-        _busValid = !A.IsHighZ && !RWB.IsHighZ;
+        _busValid = !A.IsHighZ && !RWB.IsHighZ && Decode((int)(A.Value & 0xFFFF));
         _address = A.Value & 0xFFFF;
         _read = RWB.GetBool();
         _phi2 = PHI2.GetBool();
