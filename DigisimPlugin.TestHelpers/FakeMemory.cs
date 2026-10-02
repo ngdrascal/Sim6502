@@ -36,7 +36,7 @@ public sealed class FakeMemory : LogicNode
     public InOutPin D { get; }
 
     /// <summary>True for the addresses this memory answers; all of them by default.</summary>
-    public Func<int, bool> Decode { get; set; } = _ => true;
+    public Func<int, bool> Decode { get; init; } = _ => true;
 
     public byte this[int address]
     {

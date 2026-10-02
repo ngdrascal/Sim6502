@@ -44,8 +44,8 @@ internal class Simulator
 
         _engine.OnInstructionComplete += (_, args) =>
         {
-            Console.WriteLine(string.Format("{0,-24} --> {1}",
-                Disassembler.Disassemble(args.Address, args.OpCode, args.Operand1, args.Operand2), args.Registers));
+            Console.WriteLine(
+                $"{Disassembler.Disassemble(args.Address, args.OpCode, args.Operand1, args.Operand2),-24} --> {args.Registers}");
         };
 
         // _ctx.OnStateChanging += (_, args) =>
