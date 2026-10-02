@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-Cycle-accurate, pin-level simulator of the WDC W65C02S CPU, plus a pin-waveform-accurate W65C21 PIA, in C# (.NET 10, `net10.0`). Ported from an earlier Java version. Solution file is `Sim6502.slnx` (XML format).
+Cycle-accurate, pin-level simulator of the WDC W65C02S CPU, plus a pin-waveform-accurate W65C22 VIA (W65C22S behavior), in C# (.NET 10, `net10.0`). Ported from an earlier Java version. Solution file is `Sim6502.slnx` (XML format).
 
 Projects:
 - `W65C02S.Engine` - the simulator library.
@@ -12,10 +12,10 @@ Projects:
 - `W65C02S.ValidationSuite` - console exe that runs Klaus Dormann functional, 65C02 extended opcode, and Bruce Clark BCD test binaries (`Tests/*.bin`). Not an xUnit project; pick which suite runs by editing `Program.cs`.
 - `W65C02S.DigisimPlugin` - wraps the engine as a component (`W65C02SCpu`) for the Digisim circuit simulator.
 - `W65C02S.DigisimPlugin.Tests` - xUnit v3 tests driving the plugin through the real Digisim scheduler.
-- `W65C21.Engine` - the PIA simulator library (no dependencies). Design: `Docs/W65C21-Design.md`; vocabulary: `CONTEXT.md`.
-- `W65C21.Engine.Tests` - xUnit v3 unit tests for the PIA engine.
-- `W65C21.DigisimPlugin` - wraps the PIA engine as a component (`W65C21Pia`) for Digisim.
-- `W65C21.DigisimPlugin.Tests` - plugin tests through the real Digisim scheduler, plus CPU+memory+PIA integration tests (`SystemBench`).
+- `W65C22.Engine` - the VIA simulator library (no dependencies). Design: `Docs/W65C22-Design.md`; vocabulary: `CONTEXT.md`.
+- `W65C22.Engine.Tests` - xUnit v3 unit tests for the VIA engine.
+- `W65C22.DigisimPlugin` - wraps the VIA engine as a component (`W65C22Via`) for Digisim.
+- `W65C22.DigisimPlugin.Tests` - plugin tests through the real Digisim scheduler, plus CPU+memory+VIA integration tests (`SystemBench`).
 - `DigisimPlugin.TestHelpers` - test doubles shared by both plugin test projects (`SignalSource`, `FakeMemory`, `CapturingLogger`).
 
 ## Commands
@@ -103,11 +103,11 @@ Engine tests derive from `UnitTestBase`, which builds Pins/Registers/Context/Eng
 
 One external PHI2 period = one CPU cycle; each external edge runs several engine substeps (falling: 6,1,2,3; rising: 4,5) by toggling a private engine clock. D is driven only while RWB low and PHI2 high; BE low floats A/D/RWB; unconnected control inputs read high. Build output folder is what Digisim's `Digisim:PluginPaths` points at.
 
-## W65C21 PIA
+## W65C22 VIA
 
-`W65C21Engine` owns a `W65C21Pins` object. The host sets inputs and calls `Evaluate()` after any change; the engine detects PHI2 edges, control-line transitions and RESB (a level) itself. Outputs are a value plus a drive flag/mask; IRQAB/IRQBB are open drain (drive flag means low). Edge mapping: PHI2 rise samples select/RS/RWB/ports, starts driving D on reads, clears flags on Read A/B Data, and clocks CB2 strobes; PHI2 fall latches writes and clocks CA2 strobes. `PiaSide` holds one Side's registers and control-line logic. `RegisterAccessed` reports each selected bus cycle (used for Debug logging). Engine tests derive from `PiaTestBase` (`Write`, `Read`, `Rise`, `Fall`, `IdleCycle`).
+`W65C22Engine` owns a `W65C22Pins` object. The host sets inputs and calls `Evaluate()` after any change; the engine detects PHI2 edges, control-line transitions and RESB (a level) itself. Outputs are a value plus a drive flag/mask; IRQB is totem-pole (always driven). Helpers: `ControlLines` (one PCR nibble), `Timer1`, `Timer2`, `ShiftRegister`. Edge mapping: PHI2 rise samples select/RS/RWB, starts driving D on reads (read side effects happen here), applies timer time-outs, samples PB6 and shift-in CB2, and clocks write-handshake strobes; PHI2 fall counts timers and the SR clock, then latches writes, and clocks read-handshake strobes and shift-out. Full timing and resolved ambiguities: `Docs/W65C22-Design.md`. `RegisterAccessed` reports each selected bus cycle (used for Debug logging). Engine tests derive from `ViaTestBase` (`Write`, `Read`, `Rise`, `Fall`, `IdleCycle`, `IdleCycles`).
 
-The `W65C21Pia` component (TypeUid `W65C21`, category Peripherals) only marshals pins. Floating control inputs read high; floating Port lines read 1 but are never driven (no pull-ups). Because a Digisim `InOutPin` that drives any bit stops receiving, Port/CA2/CB2/D input levels are resolved in `NetLevels` from `ConnectedOutputs` (normal over weak). Add the plugin's build output folder as a second entry in `Digisim:PluginPaths`.
+The `W65C22Via` component (TypeUid `W65C22`, category Peripherals) only marshals pins. Floating bus-side inputs read high; Port and control lines model bus hold (a floating line reads its last level, 1 at start) and are never driven by the VIA unless it outputs. Because a Digisim `InOutPin` that drives any bit stops receiving, Port/CA2/CB1/CB2/D input levels are resolved in `NetLevels` from `ConnectedOutputs` (normal over weak). Add the plugin's build output folder as a second entry in `Digisim:PluginPaths`.
 
 ## Code style
 

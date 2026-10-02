@@ -20,6 +20,8 @@
   <Project Path="W65C02S.Engine.Tests/W65C02S.Engine.Tests.csproj" />
   <Project Path="W65C02S.Engine/W65C02S.Engine.csproj" />
   <Project Path="W65C02S.ValidationSuite/W65C02S.ValidationSuite.csproj" />
+  <Project Path="W65C22.DigisimPlugin.Tests/W65C22.DigisimPlugin.Tests.csproj" />
+  <Project Path="W65C22.DigisimPlugin/W65C22.DigisimPlugin.csproj" />
   <Project Path="W65C22.Engine.Tests/W65C22.Engine.Tests.csproj" />
   <Project Path="W65C22.Engine/W65C22.Engine.csproj" />
 </Solution>

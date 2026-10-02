@@ -1,19 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <!-- A Digisim plugin (Digisim ADR 0009) wrapping W65C21.Engine as a circuit component. Add this
+  <!-- A Digisim plugin (Digisim ADR 0009) wrapping W65C22.Engine as a circuit component. Add this
        project's build output folder to the host's Digisim:PluginPaths list to load it. -->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <EnableDynamicLoading>true</EnableDynamicLoading>
-    <AssemblyTitle>W65C21 Digisim Plugin</AssemblyTitle>
+    <AssemblyTitle>W65C22 Digisim Plugin</AssemblyTitle>
     <Version>1.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>W65C21.DigisimPlugin.Tests</_Parameter1>
+      <_Parameter1>W65C22.DigisimPlugin.Tests</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
 
@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\W65C21.Engine\W65C21.Engine.csproj" />
+    <ProjectReference Include="..\W65C22.Engine\W65C22.Engine.csproj" />
   </ItemGroup>
 
 </Project>

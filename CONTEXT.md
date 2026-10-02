@@ -1,66 +1,83 @@
 # Sim6502
 
-Pin-level simulation of WDC 65xx parts - the W65C02S CPU (cycle-accurate) and the W65C21 PIA - driven one clock edge at a time.
+Pin-level simulation of WDC 65xx parts - the W65C02S CPU (cycle-accurate) and the W65C22 VIA - driven one clock edge at a time.
 
 ## Language
 
 ### Clocking
 
 **PHI2**:
-The bus clock input. One PHI2 period is one CPU cycle; the PIA uses it to time every bus transfer.
+The bus clock input. One PHI2 period is one CPU cycle; the VIA uses it to time every bus transfer.
 
 **Substep**:
 One of six fixed phases of a PHI2 cycle; each PHI2 toggle advances the CPU engine one substep.
 _Avoid_: microstep, tick
 
-### W65C21 PIA
+### W65C22 VIA
 
-**PIA**:
-The W65C21 Peripheral Interface Adapter: two 8-bit peripheral ports, each with two control lines, behind four CPU-addressable locations.
-_Avoid_: VIA (that is the W65C22), PIO
-
-**Side**:
-One of the two independent halves of the PIA (A or B), each with its own Port, Control Register, Data Direction Register, Output Register and IRQ line.
+**VIA**:
+The W65C22 Versatile Interface Adapter: two 8-bit peripheral ports with two control lines each, two 16-bit timers and a shift register, behind sixteen CPU-addressable registers. Modelled with W65C22S behavior.
+_Avoid_: PIA (that is the W65C21), PIO
 
 **Port**:
-The eight peripheral I/O lines of a Side (PA0-PA7 or PB0-PB7).
-_Avoid_: Peripheral Interface (the datasheet's term for the register selection), I/O bus
+The eight peripheral I/O lines PA0-PA7 or PB0-PB7.
+_Avoid_: I/O bus
 
 **Output Register**:
 The register (ORA, ORB) holding the levels driven on a Port's output lines.
-_Avoid_: Peripheral Register, IRA/IRB
+
+**Input Register**:
+What a CPU read of a Port returns (IRA, IRB): pin levels, ORB on Port B output lines, or the value captured by Input latching.
 
 **Data Direction Register**:
 The register (DDRA, DDRB) whose bits make each Port line an output (1) or input (0).
 _Avoid_: DDR as a standalone word in prose
 
-**Control Register**:
-The register (CRA, CRB) configuring a Side's control lines and holding its two Interrupt Flags.
-
-**DDR Access bit**:
-Bit 2 of a Control Register; it chooses whether that Side's data location reaches the Output Register/Port (1) or the Data Direction Register (0).
+**Input latching**:
+ACR bit 0 (Port A) or 1 (Port B): the CA1/CB1 Active transition captures the Port into the Input Register, held until read.
 
 **Control lines**:
-CA1, CA2 (Side A) and CB1, CB2 (Side B). CA1/CB1 are inputs only; CA2/CB2 are inputs or outputs per the Control Register.
+CA1, CA2 (Port A) and CB1, CB2 (Port B), configured by the PCR. CA1 is an input; CA2/CB2 are inputs or outputs; CB1 is also the Shift Register clock.
+
+**Peripheral Control Register (PCR)**:
+Configures the Control lines: active edges, input/independent-interrupt modes and the CA2/CB2 output modes.
+
+**Auxiliary Control Register (ACR)**:
+Configures the Timers, the Shift Register mode and Input latching.
 
 **Active transition**:
-The edge (rising or falling, chosen in the Control Register) on a control line input that sets its Interrupt Flag.
+The edge (rising or falling, chosen in the PCR) on a control line input that sets its Interrupt Flag.
 
 **Interrupt Flag**:
-Control Register bit 7 (set by CA1/CB1) or bit 6 (set by CA2/CB2 as input); read-only to the CPU.
+One of IFR bits 0-6 (CA2, CA1, SR, CB2, CB1, T2, T1). Set by hardware; cleared by the documented register access or by writing 1 to it in the IFR.
 _Avoid_: IRQ bit, status bit
 
-**Read A Data**:
-A CPU read of Side A's data location with the DDR Access bit set; it clears Side A's Interrupt Flags and drives CA2 handshake/pulse.
+**Interrupt Enable**:
+The IER bit that lets the matching Interrupt Flag pull IRQB low. Written with bit 7 choosing set (1) or clear (0).
 
-**Write B Data**:
-A CPU write of Side B's data location with the DDR Access bit set; it drives CB2 handshake/pulse.
+**Independent interrupt**:
+A CA2/CB2 input mode whose flag is not cleared by ORA/ORB accesses, only by writing the IFR.
 
 **Handshake mode**:
-A CA2/CB2 output mode where the line is cleared by Read A Data / Write B Data and set again by the active transition on CA1/CB1.
+A CA2/CB2 output mode where the line goes low after an ORA read (CA2 only) or an ORA/ORB write, and high again on the CA1/CB1 Active transition.
 
 **Pulse mode**:
-A CA2/CB2 output mode where the line goes low for one PHI2 cycle after Read A Data / Write B Data.
+A CA2/CB2 output mode where the line goes low for one PHI2 cycle after the same accesses.
 
 **Manual output**:
-A CA2/CB2 output mode where the line follows Control Register bit 3.
+A CA2/CB2 output mode where the line is held low or high by the PCR.
+
+**Timer**:
+T1 or T2: a 16-bit counter decrementing at PHI2 falls, with Latches. T1 can run one-shot or free-run and drive PB7; T2 is one-shot or counts PB6 pulses.
+
+**Latch**:
+The register a Timer counter is loaded from (T1: 16 bits; T2: low 8 bits only).
+
+**Time-out**:
+A Timer counter passing 0 to $FFFF, which sets the Timer's Interrupt Flag at the next PHI2 rise; in T2 pulse counting, reaching 0, which sets it at once.
+
+**Shift Register (SR)**:
+An 8-bit register shifting serial data on CB2, clocked on CB1 by PHI2, by T2's low byte, or externally, per ACR bits 4-2.
+
+**Bus hold**:
+The W65C22S keeper on Port and control lines: a floating line reads its last level.
