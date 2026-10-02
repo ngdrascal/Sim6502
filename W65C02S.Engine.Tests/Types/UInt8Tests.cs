@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Sim6502.Tests;
 using W65C02S.Engine.Types;
 using UInt8 = W65C02S.Engine.Types.UInt8;
 

@@ -1,5 +1,4 @@
-﻿using Sim6502.Tests;
-using W65C02S.Engine.Types;
+﻿using W65C02S.Engine.Types;
 
 namespace W65C02S.Engine.Tests;
 

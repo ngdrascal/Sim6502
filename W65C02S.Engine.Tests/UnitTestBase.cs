@@ -1,12 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
-using Sim6502.Tests.Logging;
-using W65C02S.Engine;
 using W65C02S.Engine.Types;
 using UInt16 = W65C02S.Engine.Types.UInt16;
 using UInt8 = W65C02S.Engine.Types.UInt8;
 
-namespace Sim6502.Tests;
+namespace W65C02S.Engine.Tests;
 
 [ExcludeFromCodeCoverage]
 public class UnitTestBase

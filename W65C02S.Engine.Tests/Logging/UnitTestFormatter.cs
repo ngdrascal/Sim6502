@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Options;
 
-namespace Sim6502.Tests.Logging;
+namespace W65C02S.Engine.Tests;
 
 [ExcludeFromCodeCoverage]
 public class UnitTestFormatter : ConsoleFormatter

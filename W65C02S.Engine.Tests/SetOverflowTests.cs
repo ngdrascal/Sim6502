@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
-using W65C02S.Engine;
 
-namespace Sim6502.Tests;
+namespace W65C02S.Engine.Tests;
 
 [ExcludeFromCodeCoverage]
 public class SetOverflowTests : UnitTestBase
