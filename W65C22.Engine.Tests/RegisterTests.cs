@@ -135,23 +135,4 @@ public class RegisterTests : ViaTestBase
         // ASSERT:
         Assert.Equal(0xA5, value);
     }
-
-    /*
-       TITLE: The shift register location reads 0 and ignores writes for now
-       GIVEN: a reset VIA
-       WHEN: 0xFF is written to SR and SR is read
-       THEN: the read returns 0
-     */
-    [Fact]
-    public void ShiftRegisterNotYetModelled()
-    {
-        // ARRANGE:
-
-        // ACT:
-        Write(Sr, 0xFF);
-        var value = Read(Sr);
-
-        // ASSERT:
-        Assert.Equal(0x00, value);
-    }
 }

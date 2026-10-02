@@ -17,6 +17,7 @@ public class W65C22Engine
     private const int T1LatchHighRegister = 0x7;
     private const int T2LowRegister = 0x8;
     private const int T2HighRegister = 0x9;
+    private const int SrRegister = 0xA;
     private const int AcrRegister = 0xB;
     private const int PcrRegister = 0xC;
     private const int IfrRegister = 0xD;
@@ -26,6 +27,7 @@ public class W65C22Engine
     // IFR / IER bits.
     private const byte Ca2Flag = 0x01;
     private const byte Ca1Flag = 0x02;
+    private const byte SrFlag = 0x04;
     private const byte Cb2Flag = 0x08;
     private const byte Cb1Flag = 0x10;
     private const byte T2Flag = 0x20;
@@ -36,6 +38,7 @@ public class W65C22Engine
     // ACR bits.
     private const byte PaLatchEnable = 0x01;
     private const byte PbLatchEnable = 0x02;
+    private const byte SrModeMask = 0x1C;
     private const byte T2PulseCounting = 0x20;
     private const byte T1FreeRun = 0x40;
     private const byte T1Pb7Output = 0x80;
@@ -59,6 +62,7 @@ public class W65C22Engine
     private readonly ControlLines _b = new();
     private readonly Timer1 _t1 = new();
     private readonly Timer2 _t2 = new();
+    private readonly ShiftRegister _sr = new();
 
     private bool _prevPhi2;
     private bool _cycleSelected;
@@ -100,6 +104,7 @@ public class W65C22Engine
     internal ushort T1Latch => _t1.Latch;
     internal ushort T2Counter => _t2.Counter;
     internal byte T2LatchLow => _t2.LatchLow;
+    internal byte SR => _sr.Value;
 
     private bool IrqActive => (IFR & IER & FlagMask) != 0;
 
@@ -139,6 +144,7 @@ public class W65C22Engine
         _b.Reset(Pins.CB1In, Pins.CB2In);
         _t1.Reset();
         _t2.Reset();
+        _sr.Reset();
         _cycleSelected = false;
         _driveData = false;
     }
@@ -172,6 +178,9 @@ public class W65C22Engine
 
         if (cb2)
             IFR |= Cb2Flag;
+
+        if (_sr.SampleCb1(Pins.CB1In))
+            IFR |= SrFlag;
     }
 
     private void OnPhi2Rise()
@@ -180,6 +189,8 @@ public class W65C22Engine
             IFR |= T1Flag;
         if (_t2.ClockRise((ACR & T2PulseCounting) != 0, (Pins.PBIn & Pb6) != 0))
             IFR |= T2Flag;
+        if (_sr.ClockRise(Pins.CB2In))
+            IFR |= SrFlag;
 
         _a.ClockStrobe(fall: false);
         _b.ClockStrobe(fall: false);
@@ -200,10 +211,14 @@ public class W65C22Engine
     {
         _driveData = false;
 
-        // Timers count before a write so a counter load at this fall is not decremented.
+        // Timers count before a write so a counter load at this fall is not decremented. While a
+        // shift mode uses T2, its low byte is the shift clock and the timer itself is held.
         _t1.ClockFall();
-        if ((ACR & T2PulseCounting) == 0)
+        var t2Underflow = _sr.ClocksFromT2 && _t2.ClockShiftFall();
+        if ((ACR & T2PulseCounting) == 0 && !_sr.UsesT2)
             _t2.ClockFall();
+        if (_sr.ClockFall(t2Underflow))
+            IFR |= SrFlag;
 
         if (_cycleSelected && !_cycleRead)
         {
@@ -247,17 +262,19 @@ public class W65C22Engine
                 return (byte)_t2.Counter;
             case T2HighRegister:
                 return (byte)(_t2.Counter >> 8);
+            case SrRegister:
+                var value = _sr.Value;
+                AccessShiftRegister();
+                return value;
             case AcrRegister:
                 return ACR;
             case PcrRegister:
                 return PCR;
             case IfrRegister:
                 return (byte)(IFR | (IrqActive ? IrqBit : 0));
-            case IerRegister:
-                return (byte)(IER | IrqBit);
             default:
-                // Shift Register: added in a later milestone.
-                return 0;
+                // IER ($E), the only register left.
+                return (byte)(IER | IrqBit);
         }
     }
 
@@ -304,6 +321,10 @@ public class W65C22Engine
                 _t2.Load(value);
                 IFR = (byte)(IFR & ~T2Flag);
                 break;
+            case SrRegister:
+                _sr.Value = value;
+                AccessShiftRegister();
+                break;
             case AcrRegister:
                 WriteAcr(value);
                 break;
@@ -326,6 +347,9 @@ public class W65C22Engine
     private void WriteAcr(byte value)
     {
         ACR = value;
+        _sr.SetMode((ACR & SrModeMask) >> 2);
+        if (!_sr.IsEnabled)
+            IFR = (byte)(IFR & ~SrFlag);
         if ((ACR & PaLatchEnable) == 0)
             _paLatched = false;
         if ((ACR & PbLatchEnable) == 0)
@@ -355,6 +379,14 @@ public class W65C22Engine
         ? ORB
         : (byte)((ORB & ~Pb7) | (_t1.Pb7 ? Pb7 : 0));
 
+    private void AccessShiftRegister()
+    {
+        IFR = (byte)(IFR & ~SrFlag);
+        _sr.Access();
+        if (_sr.UsesT2)
+            _t2.RestartShiftClock();
+    }
+
     private void ClearPortAFlags()
     {
         IFR = (byte)(IFR & ~(_a.C2IsIndependent ? Ca1Flag : Ca1Flag | Ca2Flag));
@@ -375,8 +407,10 @@ public class W65C22Engine
         Pins.PBDrive = PortBDrive;
         Pins.CA2Out = _a.C2Level;
         Pins.CA2Drive = _a.C2IsOutput;
-        Pins.CB2Out = _b.C2Level;
-        Pins.CB2Drive = _b.C2IsOutput;
+        Pins.CB1Out = _sr.Cb1Level;
+        Pins.CB1Drive = _sr.DrivesCb1;
+        Pins.CB2Out = _sr.DrivesCb2 ? _sr.Cb2Level : _b.C2Level;
+        Pins.CB2Drive = _sr.IsEnabled ? _sr.DrivesCb2 : _b.C2IsOutput;
         Pins.IRQB = !IrqActive;
     }
 }

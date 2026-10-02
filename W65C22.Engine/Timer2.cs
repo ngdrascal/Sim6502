@@ -13,6 +13,7 @@ internal sealed class Timer2
     private bool _armed;
     private bool _timeoutPending;
     private bool _prevPb6 = true;
+    private bool _lowReloadPending;
 
     public ushort Counter { get; private set; }
 
@@ -33,6 +34,35 @@ internal sealed class Timer2
         _running = true;
         _armed = true;
         _timeoutPending = false;
+    }
+
+    /// <summary>SR access in a T2-clocked shift mode: reloads the low-order counter from the latch.</summary>
+    public void RestartShiftClock()
+    {
+        Counter = (ushort)((Counter & 0xFF00) | LatchLow);
+        _lowReloadPending = false;
+    }
+
+    /// <summary>
+    /// Counts one PHI2 fall on the low-order counter only, as the Shift Register clock. Returns true
+    /// when it passes 0 to $FF; it reloads from the latch on the following fall (N+2 cycles).
+    /// </summary>
+    public bool ClockShiftFall()
+    {
+        if (_lowReloadPending)
+        {
+            _lowReloadPending = false;
+            Counter = (ushort)((Counter & 0xFF00) | LatchLow);
+            return false;
+        }
+
+        var low = (byte)(Counter - 1);
+        Counter = (ushort)((Counter & 0xFF00) | low);
+        if (low != 0xFF)
+            return false;
+
+        _lowReloadPending = true;
+        return true;
     }
 
     /// <summary>Counts one PHI2 fall in interval mode.</summary>

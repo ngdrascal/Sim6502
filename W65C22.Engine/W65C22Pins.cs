@@ -37,6 +37,8 @@ public class W65C22Pins
     public byte PBDrive { get; internal set; }
     public bool CA2Out { get; internal set; }
     public bool CA2Drive { get; internal set; }
+    public bool CB1Out { get; internal set; } = true;
+    public bool CB1Drive { get; internal set; }
     public bool CB2Out { get; internal set; }
     public bool CB2Drive { get; internal set; }
 
