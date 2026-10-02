@@ -1,14 +1,14 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace W65C21.Engine.Tests;
+namespace W65C22.Engine.Tests;
 
 [ExcludeFromCodeCoverage]
-public class Cb2OutputTests : PiaTestBase
+public class Cb2HandshakeTests : ViaTestBase
 {
     /*
-       TITLE: Manual output modes drive CB2 from CRB bit 3
-       GIVEN: a reset PIA
-       WHEN: CRB selects manual low, then manual high
+       TITLE: Manual output modes drive CB2 from PCR bits 7-5
+       GIVEN: a reset VIA
+       WHEN: PCR selects CB2 manual low, then manual high
        THEN: CB2 is driven low, then driven high
      */
     [Fact]
@@ -17,9 +17,9 @@ public class Cb2OutputTests : PiaTestBase
         // ARRANGE:
 
         // ACT:
-        Write(Crb, C2ManualLow);
+        Write(Pcr, C2ManualLow << 4);
         var low = Pins.CB2Out;
-        Write(Crb, C2ManualHigh);
+        Write(Pcr, C2ManualHigh << 4);
 
         // ASSERT:
         Assert.False(low);
@@ -28,19 +28,19 @@ public class Cb2OutputTests : PiaTestBase
     }
 
     /*
-       TITLE: In handshake mode Write B Data takes CB2 low at the next PHI2 rise
-       GIVEN: a PIA with CB2 handshake and DDR Access set
+       TITLE: Write handshake takes CB2 low at the PHI2 rise after the ORB write
+       GIVEN: a VIA with CB2 handshake
        WHEN: ORB is written, then PHI2 rises
        THEN: CB2 is still high after the write's fall and low after the next rise
      */
     [Fact]
-    public void HandshakeLowAtRiseAfterWriteBData()
+    public void HandshakeLowAtRiseAfterOrbWrite()
     {
         // ARRANGE:
-        Write(Crb, C2Handshake | DdrAccess);
+        Write(Pcr, C2Handshake << 4);
 
         // ACT:
-        Write(PortB, 0x55);
+        Write(Orb, 0x55);
         var afterWrite = Pins.CB2Out;
         Rise();
 
@@ -51,7 +51,7 @@ public class Cb2OutputTests : PiaTestBase
 
     /*
        TITLE: In handshake mode CB2 stays low until the CB1 active transition sets it high
-       GIVEN: a PIA with CB2 handshake taken low after Write B Data, CB1 active on falling edge
+       GIVEN: a VIA with CB2 handshake taken low after an ORB write, CB1 active on falling edge
        WHEN: two idle cycles run, then CB1 falls
        THEN: CB2 stays low through the idle cycles and is high after CB1 falls
      */
@@ -59,8 +59,8 @@ public class Cb2OutputTests : PiaTestBase
     public void HandshakeHighOnCb1ActiveTransition()
     {
         // ARRANGE:
-        Write(Crb, C2Handshake | DdrAccess);
-        Write(PortB, 0x55);
+        Write(Pcr, C2Handshake << 4);
+        Write(Orb, 0x55);
 
         // ACT:
         IdleCycle();
@@ -74,8 +74,8 @@ public class Cb2OutputTests : PiaTestBase
     }
 
     /*
-       TITLE: In pulse mode CB2 is low for one PHI2 cycle, rise to rise, after Write B Data
-       GIVEN: a PIA with CB2 pulse and DDR Access set
+       TITLE: In pulse mode CB2 is low for one PHI2 cycle, rise to rise, after an ORB write
+       GIVEN: a VIA with CB2 pulse mode
        WHEN: ORB is written and two PHI2 rises follow
        THEN: CB2 goes low at the first rise, stays low through its fall, and is high at the second rise
      */
@@ -83,8 +83,8 @@ public class Cb2OutputTests : PiaTestBase
     public void PulseLowForOneCycle()
     {
         // ARRANGE:
-        Write(Crb, C2Pulse | DdrAccess);
-        Write(PortB, 0x55);
+        Write(Pcr, C2Pulse << 4);
+        Write(Orb, 0x55);
 
         // ACT:
         Rise();
@@ -100,45 +100,40 @@ public class Cb2OutputTests : PiaTestBase
     }
 
     /*
-       TITLE: Only Write B Data strobes CB2
-       GIVEN: a PIA with CB2 pulse mode
-       WHEN: DDRB is written, Port B is read (DDR Access set), and idle cycles follow each
-       THEN: CB2 stays high throughout
+       TITLE: Reading IRB does not strobe CB2 (no read handshake on Port B)
+       GIVEN: a VIA with CB2 pulse mode
+       WHEN: IRB is read and idle cycles follow
+       THEN: CB2 stays high
      */
     [Fact]
-    public void OtherAccessesDoNotStrobe()
+    public void ReadDoesNotStrobe()
     {
         // ARRANGE:
-        Write(Crb, C2Pulse);
+        Write(Pcr, C2Pulse << 4);
 
         // ACT:
-        Write(PortB, 0xFF);
+        Read(Orb);
         IdleCycle();
-        var afterDdrWrite = Pins.CB2Out;
-        Write(Crb, C2Pulse | DdrAccess);
-        Read(PortB);
         IdleCycle();
 
         // ASSERT:
-        Assert.True(afterDdrWrite);
         Assert.True(Pins.CB2Out);
     }
 
     /*
-       TITLE: A Write B Data in input mode does not strobe CB2 once output mode is selected
-       GIVEN: a PIA with CB2 as input and DDR Access set
-       WHEN: ORB is written, CRB selects pulse mode, and idle cycles run
+       TITLE: An ORB write in input mode does not strobe CB2 once output mode is selected
+       GIVEN: a VIA with CB2 as input
+       WHEN: ORB is written, PCR selects CB2 pulse mode, and idle cycles run
        THEN: CB2 is driven high throughout
      */
     [Fact]
     public void WriteInInputModeDoesNotStrobe()
     {
         // ARRANGE:
-        Write(Crb, DdrAccess);
 
         // ACT:
-        Write(PortB, 0x55);
-        Write(Crb, C2Pulse | DdrAccess);
+        Write(Orb, 0x55);
+        Write(Pcr, C2Pulse << 4);
         IdleCycle();
         IdleCycle();
 

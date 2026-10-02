@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\W65C21.Engine\W65C21.Engine.csproj" />
+    <ProjectReference Include="..\W65C22.Engine\W65C22.Engine.csproj" />
   </ItemGroup>
 
   <ItemGroup>
