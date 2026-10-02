@@ -137,26 +137,19 @@ public class RegisterTests : ViaTestBase
     }
 
     /*
-       TITLE: The timer and shift register locations read 0 and ignore writes for now
+       TITLE: The shift register location reads 0 and ignores writes for now
        GIVEN: a reset VIA
-       WHEN: 0xFF is written to each timer and SR register and each is read
-       THEN: every read returns 0
+       WHEN: 0xFF is written to SR and SR is read
+       THEN: the read returns 0
      */
-    [Theory]
-    [InlineData(T1CL)]
-    [InlineData(T1CH)]
-    [InlineData(T1LL)]
-    [InlineData(T1LH)]
-    [InlineData(T2CL)]
-    [InlineData(T2CH)]
-    [InlineData(Sr)]
-    public void TimerAndShiftRegistersNotYetModelled(int register)
+    [Fact]
+    public void ShiftRegisterNotYetModelled()
     {
         // ARRANGE:
 
         // ACT:
-        Write(register, 0xFF);
-        var value = Read(register);
+        Write(Sr, 0xFF);
+        var value = Read(Sr);
 
         // ASSERT:
         Assert.Equal(0x00, value);

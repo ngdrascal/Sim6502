@@ -124,6 +124,12 @@ public abstract class ViaTestBase
         Fall();
     }
 
+    protected void IdleCycles(int count)
+    {
+        for (var i = 0; i < count; i++)
+            IdleCycle();
+    }
+
     protected void SetCa1(bool level)
     {
         Pins.CA1 = level;

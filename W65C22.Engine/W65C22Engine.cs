@@ -11,6 +11,12 @@ public class W65C22Engine
     private const int OraRegister = 0x1;
     private const int DdrbRegister = 0x2;
     private const int DdraRegister = 0x3;
+    private const int T1CounterLowRegister = 0x4;
+    private const int T1CounterHighRegister = 0x5;
+    private const int T1LatchLowRegister = 0x6;
+    private const int T1LatchHighRegister = 0x7;
+    private const int T2LowRegister = 0x8;
+    private const int T2HighRegister = 0x9;
     private const int AcrRegister = 0xB;
     private const int PcrRegister = 0xC;
     private const int IfrRegister = 0xD;
@@ -22,12 +28,20 @@ public class W65C22Engine
     private const byte Ca1Flag = 0x02;
     private const byte Cb2Flag = 0x08;
     private const byte Cb1Flag = 0x10;
+    private const byte T2Flag = 0x20;
+    private const byte T1Flag = 0x40;
     private const byte IrqBit = 0x80;
     private const byte FlagMask = 0x7F;
 
     // ACR bits.
     private const byte PaLatchEnable = 0x01;
     private const byte PbLatchEnable = 0x02;
+    private const byte T2PulseCounting = 0x20;
+    private const byte T1FreeRun = 0x40;
+    private const byte T1Pb7Output = 0x80;
+
+    private const byte Pb6 = 0x40;
+    private const byte Pb7 = 0x80;
 
     private static readonly string[] ReadNames =
     [
@@ -43,6 +57,8 @@ public class W65C22Engine
 
     private readonly ControlLines _a = new();
     private readonly ControlLines _b = new();
+    private readonly Timer1 _t1 = new();
+    private readonly Timer2 _t2 = new();
 
     private bool _prevPhi2;
     private bool _cycleSelected;
@@ -80,6 +96,11 @@ public class W65C22Engine
     /// <summary>The Interrupt Enable bits (bits 0-6).</summary>
     internal byte IER { get; private set; }
 
+    internal ushort T1Counter => _t1.Counter;
+    internal ushort T1Latch => _t1.Latch;
+    internal ushort T2Counter => _t2.Counter;
+    internal byte T2LatchLow => _t2.LatchLow;
+
     private bool IrqActive => (IFR & IER & FlagMask) != 0;
 
     public void Evaluate()
@@ -116,6 +137,8 @@ public class W65C22Engine
         _pbLatched = false;
         _a.Reset(Pins.CA1, Pins.CA2In);
         _b.Reset(Pins.CB1In, Pins.CB2In);
+        _t1.Reset();
+        _t2.Reset();
         _cycleSelected = false;
         _driveData = false;
     }
@@ -153,6 +176,11 @@ public class W65C22Engine
 
     private void OnPhi2Rise()
     {
+        if (_t1.ClockRise((ACR & T1FreeRun) != 0))
+            IFR |= T1Flag;
+        if (_t2.ClockRise((ACR & T2PulseCounting) != 0, (Pins.PBIn & Pb6) != 0))
+            IFR |= T2Flag;
+
         _a.ClockStrobe(fall: false);
         _b.ClockStrobe(fall: false);
 
@@ -171,6 +199,11 @@ public class W65C22Engine
     private void OnPhi2Fall()
     {
         _driveData = false;
+
+        // Timers count before a write so a counter load at this fall is not decremented.
+        _t1.ClockFall();
+        if ((ACR & T2PulseCounting) == 0)
+            _t2.ClockFall();
 
         if (_cycleSelected && !_cycleRead)
         {
@@ -200,6 +233,20 @@ public class W65C22Engine
                 return DDRB;
             case DdraRegister:
                 return DDRA;
+            case T1CounterLowRegister:
+                IFR = (byte)(IFR & ~T1Flag);
+                return (byte)_t1.Counter;
+            case T1CounterHighRegister:
+                return (byte)(_t1.Counter >> 8);
+            case T1LatchLowRegister:
+                return (byte)_t1.Latch;
+            case T1LatchHighRegister:
+                return (byte)(_t1.Latch >> 8);
+            case T2LowRegister:
+                IFR = (byte)(IFR & ~T2Flag);
+                return (byte)_t2.Counter;
+            case T2HighRegister:
+                return (byte)(_t2.Counter >> 8);
             case AcrRegister:
                 return ACR;
             case PcrRegister:
@@ -209,7 +256,7 @@ public class W65C22Engine
             case IerRegister:
                 return (byte)(IER | IrqBit);
             default:
-                // Timers and Shift Register: added in later milestones.
+                // Shift Register: added in a later milestone.
                 return 0;
         }
     }
@@ -236,6 +283,26 @@ public class W65C22Engine
                 break;
             case DdraRegister:
                 DDRA = value;
+                break;
+            case T1CounterLowRegister:
+            case T1LatchLowRegister:
+                _t1.WriteLatchLow(value);
+                break;
+            case T1CounterHighRegister:
+                _t1.WriteLatchHigh(value);
+                _t1.Load();
+                IFR = (byte)(IFR & ~T1Flag);
+                break;
+            case T1LatchHighRegister:
+                _t1.WriteLatchHigh(value);
+                IFR = (byte)(IFR & ~T1Flag);
+                break;
+            case T2LowRegister:
+                _t2.LatchLow = value;
+                break;
+            case T2HighRegister:
+                _t2.Load(value);
+                IFR = (byte)(IFR & ~T2Flag);
                 break;
             case AcrRegister:
                 WriteAcr(value);
@@ -273,13 +340,20 @@ public class W65C22Engine
         return value;
     }
 
-    // IRB: ORB on output bits; pin levels (or the CB1 latch until read) on input bits.
+    // IRB: ORB (PB7 from T1 when ACR7 is set) on output bits; pin levels (or the CB1 latch
+    // until read) on input bits.
     private byte ReadPortB()
     {
         var inputs = _pbLatched ? _irb : Pins.PBIn;
         _pbLatched = false;
-        return (byte)((ORB & DDRB) | (inputs & ~DDRB));
+        return (byte)((PortBOutput & PortBDrive) | (inputs & ~PortBDrive));
     }
+
+    private byte PortBDrive => (ACR & T1Pb7Output) != 0 ? (byte)(DDRB | Pb7) : DDRB;
+
+    private byte PortBOutput => (ACR & T1Pb7Output) == 0
+        ? ORB
+        : (byte)((ORB & ~Pb7) | (_t1.Pb7 ? Pb7 : 0));
 
     private void ClearPortAFlags()
     {
@@ -297,8 +371,8 @@ public class W65C22Engine
         Pins.DataDrive = _driveData ? (byte)0xFF : (byte)0x00;
         Pins.PAOut = ORA;
         Pins.PADrive = DDRA;
-        Pins.PBOut = ORB;
-        Pins.PBDrive = DDRB;
+        Pins.PBOut = PortBOutput;
+        Pins.PBDrive = PortBDrive;
         Pins.CA2Out = _a.C2Level;
         Pins.CA2Drive = _a.C2IsOutput;
         Pins.CB2Out = _b.C2Level;
