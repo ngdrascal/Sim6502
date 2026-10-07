@@ -206,6 +206,7 @@ public enum States
 
     InstJMPabs2, InstJMPabs3, // JMP absolute
     InstJMPind2, InstJMPind3, InstJMPind4, InstJMPind5, // JMP indirect
+    InstJMPabsxind2, InstJMPabsxind3, InstJMPabsxind4, InstJMPabsxind5, InstJMPabsxind6, // JMP absolute indexed indirect
 
     InstJSRabs2, InstJSRabs3, InstJSRabs4, InstJSRabs5, InstJSRabs6, // JSR absolute
 

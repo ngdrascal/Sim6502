@@ -76,6 +76,64 @@ public class ControlTests : UnitTestBase
     }
 
     // -------------------------------------------------------------------------
+    // JMP absolute indexed indirect
+    // -------------------------------------------------------------------------
+    /*
+      TITLE: JMP (abs,X) loads PC from the pointer at base + X with the datasheet bus activity
+      GIVEN: a CPU booted to $1000 and X set; cases cover X = 0, an ordinary X, base + X carrying
+             into the high byte, a pointer at $xxFF, base + X wrapping past $FFFF, and a pointer
+             at $FFFF
+      WHEN: JMP (abs,X) runs for its 6 cycles with the operand and target bytes on the data bus
+      THEN: cycles 2-4 address PC+1, PC+2, PC+2; cycles 5-6 address base + X and base + X + 1
+            (full 16-bit adds, no page wrap); every cycle is a read; PC is the target
+    */
+    [Theory]
+    [InlineData(0x1234, 0x00, 0x1234)]
+    [InlineData(0x1234, 0x05, 0x1239)]
+    [InlineData(0x12F0, 0x20, 0x1310)]
+    [InlineData(0x20F0, 0x0F, 0x20FF)]
+    [InlineData(0xFFF0, 0x20, 0x0010)]
+    [InlineData(0xFFFF, 0x00, 0xFFFF)]
+    public void TestJMPabsxind(int baseAddr, int xValue, int pointer)
+    {
+        // ARRANGE:
+        var opCode = OpCodes.JMPabsxind.ToUInt8();
+        var operand = new UInt16(baseAddr);
+        var targetLsb = new UInt8(0xBA);
+        var targetMsb = new UInt8(0xDC);
+        var expectedAddrs = new[]
+        {
+            new UInt16(0x1001), new UInt16(0x1002), new UInt16(0x1002),
+            new UInt16(pointer), new UInt16(pointer + 1)
+        };
+        var addrs = new List<UInt16>();
+        var rwbs = new List<byte>();
+
+        BootToAddress(BootAddr);
+        Regs.X = new UInt8(xValue);
+
+        // ACT:
+        Pins.DataBus = opCode;
+        ExecuteClockCycles(1); // fetch the opcode
+
+        var dataPerCycle = new[] { operand.Lsb(), operand.Msb(), Pins.DataBus, targetLsb, targetMsb };
+        foreach (var data in dataPerCycle)
+        {
+            // JMPabsxind2..6 - base low, base high, internal op (add X), target low, target high
+            Pins.DataBus = data;
+            ExecuteClockCycles(1);
+            addrs.Add(Pins.AddrBus);
+            rwbs.Add(Pins.RWB);
+        }
+
+        // ASSERT:
+        Assert.Equal(opCode, Pins.DBGINST);
+        Assert.Equal(expectedAddrs, addrs);
+        Assert.All(rwbs, rwb => Assert.Equal((byte)High.ToInt(), rwb));
+        Assert.Equal(new UInt16(targetLsb, targetMsb), Regs.PC);
+    }
+
+    // -------------------------------------------------------------------------
     // JSR absolute
     // -------------------------------------------------------------------------
     [Fact]

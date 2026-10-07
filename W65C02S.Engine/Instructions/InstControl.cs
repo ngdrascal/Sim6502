@@ -6,6 +6,7 @@ internal class InstControl : InstBase, IInstruction
     {
         registry.Map(OpCodes.JMPabs, States.InstJMPabs2);
         registry.Map(OpCodes.JMPind, States.InstJMPind2);
+        registry.Map(OpCodes.JMPabsxind, States.InstJMPabsxind2);
         registry.Map(OpCodes.JSRabs, States.InstJSRabs2);
         registry.Map(OpCodes.RTIimp, States.InstRTIimp2);
         registry.Map(OpCodes.RTSimp, States.InstRTSimp2);
@@ -21,6 +22,11 @@ internal class InstControl : InstBase, IInstruction
         stateRegistry.Map(States.InstJMPind3, JmpInd3);
         stateRegistry.Map(States.InstJMPind4, JmpInd4);
         stateRegistry.Map(States.InstJMPind5, JmpInd5);
+        stateRegistry.Map(States.InstJMPabsxind2, JmpAbsxInd2);
+        stateRegistry.Map(States.InstJMPabsxind3, JmpAbsxInd3);
+        stateRegistry.Map(States.InstJMPabsxind4, JmpAbsxInd4);
+        stateRegistry.Map(States.InstJMPabsxind5, JmpAbsxInd5);
+        stateRegistry.Map(States.InstJMPabsxind6, JmpAbsxInd6);
         stateRegistry.Map(States.InstJSRabs2, JsrAbs2);
         stateRegistry.Map(States.InstJSRabs3, JsrAbs3);
         stateRegistry.Map(States.InstJSRabs4, JsrAbs4);
@@ -50,6 +56,7 @@ internal class InstControl : InstBase, IInstruction
     // ------------------------------------------------
     // absolute       JMP oper      4C      3      3
     // indirect       JMP (oper)    6C      3      5
+    // abs,X indirect JMP (oper,X)  7C      3      6
     /////////////////////////////////////////////////////////////////////////////
 
     // -------------------------------------------------------------------------
@@ -101,6 +108,50 @@ internal class InstControl : InstBase, IInstruction
     {
         FetchEA2HighIndirect(ctx);
         ctx.Regs.PC = ctx.Regs.EA2;
+
+        ctx.AdvanceState(States.Fetch);
+    }
+
+    // -------------------------------------------------------------------------
+    // JMP absolute indexed indirect
+    // -------------------------------------------------------------------------
+    private void JmpAbsxInd2(Context ctx)
+    {
+        FetchEffAddrLow(ctx);
+
+        ctx.AdvanceState(States.InstJMPabsxind3);
+    }
+
+    private void JmpAbsxInd3(Context ctx)
+    {
+        FetchEffAddrHigh(ctx);
+
+        ctx.AdvanceState(States.InstJMPabsxind4);
+    }
+
+    private void JmpAbsxInd4(Context ctx)
+    {
+        // internal operation: the address bus keeps PC+2 from the previous cycle while X is
+        // added to the base address (full 16-bit add, carries into the high byte)
+        if (ctx.GetSubStep() == P2LastSubstep)
+            ctx.Regs.IncEAWithX();
+
+        ctx.AdvanceState(States.InstJMPabsxind5);
+    }
+
+    private void JmpAbsxInd5(Context ctx)
+    {
+        FetchEA2LowIndirect(ctx);
+
+        ctx.AdvanceState(States.InstJMPabsxind6);
+    }
+
+    private void JmpAbsxInd6(Context ctx)
+    {
+        // pointer + 1 is a 16-bit increment: no page wrap on the 65C02
+        FetchEA2HighIndirect(ctx);
+        if (ctx.GetSubStep() == P2LastSubstep)
+            ctx.Regs.PC = ctx.Regs.EA2;
 
         ctx.AdvanceState(States.Fetch);
     }

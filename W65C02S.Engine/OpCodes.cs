@@ -219,6 +219,7 @@ public enum OpCodes
     BRKimp = 0x00,
     JMPabs = 0x4C,
     JMPind = 0x6C,
+    JMPabsxind = 0x7C,
     JSRabs = 0x20,
     RTIimp = 0x40,
     RTSimp = 0x60,
