@@ -47,16 +47,52 @@ public class TRBTests : UnitTestBase
         Assert.Equal(aValue, Regs.A);
     }
 
-    [Fact]
-    public void TestTRBzpgZero()
-    {
-        ExecuteTRBzpg(new UInt8(0xF0), new UInt8(0xA0), High);
-    }
-
+    /*
+      TITLE: TRB zpg clears Z when A AND M is non-zero
+      GIVEN: A = $F0 and memory = $A1
+      WHEN: TRB zpg executes
+      THEN: memory is written with ~A AND M = $01, Z is clear (A AND M = $A0), A is unchanged
+    */
     [Fact]
     public void TestTRBzpgNotZero()
     {
         ExecuteTRBzpg(new UInt8(0xF0), new UInt8(0xA1), Low);
+    }
+
+    /*
+      TITLE: TRB zpg sets Z from A AND M, not from the value written back
+      GIVEN: A = $F0 and memory = $A0
+      WHEN: TRB zpg executes
+      THEN: memory is written with ~A AND M = $00, but Z is clear because A AND M = $A0
+    */
+    [Fact]
+    public void TestTRBzpgZeroResultTestNotZero()
+    {
+        ExecuteTRBzpg(new UInt8(0xF0), new UInt8(0xA0), Low);
+    }
+
+    /*
+      TITLE: TRB zpg clears Z when all bits are reset even though A has bits clear
+      GIVEN: A = $FF and memory = $0F
+      WHEN: TRB zpg executes
+      THEN: memory is written with ~A AND M = $00, Z is clear because A AND M = $0F
+    */
+    [Fact]
+    public void TestTRBzpgAllBitsReset()
+    {
+        ExecuteTRBzpg(new UInt8(0xFF), new UInt8(0x0F), Low);
+    }
+
+    /*
+      TITLE: TRB zpg sets Z when A AND M is zero even though the written value is not
+      GIVEN: A = $F0 and memory = $0F
+      WHEN: TRB zpg executes
+      THEN: memory is written with ~A AND M = $0F, Z is set because A AND M = $00
+    */
+    [Fact]
+    public void TestTRBzpgTestZero()
+    {
+        ExecuteTRBzpg(new UInt8(0xF0), new UInt8(0x0F), High);
     }
 
     // -------------------------------------------------------------------------
@@ -100,15 +136,51 @@ public class TRBTests : UnitTestBase
         Assert.Equal(aValue, Regs.A);
     }
 
-    [Fact]
-    public void TestTRBabsZero()
-    {
-        ExecuteTRBabs(new UInt8(0xF0), new UInt8(0xA0), High);
-    }
-
+    /*
+      TITLE: TRB abs clears Z when A AND M is non-zero
+      GIVEN: A = $F0 and memory = $A1
+      WHEN: TRB abs executes
+      THEN: memory is written with ~A AND M = $01, Z is clear (A AND M = $A0), A is unchanged
+    */
     [Fact]
     public void TestTRBabsNotZero()
     {
         ExecuteTRBabs(new UInt8(0xF0), new UInt8(0xA1), Low);
+    }
+
+    /*
+      TITLE: TRB abs sets Z from A AND M, not from the value written back
+      GIVEN: A = $F0 and memory = $A0
+      WHEN: TRB abs executes
+      THEN: memory is written with ~A AND M = $00, but Z is clear because A AND M = $A0
+    */
+    [Fact]
+    public void TestTRBabsZeroResultTestNotZero()
+    {
+        ExecuteTRBabs(new UInt8(0xF0), new UInt8(0xA0), Low);
+    }
+
+    /*
+      TITLE: TRB abs clears Z when all bits are reset even though A has bits clear
+      GIVEN: A = $FF and memory = $0F
+      WHEN: TRB abs executes
+      THEN: memory is written with ~A AND M = $00, Z is clear because A AND M = $0F
+    */
+    [Fact]
+    public void TestTRBabsAllBitsReset()
+    {
+        ExecuteTRBabs(new UInt8(0xFF), new UInt8(0x0F), Low);
+    }
+
+    /*
+      TITLE: TRB abs sets Z when A AND M is zero even though the written value is not
+      GIVEN: A = $F0 and memory = $0F
+      WHEN: TRB abs executes
+      THEN: memory is written with ~A AND M = $0F, Z is set because A AND M = $00
+    */
+    [Fact]
+    public void TestTRBabsTestZero()
+    {
+        ExecuteTRBabs(new UInt8(0xF0), new UInt8(0x0F), High);
     }
 }

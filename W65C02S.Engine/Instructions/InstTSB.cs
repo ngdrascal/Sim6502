@@ -28,19 +28,17 @@ internal class InstTSB : InstBase, IInstruction
 
     private void TestAndSet(Context ctx)
     {
-        var acc = ctx.Regs.A.Copy();
+        var acc = ctx.Regs.A;
         var temp = ctx.Regs.Temp;
-        var result = acc.Or(temp);
-        ctx.Regs.Temp = result;
-        if (result.EqualsZero())
-            ctx.Regs.P.SetZero();
-        else
-            ctx.Regs.P.ClearZero();
+
+        // Z comes from A AND M (the value read), not the value written back
+        ctx.Regs.P.Zero = acc.And(temp).EqualsZero();
+        ctx.Regs.Temp = acc.Or(temp);
     }
 
     /////////////////////////////////////////////////////////////////////////////
-    // TSB - Test And Reset Memory Bits With Accumulator
-    // A | M -> M
+    // TSB - Test and Set Bits in Memory
+    // (A & M) -> Z, (A | M) -> M
     // N V B D I Z C
     // - - - - - + -
     //

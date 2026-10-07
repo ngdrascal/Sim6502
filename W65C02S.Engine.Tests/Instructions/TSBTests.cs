@@ -44,18 +44,43 @@ public class TSBTests : UnitTestBase
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
+        Assert.Equal(aValue, Regs.A);
     }
 
+    /*
+      TITLE: TSB zpg sets Z when A and M are both zero
+      GIVEN: A = $00 and memory = $00
+      WHEN: TSB zpg executes
+      THEN: memory is written with A OR M = $00, Z is set (A AND M = $00)
+    */
     [Fact]
     public void TestTSBzpgZero()
     {
         ExecuteTSBzpg(new UInt8(0x00), new UInt8(0x00), High);
     }
 
+    /*
+      TITLE: TSB zpg clears Z when A AND M is non-zero
+      GIVEN: A = $F0 and memory = $A1
+      WHEN: TSB zpg executes
+      THEN: memory is written with A OR M = $F1, Z is clear (A AND M = $A0)
+    */
     [Fact]
     public void TestTSBzpgNotZero()
     {
         ExecuteTSBzpg(new UInt8(0xF0), new UInt8(0xA1), Low);
+    }
+
+    /*
+      TITLE: TSB zpg sets Z from A AND M, not from the value written back
+      GIVEN: A = $0F and memory = $F0
+      WHEN: TSB zpg executes
+      THEN: memory is written with A OR M = $FF, but Z is set because A AND M = $00
+    */
+    [Fact]
+    public void TestTSBzpgNonZeroResultTestZero()
+    {
+        ExecuteTSBzpg(new UInt8(0x0F), new UInt8(0xF0), High);
     }
 
     // -------------------------------------------------------------------------
@@ -96,17 +121,42 @@ public class TSBTests : UnitTestBase
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
+        Assert.Equal(aValue, Regs.A);
     }
 
+    /*
+      TITLE: TSB abs sets Z when A and M are both zero
+      GIVEN: A = $00 and memory = $00
+      WHEN: TSB abs executes
+      THEN: memory is written with A OR M = $00, Z is set (A AND M = $00)
+    */
     [Fact]
     public void TestTSBabsZero()
     {
         ExecuteTSBabs(new UInt8(0x00), new UInt8(0x00), High);
     }
 
+    /*
+      TITLE: TSB abs clears Z when A AND M is non-zero
+      GIVEN: A = $F0 and memory = $A1
+      WHEN: TSB abs executes
+      THEN: memory is written with A OR M = $F1, Z is clear (A AND M = $A0)
+    */
     [Fact]
     public void TestTSBabsNotZero()
     {
         ExecuteTSBabs(new UInt8(0xF0), new UInt8(0xA1), Low);
+    }
+
+    /*
+      TITLE: TSB abs sets Z from A AND M, not from the value written back
+      GIVEN: A = $0F and memory = $F0
+      WHEN: TSB abs executes
+      THEN: memory is written with A OR M = $FF, but Z is set because A AND M = $00
+    */
+    [Fact]
+    public void TestTSBabsNonZeroResultTestZero()
+    {
+        ExecuteTSBabs(new UInt8(0x0F), new UInt8(0xF0), High);
     }
 }

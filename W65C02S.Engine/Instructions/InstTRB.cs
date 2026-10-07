@@ -28,16 +28,12 @@ internal class InstTRB : InstBase, IInstruction
 
     private void TestAndReset(Context ctx)
     {
-        var acc = ctx.Regs.A.Copy();
+        var acc = ctx.Regs.A;
         var temp = ctx.Regs.Temp;
 
-        var result = acc.Not().And(temp);
-        ctx.Regs.Temp = result;
-
-        if (result.EqualsZero())
-            ctx.Regs.P.SetZero();
-        else
-            ctx.Regs.P.ClearZero();
+        // Z comes from A AND M (the value read), not the value written back
+        ctx.Regs.P.Zero = acc.And(temp).EqualsZero();
+        ctx.Regs.Temp = acc.Not().And(temp);
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -65,11 +61,6 @@ internal class InstTRB : InstBase, IInstruction
     private void Zpg3(Context ctx)
     {
         LoadTempFromEffAddr(ctx);
-        if (ctx.GetSubStep() == Constants.P2LastSubstep)
-        {
-            var result = ctx.Regs.A.And(ctx.Regs.Temp);
-            ctx.Regs.P.Zero = result.EqualsZero();
-        }
 
         ctx.AdvanceState(States.InstTRBzpg4);
     }
