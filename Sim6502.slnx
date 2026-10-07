@@ -4,6 +4,7 @@
   </Folder>
   <Folder Name="/Solution Items/Docs/">
     <File Path="Docs/ARCHITECTURE.md" />
+    <File Path="Docs/Digisim-Allocation-Fix.md" />
     <File Path="Docs/Performance.md" />
   </Folder>
   <Folder Name="/Solution Items/Docs/DataSheets/">

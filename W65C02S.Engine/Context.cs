@@ -52,7 +52,8 @@ public class Context
     {
         if (_subStep == Constants.P2LastSubstep)
         {
-            DoStateChanging(new StateChangingEventArgs(nextState));
+            if (OnStateChanging != null)
+                DoStateChanging(new StateChangingEventArgs(nextState));
 
             InitState(nextState);
         }

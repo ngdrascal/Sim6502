@@ -177,7 +177,9 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
             if (_ctx.NmiFlag || _ctx.IrqFlag)
                 _ctx.InitState(States.Interrupt1);
 
-        OnSubstateChanging(new SubstepChangingEventArgs(_ctx.State, substep));
+        // only build the event args when someone is listening; this runs on every substep
+        if (OnSubstepChanging != null)
+            OnSubstateChanging(new SubstepChangingEventArgs(_ctx.State, substep));
 
         var method = _stateMethodMap[(int)_ctx.State];
         method(_ctx);

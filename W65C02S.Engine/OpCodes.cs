@@ -305,16 +305,26 @@ public static class OpCodesExtensions
 
     public static UInt8 ToUInt8(this OpCodes opCode) => new((int)opCode);
 
+    // true for each byte value that has an OpCodes member; built once so decode is a table lookup
+    private static readonly bool[] Defined = BuildDefined();
+
+    private static bool[] BuildDefined()
+    {
+        var defined = new bool[256];
+        foreach (var code in Enum.GetValues<OpCodes>())
+            defined[(int)code] = true;
+
+        return defined;
+    }
+
     public static OpCodes FromValue(int value)
     {
         if (value < 0 || value > 255)
             throw new ArgumentOutOfRangeException(nameof(value));
-        foreach (OpCodes code in Enum.GetValues(typeof(OpCodes)))
-        {
-            if ((int)code == value)
-                return code;
-        }
-        throw new ArgumentException($"No matching OpCode for {value}", nameof(value));
+        if (!Defined[value])
+            throw new ArgumentException($"No matching OpCode for {value}", nameof(value));
+
+        return (OpCodes)value;
     }
 
     public static OpCodes FromValue(UInt8 value)

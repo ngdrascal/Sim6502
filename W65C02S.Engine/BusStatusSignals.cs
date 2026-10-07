@@ -5,21 +5,21 @@ namespace W65C02S.Engine;
 /// </summary>
 internal static class BusStatusSignals
 {
-    private static readonly HashSet<States> OpcodeFetchStates =
+    private static readonly bool[] OpcodeFetchStates = ToTable(
     [
         States.Fetch,
         // the discarded opcode fetch that starts a hardware interrupt sequence
         States.Interrupt1
-    ];
+    ]);
 
-    private static readonly HashSet<States> VectorPullStates =
+    private static readonly bool[] VectorPullStates = ToTable(
     [
         States.Boot1, States.Boot2,
         States.InstBRKimp6, States.InstBRKimp7
-    ];
+    ]);
 
     // the read, modify and write cycles (the last three) of every read-modify-write instruction
-    private static readonly HashSet<States> ReadModifyWriteStates =
+    private static readonly bool[] ReadModifyWriteStates = ToTable(
     [
         States.InstASLzpg3, States.InstASLzpg4, States.InstASLzpg5,
         States.InstASLzpgx4, States.InstASLzpgx5, States.InstASLzpgx6,
@@ -56,11 +56,21 @@ internal static class BusStatusSignals
 
         States.InstTSBzpg3, States.InstTSBzpg4, States.InstTSBzpg5,
         States.InstTSBabs4, States.InstTSBabs5, States.InstTSBabs6
-    ];
+    ]);
 
-    public static bool IsOpcodeFetch(States state) => OpcodeFetchStates.Contains(state);
+    public static bool IsOpcodeFetch(States state) => OpcodeFetchStates[(int)state];
 
-    public static bool IsVectorPull(States state) => VectorPullStates.Contains(state);
+    public static bool IsVectorPull(States state) => VectorPullStates[(int)state];
 
-    public static bool IsReadModifyWrite(States state) => ReadModifyWriteStates.Contains(state);
+    public static bool IsReadModifyWrite(States state) => ReadModifyWriteStates[(int)state];
+
+    // one flag per state value, so each per-cycle status-pin lookup is an array index
+    private static bool[] ToTable(States[] states)
+    {
+        var table = new bool[Enum.GetValues<States>().Length];
+        foreach (var state in states)
+            table[(int)state] = true;
+
+        return table;
+    }
 }

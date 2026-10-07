@@ -23,11 +23,14 @@ Projects:
 
 ```
 dotnet build Sim6502.slnx
-dotnet test Sim6502.slnx
-dotnet test W65C02S.Engine.Tests --filter "FullyQualifiedName~LDATests"
-dotnet test W65C02S.Engine.Tests --filter "FullyQualifiedName~LDATests.TestLDAimmWith0"
+dotnet test --solution Sim6502.slnx
+dotnet test --project W65C02S.Engine.Tests --filter-class "*LDATests"
+dotnet test --project W65C02S.Engine.Tests --filter-method "*LDATests.TestLDAimmWith0"
+dotnet test --solution Sim6502.slnx --coverlet --coverlet-output-format cobertura
 dotnet run --project W65C02S.ValidationSuite
 ```
+
+`dotnet test` runs on Microsoft.Testing.Platform (opted in by `global.json`; xUnit v3 4.x no longer supports the VSTest path). Coverage uses `coverlet.MTP`; reports land in `TestResults/`.
 
 The Digisim projects depend on `Digisim.Sdk` / `Digisim.Engine` 1.0.0 from a local NuGet feed at `C:\nuget-local` (see `nuget.config`), produced by Digisim's `scripts/pack-sdk.ps1`. If restore fails for those, the feed is missing; the engine projects build without it. The plugin references `Digisim.Sdk` with `ExcludeAssets="runtime"` because the host supplies it.
 
