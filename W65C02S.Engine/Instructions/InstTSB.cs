@@ -31,7 +31,7 @@ internal class InstTSB : InstBase, IInstruction
         var acc = ctx.Regs.A.Copy();
         var temp = ctx.Regs.Temp;
         var result = acc.Or(temp);
-        temp.UpdateValue(result);
+        ctx.Regs.Temp = result;
         if (result.EqualsZero())
             ctx.Regs.P.SetZero();
         else

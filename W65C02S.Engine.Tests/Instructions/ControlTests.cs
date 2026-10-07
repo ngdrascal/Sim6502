@@ -91,7 +91,7 @@ public class ControlTests : UnitTestBase
         var expectedReturnAddr = BootAddr.Copy().AddUnsigned(new UInt8(2));
 
         BootToAddress(BootAddr);
-        Regs.S.UpdateValue(stackTop);
+        Regs.S = stackTop;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -133,7 +133,7 @@ public class ControlTests : UnitTestBase
         var expectedFlags = UInt8FromFlags("NvbdizC");
 
         BootToAddress(BootAddr);
-        Regs.S.UpdateValue(stackTop);
+        Regs.S = stackTop;
         Regs.P.LoadFlags("nvbdizc");
 
         // ACT:
@@ -175,7 +175,7 @@ public class ControlTests : UnitTestBase
         var expectedStackTop = stackTop.Copy().Inc().Inc();
 
         BootToAddress(BootAddr);
-        Regs.S.UpdateValue(stackTop);
+        Regs.S = stackTop;
 
         // ACT:
         Pins.DataBus = (opCode);

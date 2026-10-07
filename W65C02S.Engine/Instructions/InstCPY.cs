@@ -29,9 +29,9 @@ internal class InstCPY : InstBase, IInstruction
         int y = ctx.Regs.Y.ToInt();
         int operand = ctx.Regs.Temp.ToInt();
         int result = y - operand;
-        flags.Carry.UpdateValue(result >= 0);
-        flags.Zero.UpdateValue(result == 0);
-        flags.Negative.UpdateValue((result & 0x80) > 0);
+        flags.Carry = result >= 0;
+        flags.Zero = result == 0;
+        flags.Negative = (result & 0x80) > 0;
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -56,7 +56,7 @@ internal class InstCPY : InstBase, IInstruction
         if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             CpyWithTemp(ctx);
             ctx.DbgOperand1 = data;
         }

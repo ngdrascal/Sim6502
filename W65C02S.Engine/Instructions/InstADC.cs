@@ -77,11 +77,12 @@ internal class InstADC : InstBase, IInstruction
         var operand = ctx.Regs.Temp;
 
         var result = ctx.Regs.A.Adc(operand, p.Carry, p.Decimal);
+        ctx.Regs.A = result.Value();
 
-        p.Negative.UpdateValue(result.Value().IsBitSet(7));
-        p.Overflow.UpdateValue(result.Overflow());
-        p.Zero.UpdateValue(result.Value().EqualsZero());
-        p.Carry.UpdateValue(result.Carry());
+        p.Negative = result.Value().IsBitSet(7);
+        p.Overflow = result.Overflow();
+        p.Zero = result.Value().EqualsZero();
+        p.Carry = result.Carry();
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -115,7 +116,7 @@ internal class InstADC : InstBase, IInstruction
         if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             AdcThenUpdateFlags(ctx);
             ctx.DbgOperand1 = data;
         }
@@ -247,7 +248,7 @@ internal class InstADC : InstBase, IInstruction
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             if (!ctx.CrossedPageBoundary)
             {
                 AdcThenUpdateFlags(ctx);
@@ -265,7 +266,7 @@ internal class InstADC : InstBase, IInstruction
         if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             AdcThenUpdateFlags(ctx);
         }
 
@@ -310,7 +311,7 @@ internal class InstADC : InstBase, IInstruction
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             if (!ctx.CrossedPageBoundary)
             {
                 AdcThenUpdateFlags(ctx);
@@ -329,7 +330,7 @@ internal class InstADC : InstBase, IInstruction
         if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             AdcThenUpdateFlags(ctx);
         }
 
@@ -356,8 +357,8 @@ internal class InstADC : InstBase, IInstruction
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
-            ctx.Regs.EA.Lsb().AddWithWrapAround(ctx.Regs.X);
-            ctx.Regs.EA.Msb().Zero();
+            ctx.Regs.EA = ctx.Regs.EA.WithLsb(ctx.Regs.EA.Lsb().AddWithWrapAround(ctx.Regs.X));
+            ctx.Regs.EA = ctx.Regs.EA.WithMsb(0);
         }
 
         ctx.AdvanceState(States.InstADCindx4);
@@ -435,7 +436,7 @@ internal class InstADC : InstBase, IInstruction
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             if (!ctx.CrossedPageBoundary)
             {
                 AdcThenUpdateFlags(ctx);

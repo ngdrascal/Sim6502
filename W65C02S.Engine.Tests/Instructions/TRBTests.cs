@@ -22,7 +22,7 @@ public class TRBTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -44,6 +44,7 @@ public class TRBTests : UnitTestBase
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1002), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
+        Assert.Equal(aValue, Regs.A);
     }
 
     [Fact]
@@ -71,7 +72,7 @@ public class TRBTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -96,6 +97,7 @@ public class TRBTests : UnitTestBase
         Assert.Equal(expectedValue, Pins.DataBus);
         Assert.Equal(new UInt16(0x1003), Regs.PC);
         Assert.Equal(expectedZFlag, Regs.P.Zero);
+        Assert.Equal(aValue, Regs.A);
     }
 
     [Fact]

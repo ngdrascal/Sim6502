@@ -21,8 +21,8 @@ public class ROLTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.P.Carry.UpdateValue(carryIn);
-        Regs.A.UpdateValue(input);
+        Regs.P.Carry = carryIn;
+        Regs.A = input;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -94,7 +94,7 @@ public class ROLTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.P.Carry.UpdateValue(carryIn);
+        Regs.P.Carry = carryIn;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -176,8 +176,8 @@ public class ROLTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.P.Carry.UpdateValue(carryIn);
-        Regs.X.UpdateValue(xValue);
+        Regs.P.Carry = carryIn;
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -261,7 +261,7 @@ public class ROLTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.P.Carry.UpdateValue(carryIn);
+        Regs.P.Carry = carryIn;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -347,8 +347,8 @@ public class ROLTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.P.Carry.UpdateValue(carryIn);
-        Regs.X.UpdateValue(xValue);
+        Regs.P.Carry = carryIn;
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);

@@ -299,7 +299,7 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         else if (ctx.GetSubStep() == LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.PC.Lsb().UpdateValue(data);
+            ctx.Regs.PC = ctx.Regs.PC.WithLsb(data);
         }
         ctx.AdvanceState(States.Boot2);
     }
@@ -314,7 +314,7 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
         else if (ctx.GetSubStep() == LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.PC.Msb().UpdateValue(data);
+            ctx.Regs.PC = ctx.Regs.PC.WithMsb(data);
         }
         ctx.AdvanceState(States.Fetch);
     }
@@ -334,12 +334,12 @@ public class W65C02SEngine : IT2Registry, IStateRegistry
             var pc = ctx.Regs.PC.Copy();
             ctx.DbgPC = pc;
             ctx.Pins.AddrBus = pc;
-            ctx.Regs.PC.Inc();
+            ctx.Regs.PC = ctx.Regs.PC.Inc();
             ctx.Pins.RWB = Read;
         }
         else if (ctx.GetSubStep() == LastSubstep)
         {
-            ctx.Regs.Inst.UpdateValue(ctx.Pins.DataBus);
+            ctx.Regs.Inst = ctx.Pins.DataBus;
             ctx.Pins.DBGINST = ctx.Regs.Inst;
             ctx.Pins.PHI1O = Low;
             _instCount++;

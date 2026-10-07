@@ -22,7 +22,7 @@ public class TSBTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -71,7 +71,7 @@ public class TSBTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = (opCode);

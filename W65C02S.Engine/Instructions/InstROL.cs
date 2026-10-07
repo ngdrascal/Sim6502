@@ -40,13 +40,15 @@ internal class InstROL : InstBase, IInstruction
         return this;
     }
 
-    private void RolUpdateFlags(Context ctx, UInt8 value)
+    private UInt8 RolUpdateFlags(Context ctx, UInt8 value)
     {
         var oldCarry = ctx.Regs.P.Carry.Copy();
-        ctx.Regs.P.Carry.UpdateValue(value.IsBitSet(7));
-        value.Shl(oldCarry);
-        ctx.Regs.P.Zero.UpdateValue(value.EqualsZero());
-        ctx.Regs.P.Negative.UpdateValue(value.IsBitSet(7));
+        ctx.Regs.P.Carry = value.IsBitSet(7);
+        value = value.Shl(oldCarry);
+        ctx.Regs.P.Zero = value.EqualsZero();
+        ctx.Regs.P.Negative = value.IsBitSet(7);
+
+        return value;
     }
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -70,7 +72,7 @@ internal class InstROL : InstBase, IInstruction
     private void Acc2(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            RolUpdateFlags(ctx, ctx.Regs.A);
+            ctx.Regs.A = RolUpdateFlags(ctx, ctx.Regs.A);
         ctx.AdvanceState(States.Fetch);
     }
 
@@ -94,7 +96,7 @@ internal class InstROL : InstBase, IInstruction
     private void Zpg4(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            RolUpdateFlags(ctx, ctx.Regs.Temp);
+            ctx.Regs.Temp = RolUpdateFlags(ctx, ctx.Regs.Temp);
 
         ctx.AdvanceState(States.InstROLzpg5);
     }
@@ -133,7 +135,7 @@ internal class InstROL : InstBase, IInstruction
     private void Zpgx5(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            RolUpdateFlags(ctx, ctx.Regs.Temp);
+            ctx.Regs.Temp = RolUpdateFlags(ctx, ctx.Regs.Temp);
 
         ctx.AdvanceState(States.InstROLzpgx6);
     }
@@ -171,7 +173,7 @@ internal class InstROL : InstBase, IInstruction
     private void Abs5(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            RolUpdateFlags(ctx, ctx.Regs.Temp);
+            ctx.Regs.Temp = RolUpdateFlags(ctx, ctx.Regs.Temp);
 
         ctx.AdvanceState(States.InstROLabs6);
     }
@@ -218,7 +220,7 @@ internal class InstROL : InstBase, IInstruction
     private void Absx6(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            RolUpdateFlags(ctx, ctx.Regs.Temp);
+            ctx.Regs.Temp = RolUpdateFlags(ctx, ctx.Regs.Temp);
 
         ctx.AdvanceState(States.InstROLabsx7);
     }

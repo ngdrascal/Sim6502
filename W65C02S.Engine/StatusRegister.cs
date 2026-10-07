@@ -8,13 +8,8 @@ public class StatusRegister
 {
     public StatusRegister()
     {
-        Negative = new BitFlag(false);
-        Overflow = new BitFlag(false);
-        Break = new BitFlag(true);
-        Decimal = new BitFlag(false);
-        IRQDisabled = new BitFlag(true);
-        Zero = new BitFlag(false);
-        Carry = new BitFlag(false);
+        Break = BitFlag.High();
+        IRQDisabled = BitFlag.High();
     }
 
     public override string ToString()
@@ -58,63 +53,62 @@ public class StatusRegister
 
     public void SetFlags(UInt8 value)
     {
-        Negative.UpdateValue(value.IsBitSet(7));
-        Overflow.UpdateValue(value.IsBitSet(6));
+        Negative = value.GetBitFlag(7);
+        Overflow = value.GetBitFlag(6);
         // NOTE: Bit 5 is unused and always set to 1
         // NOTE: Bit 4 is the Break flag.  It is not affected by this method.
-        Decimal.UpdateValue(value.IsBitSet(3));
-        IRQDisabled.UpdateValue(value.IsBitSet(2));
-        Zero.UpdateValue(value.IsBitSet(1));
-        Carry.UpdateValue(value.IsBitSet(0));
+        Decimal = value.GetBitFlag(3);
+        IRQDisabled = value.GetBitFlag(2);
+        Zero = value.GetBitFlag(1);
+        Carry = value.GetBitFlag(0);
     }
 
     public StatusRegister Copy()
     {
-        var result = new StatusRegister();
-
-        result.Negative.UpdateValue(Negative);
-        result.Overflow.UpdateValue(Overflow);
-        result.Break.UpdateValue(Break);
-        result.Decimal.UpdateValue(Decimal);
-        result.IRQDisabled.UpdateValue(IRQDisabled);
-        result.Zero.UpdateValue(Zero);
-        result.Carry.UpdateValue(Carry);
-
-        return result;
+        return new StatusRegister
+        {
+            Negative = Negative,
+            Overflow = Overflow,
+            Break = Break,
+            Decimal = Decimal,
+            IRQDisabled = IRQDisabled,
+            Zero = Zero,
+            Carry = Carry
+        };
     }
 
-    public BitFlag Carry { get; }
+    public BitFlag Carry { get; set; }
 
-    public void SetCarry() => Carry.Set();
-    public void ClearCarry() => Carry.Clear();
+    public void SetCarry() => Carry = BitFlag.High();
+    public void ClearCarry() => Carry = BitFlag.Low();
 
-    public BitFlag Zero { get; }
+    public BitFlag Zero { get; set; }
 
-    public void SetZero() => Zero.Set();
-    public void ClearZero() => Zero.Clear();
+    public void SetZero() => Zero = BitFlag.High();
+    public void ClearZero() => Zero = BitFlag.Low();
 
-    public BitFlag IRQDisabled { get; }
+    public BitFlag IRQDisabled { get; set; }
 
-    public void SetIRQDisabled() => IRQDisabled.Set();
-    public void ClearIRQDisabled() => IRQDisabled.Clear();
+    public void SetIRQDisabled() => IRQDisabled = BitFlag.High();
+    public void ClearIRQDisabled() => IRQDisabled = BitFlag.Low();
 
-    public BitFlag Decimal { get; }
+    public BitFlag Decimal { get; set; }
 
-    public void SetDecimal() => Decimal.Set();
-    public void ClearDecimal() => Decimal.Clear();
+    public void SetDecimal() => Decimal = BitFlag.High();
+    public void ClearDecimal() => Decimal = BitFlag.Low();
 
-    public BitFlag Break { get; }
+    public BitFlag Break { get; set; }
 
-    public void SetBreak() => Break.Set();
-    public void ClearBreak() => Break.Clear();
+    public void SetBreak() => Break = BitFlag.High();
+    public void ClearBreak() => Break = BitFlag.Low();
 
-    public BitFlag Overflow { get; }
+    public BitFlag Overflow { get; set; }
 
-    public void SetOverflow() => Overflow.Set();
-    public void ClearOverflow() => Overflow.Clear();
+    public void SetOverflow() => Overflow = BitFlag.High();
+    public void ClearOverflow() => Overflow = BitFlag.Low();
 
-    public BitFlag Negative { get; }
+    public BitFlag Negative { get; set; }
 
-    public void SetNegative() => Negative.Set();
-    public void ClearNegative() => Negative.Clear();
+    public void SetNegative() => Negative = BitFlag.High();
+    public void ClearNegative() => Negative = BitFlag.Low();
 }

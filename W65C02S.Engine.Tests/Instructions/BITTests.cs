@@ -21,7 +21,7 @@ public class BITTests : UnitTestBase
         var expectedVFlag = Regs.P.Overflow;
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -82,7 +82,7 @@ public class BITTests : UnitTestBase
         var expectedAddr = new UInt16(operand);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -147,8 +147,8 @@ public class BITTests : UnitTestBase
         var expectedAddr = new UInt16(operand.Copy().AddWithWrapAround(xValue));
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
-        Regs.X.UpdateValue(xValue);
+        Regs.A = aValue;
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -215,7 +215,7 @@ public class BITTests : UnitTestBase
         var expectedAddr = new UInt16(operand1, operand2);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -283,8 +283,8 @@ public class BITTests : UnitTestBase
         var expectedAddr = new UInt16(operand1, operand2).AddUnsigned(xValue);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
-        Regs.X.UpdateValue(xValue);
+        Regs.A = aValue;
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);

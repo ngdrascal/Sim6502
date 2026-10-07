@@ -53,7 +53,7 @@ Each instruction family class in `Instructions/` (derives `InstBase`, implements
 
 At `Fetch`, a pending NMI/IRQ flag diverts to `Interrupt1` (`Instructions/Interrupts.cs`, shared with BRK sequence).
 
-**Types.** Registers and buses use custom reference types `Types.UInt8`, `Types.UInt16`, `Types.BitFlag` (not the BCL types); files alias them with `using UInt8 = W65C02S.Engine.Types.UInt8;`. ADC/SBC (incl. decimal mode) live on `UInt8` returning `MathResult`.
+**Types.** Registers and buses use custom `readonly struct` types `Types.UInt8`, `Types.UInt16`, `Types.BitFlag` (not the BCL types); files alias them with `using UInt8 = W65C02S.Engine.Types.UInt8;`. They are immutable: every operation returns a new value, so assign it back (`ctx.Regs.S = ctx.Regs.S.Inc();`, `ctx.Regs.PC = ctx.Regs.PC.WithLsb(data);`). A bare `ctx.Regs.S.Inc();` compiles but does nothing. Construction from an int keeps the low 8/16 bits; bit-index checks are `Debug.Assert`. `Registers` and `StatusRegister` expose settable properties; `bool` converts implicitly to `BitFlag`. ADC/SBC (incl. decimal mode) live on `UInt8` returning `MathResult` (the caller stores `result.Value()`).
 
 **Pins.** `Pins` implements both `IPinsExternal` (what a host drives/reads) and `IPinsInternal` (what the engine uses). `DBG*` pins (e.g. `DBGINST`, `DBGSUBSTEP`) expose internals for tests.
 

@@ -49,16 +49,19 @@ internal class InstDecrement : InstBase, IInstruction
     private void DecTempAndUpdateFlags(Context ctx)
     {
         var temp = ctx.Regs.Temp;
-        temp.Dec();
-        ctx.Regs.P.Zero.UpdateValue(temp.EqualsZero());
-        ctx.Regs.P.Negative.UpdateValue(temp.IsBitSet(7));
+        temp = temp.Dec();
+        ctx.Regs.Temp = temp;
+        ctx.Regs.P.Zero = temp.EqualsZero();
+        ctx.Regs.P.Negative = temp.IsBitSet(7);
     }
 
-    private void DecAndUpdateFlags(Context ctx, UInt8 value)
+    private UInt8 DecAndUpdateFlags(Context ctx, UInt8 value)
     {
-        value.Dec();
-        ctx.Regs.P.Zero.UpdateValue(value.EqualsZero());
-        ctx.Regs.P.Negative.UpdateValue(value.IsBitSet(7));
+        value = value.Dec();
+        ctx.Regs.P.Zero = value.EqualsZero();
+        ctx.Regs.P.Negative = value.IsBitSet(7);
+
+        return value;
     }
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -82,7 +85,7 @@ internal class InstDecrement : InstBase, IInstruction
     private void DecAcc2(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            DecAndUpdateFlags(ctx, ctx.Regs.A);
+            ctx.Regs.A = DecAndUpdateFlags(ctx, ctx.Regs.A);
 
         ctx.AdvanceState(States.Fetch);
     }
@@ -240,7 +243,7 @@ internal class InstDecrement : InstBase, IInstruction
     private void DexImp2(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            DecAndUpdateFlags(ctx, ctx.Regs.X);
+            ctx.Regs.X = DecAndUpdateFlags(ctx, ctx.Regs.X);
 
         ctx.AdvanceState(States.Fetch);
     }
@@ -258,7 +261,7 @@ internal class InstDecrement : InstBase, IInstruction
     private void DeyImp2(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            DecAndUpdateFlags(ctx, ctx.Regs.Y);
+            ctx.Regs.Y = DecAndUpdateFlags(ctx, ctx.Regs.Y);
 
         ctx.AdvanceState(States.Fetch);
     }

@@ -165,7 +165,7 @@ public class BusStatusPinTests : UnitTestBase
     {
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.S.UpdateValue(new UInt8(0xFF));
+        Regs.S = new UInt8(0xFF);
         var vpb = new List<byte>();
         var sync = new List<byte>();
 
@@ -196,8 +196,8 @@ public class BusStatusPinTests : UnitTestBase
     {
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.P.IRQDisabled.UpdateValue(High);
-        Regs.S.UpdateValue(new UInt8(0xFF));
+        Regs.P.IRQDisabled = High;
+        Regs.S = new UInt8(0xFF);
         var vpb = new List<byte>();
         var sync = new List<byte>();
 

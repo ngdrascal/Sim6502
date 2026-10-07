@@ -21,12 +21,12 @@ public class ADCTests : UnitTestBase
         var expectedValue = aValue.Copy().Adc(operand, cIn, dIn).Value();
 
         BootToAddress(BootAddr);
-        Regs.P.Zero.UpdateValue(expectedZ.Copy().Not());
-        Regs.P.Carry.UpdateValue(cIn);
-        Regs.P.Decimal.UpdateValue(dIn);
-        Regs.P.Negative.UpdateValue(expectedN.Copy().Not());
-        Regs.P.Overflow.UpdateValue(expectedV.Copy().Not());
-        Regs.A.UpdateValue(aValue);
+        Regs.P.Zero = expectedZ.Copy().Not();
+        Regs.P.Carry = cIn;
+        Regs.P.Decimal = dIn;
+        Regs.P.Negative = expectedN.Copy().Not();
+        Regs.P.Overflow = expectedV.Copy().Not();
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -101,12 +101,12 @@ public class ADCTests : UnitTestBase
         var expectedAddr = new UInt16(operand);
 
         BootToAddress(BootAddr);
-        Regs.P.Zero.UpdateValue(expectedZ.Copy().Not());
-        Regs.P.Carry.UpdateValue(cIn);
-        Regs.P.Decimal.UpdateValue(dIn);
-        Regs.P.Negative.UpdateValue(expectedN.Copy().Not());
-        Regs.P.Overflow.UpdateValue(expectedV.Copy().Not());
-        Regs.A.UpdateValue(aValue);
+        Regs.P.Zero = expectedZ.Copy().Not();
+        Regs.P.Carry = cIn;
+        Regs.P.Decimal = dIn;
+        Regs.P.Negative = expectedN.Copy().Not();
+        Regs.P.Overflow = expectedV.Copy().Not();
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -185,13 +185,13 @@ public class ADCTests : UnitTestBase
         var expectedAddr = new UInt16(operand.Copy().AddWithWrapAround(xValue));
 
         BootToAddress(BootAddr);
-        Regs.P.Zero.UpdateValue(expectedZ.Copy().Not());
-        Regs.P.Carry.UpdateValue(cIn);
-        Regs.P.Decimal.UpdateValue(dIn);
-        Regs.P.Negative.UpdateValue(expectedN.Copy().Not());
-        Regs.P.Overflow.UpdateValue(expectedV.Copy().Not());
-        Regs.A.UpdateValue(aValue);
-        Regs.X.UpdateValue(xValue);
+        Regs.P.Zero = expectedZ.Copy().Not();
+        Regs.P.Carry = cIn;
+        Regs.P.Decimal = dIn;
+        Regs.P.Negative = expectedN.Copy().Not();
+        Regs.P.Overflow = expectedV.Copy().Not();
+        Regs.A = aValue;
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -273,12 +273,12 @@ public class ADCTests : UnitTestBase
         var expectedAddr = new UInt16(operand1, operand2);
 
         BootToAddress(BootAddr);
-        Regs.P.Zero.UpdateValue(expectedZ.Copy().Not());
-        Regs.P.Carry.UpdateValue(cIn);
-        Regs.P.Decimal.UpdateValue(dIn);
-        Regs.P.Negative.UpdateValue(expectedN.Copy().Not());
-        Regs.P.Overflow.UpdateValue(expectedV.Copy().Not());
-        Regs.A.UpdateValue(aValue);
+        Regs.P.Zero = expectedZ.Copy().Not();
+        Regs.P.Carry = cIn;
+        Regs.P.Decimal = dIn;
+        Regs.P.Negative = expectedN.Copy().Not();
+        Regs.P.Overflow = expectedV.Copy().Not();
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -361,13 +361,13 @@ public class ADCTests : UnitTestBase
         var expectedAddr = new UInt16(operand1, operand2).AddUnsigned(xValue);
 
         BootToAddress(BootAddr);
-        Regs.P.Zero.UpdateValue(expectedZ.Copy().Not());
-        Regs.P.Carry.UpdateValue(cIn);
-        Regs.P.Decimal.UpdateValue(dIn);
-        Regs.P.Negative.UpdateValue(expectedN.Copy().Not());
-        Regs.P.Overflow.UpdateValue(expectedV.Copy().Not());
-        Regs.A.UpdateValue(aValue);
-        Regs.X.UpdateValue(xValue);
+        Regs.P.Zero = expectedZ.Copy().Not();
+        Regs.P.Carry = cIn;
+        Regs.P.Decimal = dIn;
+        Regs.P.Negative = expectedN.Copy().Not();
+        Regs.P.Overflow = expectedV.Copy().Not();
+        Regs.A = aValue;
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -460,13 +460,13 @@ public class ADCTests : UnitTestBase
         var expectedAddr = new UInt16(operand1, operand2).AddUnsigned(yValue);
 
         BootToAddress(BootAddr);
-        Regs.P.Zero.UpdateValue(expectedZ.Copy().Not());
-        Regs.P.Carry.UpdateValue(cIn);
-        Regs.P.Decimal.UpdateValue(dIn);
-        Regs.P.Negative.UpdateValue(expectedN.Copy().Not());
-        Regs.P.Overflow.UpdateValue(expectedV.Copy().Not());
-        Regs.A.UpdateValue(aValue);
-        Regs.Y.UpdateValue(yValue);
+        Regs.P.Zero = expectedZ.Copy().Not();
+        Regs.P.Carry = cIn;
+        Regs.P.Decimal = dIn;
+        Regs.P.Negative = expectedN.Copy().Not();
+        Regs.P.Overflow = expectedV.Copy().Not();
+        Regs.A = aValue;
+        Regs.Y = yValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -560,13 +560,13 @@ public class ADCTests : UnitTestBase
         var expectedAddr = new UInt16(indAddrLsb, indAddrMsb);
 
         BootToAddress(BootAddr);
-        Regs.P.Zero.UpdateValue(expectedZ.Copy().Not());
-        Regs.P.Carry.UpdateValue(cIn);
-        Regs.P.Decimal.UpdateValue(dIn);
-        Regs.P.Negative.UpdateValue(expectedN.Copy().Not());
-        Regs.P.Overflow.UpdateValue(expectedV.Copy().Not());
-        Regs.A.UpdateValue(aValue);
-        Regs.X.UpdateValue(xValue);
+        Regs.P.Zero = expectedZ.Copy().Not();
+        Regs.P.Carry = cIn;
+        Regs.P.Decimal = dIn;
+        Regs.P.Negative = expectedN.Copy().Not();
+        Regs.P.Overflow = expectedV.Copy().Not();
+        Regs.A = aValue;
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -656,13 +656,13 @@ public class ADCTests : UnitTestBase
         var expectedAddr = new UInt16(indAddrLsb, indAddrMsb).AddUnsigned(yValue);
 
         BootToAddress(BootAddr);
-        Regs.P.Zero.UpdateValue(expectedZ.Copy().Not());
-        Regs.P.Carry.UpdateValue(cIn);
-        Regs.P.Decimal.UpdateValue(dIn);
-        Regs.P.Negative.UpdateValue(expectedN.Copy().Not());
-        Regs.P.Overflow.UpdateValue(expectedV.Copy().Not());
-        Regs.A.UpdateValue(aValue);
-        Regs.Y.UpdateValue(yValue);
+        Regs.P.Zero = expectedZ.Copy().Not();
+        Regs.P.Carry = cIn;
+        Regs.P.Decimal = dIn;
+        Regs.P.Negative = expectedN.Copy().Not();
+        Regs.P.Overflow = expectedV.Copy().Not();
+        Regs.A = aValue;
+        Regs.Y = yValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -761,12 +761,12 @@ public class ADCTests : UnitTestBase
         var expectedAddr = new UInt16(indAddrLsb, indAddrMsb);
 
         BootToAddress(BootAddr);
-        Regs.P.Zero.UpdateValue(expectedZ.Copy().Not());
-        Regs.P.Carry.UpdateValue(cIn);
-        Regs.P.Decimal.UpdateValue(dIn);
-        Regs.P.Negative.UpdateValue(expectedN.Copy().Not());
-        Regs.P.Overflow.UpdateValue(expectedV.Copy().Not());
-        Regs.A.UpdateValue(aValue);
+        Regs.P.Zero = expectedZ.Copy().Not();
+        Regs.P.Carry = cIn;
+        Regs.P.Decimal = dIn;
+        Regs.P.Negative = expectedN.Copy().Not();
+        Regs.P.Overflow = expectedV.Copy().Not();
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = opCode;

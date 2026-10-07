@@ -22,7 +22,7 @@ public class STYTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.Y.UpdateValue(yValue);
+        Regs.Y = yValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -55,8 +55,8 @@ public class STYTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.X.UpdateValue(xValue);
-        Regs.Y.UpdateValue(yValue);
+        Regs.X = xValue;
+        Regs.Y = yValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -91,7 +91,7 @@ public class STYTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.Y.UpdateValue(yValue);
+        Regs.Y = yValue;
 
         // ACT:
         Pins.DataBus = (opCode);

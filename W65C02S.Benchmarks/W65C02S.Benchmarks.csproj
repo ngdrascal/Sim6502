@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\W65C02S.ValidationSuite\Tests\6502_functional_test.bin" Link="Tests\6502_functional_test.bin">
+    <None Include="..\W65C02S.ValidationSuite\Tests\*.bin" LinkBase="Tests">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

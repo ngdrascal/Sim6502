@@ -25,7 +25,7 @@ public class InterruptTests : UnitTestBase
         var expectedReturnAddr = BootAddr.Copy().AddUnsigned(new UInt8(2));
 
         BootToAddress(BootAddr);
-        Regs.S.UpdateValue(stackTop);
+        Regs.S = stackTop;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -76,8 +76,8 @@ public class InterruptTests : UnitTestBase
         var stackTop = new UInt8(0xFF);
 
         BootToAddress(BootAddr);
-        Regs.P.IRQDisabled.UpdateValue(High);
-        Regs.S.UpdateValue(stackTop);
+        Regs.P.IRQDisabled = High;
+        Regs.S = stackTop;
 
         // ACT:
         Pins.DataBus = (interruptedOpCode);
@@ -127,8 +127,8 @@ public class InterruptTests : UnitTestBase
         var stackTop = new UInt8(0xFF);
 
         BootToAddress(BootAddr);
-        Regs.P.IRQDisabled.UpdateValue(Low);
-        Regs.S.UpdateValue(stackTop);
+        Regs.P.IRQDisabled = Low;
+        Regs.S = stackTop;
 
         // ACT:
         Pins.DataBus = (interruptedOpCode);
@@ -180,8 +180,8 @@ public class InterruptTests : UnitTestBase
         var expectedPC = handlerAddr.Copy().AddUnsigned(new UInt8(2));
 
         BootToAddress(BootAddr);
-        Regs.P.IRQDisabled.UpdateValue(Low);
-        Regs.S.UpdateValue(stackTop);
+        Regs.P.IRQDisabled = Low;
+        Regs.S = stackTop;
 
         Pins.DataBus = nop;
         ExecuteClockCycles(1); // fetch NOP

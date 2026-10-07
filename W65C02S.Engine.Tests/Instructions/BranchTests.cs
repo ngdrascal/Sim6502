@@ -10,7 +10,7 @@ namespace W65C02S.Engine.Tests;
 [ExcludeFromCodeCoverage]
 public class BranchTests : UnitTestBase
 {
-    private void ExecuteBranch(OpCodes opCode, UInt8 operand, BitFlag flag, BitFlag branchCondition,
+    private void ExecuteBranch(OpCodes opCode, UInt8 operand, Action<BitFlag> setFlag, BitFlag branchCondition,
                                BitFlag flagInitValue, UInt16 pcInitValue)
     {
         // ARRANGE:
@@ -19,8 +19,8 @@ public class BranchTests : UnitTestBase
         var expectedPC = pcInitValue.Copy().AddUnsigned(new UInt8(2)).AddSigned(offset);
 
         BootToAddress(BootAddr);
-        Regs.PC.UpdateValue(pcInitValue);
-        flag.UpdateValue(flagInitValue);
+        Regs.PC = pcInitValue;
+        setFlag(flagInitValue);
 
         // ACT:
         Pins.DataBus = (opCodeValue);
@@ -29,7 +29,7 @@ public class BranchTests : UnitTestBase
         Pins.DataBus = (operand);
         ExecuteClockCycles(1); // InstBXXrel2 - fetch operand, check flag
 
-        if (flag.Equals(branchCondition))
+        if (flagInitValue.Equals(branchCondition))
         {
             ExecuteClockCycles(1); // InstBXXrel3 - add the operand to the lsb of the PC reg
 
@@ -53,7 +53,7 @@ public class BranchTests : UnitTestBase
         var expectedPC = pcInitValue.Copy().AddUnsigned(new UInt8(2)).AddSigned(offset);
 
         BootToAddress(BootAddr);
-        Regs.PC.UpdateValue(pcInitValue);
+        Regs.PC = pcInitValue;
 
         // ACT:
         Pins.DataBus = (opCodeValue);
@@ -116,7 +116,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BCCrel;
         var operand = new UInt8(0x08);
-        var flag = Regs.P.Carry;
+        Action<BitFlag> flag = value => Regs.P.Carry = value;
         var branchCondition = Low;
         var flagInitValue = High;
         var pcInitValue = new UInt16(0x01F0);
@@ -129,7 +129,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BCCrel;
         var operand = new UInt8(0x08);
-        var flag = Regs.P.Carry;
+        Action<BitFlag> flag = value => Regs.P.Carry = value;
         var branchCondition = Low;
         var flagInitValue = Low;
         var pcInitValue = new UInt16(0x01F0);
@@ -142,7 +142,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BCCrel;
         var operand = new UInt8(0x10);
-        var flag = Regs.P.Carry;
+        Action<BitFlag> flag = value => Regs.P.Carry = value;
         var branchCondition = Low;
         var flagInitValue = Low;
         var pcInitValue = new UInt16(0x01F0);
@@ -155,7 +155,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BCCrel;
         var operand = new UInt8(0xF0);
-        var flag = Regs.P.Carry;
+        Action<BitFlag> flag = value => Regs.P.Carry = value;
         var branchCondition = Low;
         var flagInitValue = Low;
         var pcInitValue = new UInt16(0x01F0);
@@ -168,7 +168,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BCCrel;
         var operand = new UInt8(0xF0);
-        var flag = Regs.P.Carry;
+        Action<BitFlag> flag = value => Regs.P.Carry = value;
         var branchCondition = Low;
         var flagInitValue = Low;
         var pcInitValue = new UInt16(0x0100);
@@ -184,7 +184,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BCSrel;
         var operand = new UInt8(0x08);
-        var flag = Regs.P.Carry;
+        Action<BitFlag> flag = value => Regs.P.Carry = value;
         var branchCondition = High;
         var flagInitValue = Low;
         var pcInitValue = new UInt16(0x01F0);
@@ -197,7 +197,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BCSrel;
         var operand = new UInt8(0x08);
-        var flag = Regs.P.Carry;
+        Action<BitFlag> flag = value => Regs.P.Carry = value;
         var branchCondition = High;
         var flagInitValue = High;
         var pcInitValue = new UInt16(0x01F0);
@@ -210,7 +210,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BCSrel;
         var operand = new UInt8(0x10);
-        var flag = Regs.P.Carry;
+        Action<BitFlag> flag = value => Regs.P.Carry = value;
         var branchCondition = High;
         var flagInitValue = High;
         var pcInitValue = new UInt16(0x01F0);
@@ -223,7 +223,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BCSrel;
         var operand = new UInt8(0xF0);
-        var flag = Regs.P.Carry;
+        Action<BitFlag> flag = value => Regs.P.Carry = value;
         var branchCondition = High;
         var flagInitValue = High;
         var pcInitValue = new UInt16(0x01F0);
@@ -236,7 +236,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BCSrel;
         var operand = new UInt8(0xF0);
-        var flag = Regs.P.Carry;
+        Action<BitFlag> flag = value => Regs.P.Carry = value;
         var branchCondition = High;
         var flagInitValue = High;
         var pcInitValue = new UInt16(0x0100);
@@ -252,7 +252,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BEQrel;
         var operand = new UInt8(0x08);
-        var flag = Regs.P.Zero;
+        Action<BitFlag> flag = value => Regs.P.Zero = value;
         var branchCondition = High;
         var flagInitValue = Low;
         var pcInitValue = new UInt16(0x01F0);
@@ -265,7 +265,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BEQrel;
         var operand = new UInt8(0x08);
-        var flag = Regs.P.Zero;
+        Action<BitFlag> flag = value => Regs.P.Zero = value;
         var branchCondition = High;
         var flagInitValue = High;
         var pcInitValue = new UInt16(0x01F0);
@@ -278,7 +278,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BEQrel;
         var operand = new UInt8(0x10);
-        var flag = Regs.P.Zero;
+        Action<BitFlag> flag = value => Regs.P.Zero = value;
         var branchCondition = High;
         var flagInitValue = High;
         var pcInitValue = new UInt16(0x01F0);
@@ -291,7 +291,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BEQrel;
         var operand = new UInt8(0xF0);
-        var flag = Regs.P.Zero;
+        Action<BitFlag> flag = value => Regs.P.Zero = value;
         var branchCondition = High;
         var flagInitValue = High;
         var pcInitValue = new UInt16(0x01F0);
@@ -304,7 +304,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BEQrel;
         var operand = new UInt8(0xF0);
-        var flag = Regs.P.Zero;
+        Action<BitFlag> flag = value => Regs.P.Zero = value;
         var branchCondition = High;
         var flagInitValue = High;
         var pcInitValue = new UInt16(0x0100);
@@ -320,7 +320,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BMIrel;
         var operand = new UInt8(0x08);
-        var flag = Regs.P.Negative;
+        Action<BitFlag> flag = value => Regs.P.Negative = value;
         var branchCondition = High;
         var flagInitValue = Low;
         var pcInitValue = new UInt16(0x01F0);
@@ -333,7 +333,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BMIrel;
         var operand = new UInt8(0x08);
-        var flag = Regs.P.Negative;
+        Action<BitFlag> flag = value => Regs.P.Negative = value;
         var branchCondition = High;
         var flagInitValue = High;
         var pcInitValue = new UInt16(0x01F0);
@@ -346,7 +346,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BMIrel;
         var operand = new UInt8(0x10);
-        var flag = Regs.P.Negative;
+        Action<BitFlag> flag = value => Regs.P.Negative = value;
         var branchCondition = High;
         var flagInitValue = High;
         var pcInitValue = new UInt16(0x01F0);
@@ -359,7 +359,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BMIrel;
         var operand = new UInt8(0xF0);
-        var flag = Regs.P.Negative;
+        Action<BitFlag> flag = value => Regs.P.Negative = value;
         var branchCondition = High;
         var flagInitValue = High;
         var pcInitValue = new UInt16(0x01F0);
@@ -372,7 +372,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BMIrel;
         var operand = new UInt8(0xF0);
-        var flag = Regs.P.Negative;
+        Action<BitFlag> flag = value => Regs.P.Negative = value;
         var branchCondition = High;
         var flagInitValue = High;
         var pcInitValue = new UInt16(0x0100);
@@ -388,7 +388,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BNErel;
         var operand = new UInt8(0x08);
-        var flag = Regs.P.Zero;
+        Action<BitFlag> flag = value => Regs.P.Zero = value;
         var branchCondition = Low;
         var flagInitValue = High;
         var pcInitValue = new UInt16(0x01F0);
@@ -401,7 +401,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BNErel;
         var operand = new UInt8(0x08);
-        var flag = Regs.P.Zero;
+        Action<BitFlag> flag = value => Regs.P.Zero = value;
         var branchCondition = Low;
         var flagInitValue = Low;
         var pcInitValue = new UInt16(0x01F0);
@@ -414,7 +414,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BNErel;
         var operand = new UInt8(0x10);
-        var flag = Regs.P.Zero;
+        Action<BitFlag> flag = value => Regs.P.Zero = value;
         var branchCondition = Low;
         var flagInitValue = Low;
         var pcInitValue = new UInt16(0x01F0);
@@ -427,7 +427,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BNErel;
         var operand = new UInt8(0xF0);
-        var flag = Regs.P.Zero;
+        Action<BitFlag> flag = value => Regs.P.Zero = value;
         var branchCondition = Low;
         var flagInitValue = Low;
         var pcInitValue = new UInt16(0x01F0);
@@ -440,7 +440,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BNErel;
         var operand = new UInt8(0xF0);
-        var flag = Regs.P.Zero;
+        Action<BitFlag> flag = value => Regs.P.Zero = value;
         var branchCondition = Low;
         var flagInitValue = Low;
         var pcInitValue = new UInt16(0x0100);
@@ -456,7 +456,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BPLrel;
         var operand = new UInt8(0x08);
-        var flag = Regs.P.Negative;
+        Action<BitFlag> flag = value => Regs.P.Negative = value;
         var branchCondition = Low;
         var flagInitValue = High;
         var pcInitValue = new UInt16(0x01F0);
@@ -469,7 +469,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BPLrel;
         var operand = new UInt8(0x08);
-        var flag = Regs.P.Negative;
+        Action<BitFlag> flag = value => Regs.P.Negative = value;
         var branchCondition = Low;
         var flagInitValue = Low;
         var pcInitValue = new UInt16(0x01F0);
@@ -482,7 +482,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BPLrel;
         var operand = new UInt8(0x10);
-        var flag = Regs.P.Negative;
+        Action<BitFlag> flag = value => Regs.P.Negative = value;
         var branchCondition = Low;
         var flagInitValue = Low;
         var pcInitValue = new UInt16(0x01F0);
@@ -495,7 +495,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BPLrel;
         var operand = new UInt8(0xF0);
-        var flag = Regs.P.Negative;
+        Action<BitFlag> flag = value => Regs.P.Negative = value;
         var branchCondition = Low;
         var flagInitValue = Low;
         var pcInitValue = new UInt16(0x01F0);
@@ -508,7 +508,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BPLrel;
         var operand = new UInt8(0xF0);
-        var flag = Regs.P.Negative;
+        Action<BitFlag> flag = value => Regs.P.Negative = value;
         var branchCondition = Low;
         var flagInitValue = Low;
         var pcInitValue = new UInt16(0x0100);
@@ -524,7 +524,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BVCrel;
         var operand = new UInt8(0x08);
-        var flag = Regs.P.Overflow;
+        Action<BitFlag> flag = value => Regs.P.Overflow = value;
         var branchCondition = Low;
         var flagInitValue = High;
         var pcInitValue = new UInt16(0x01F0);
@@ -537,7 +537,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BVCrel;
         var operand = new UInt8(0x08);
-        var flag = Regs.P.Overflow;
+        Action<BitFlag> flag = value => Regs.P.Overflow = value;
         var branchCondition = Low;
         var flagInitValue = Low;
         var pcInitValue = new UInt16(0x01F0);
@@ -550,7 +550,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BVCrel;
         var operand = new UInt8(0x10);
-        var flag = Regs.P.Overflow;
+        Action<BitFlag> flag = value => Regs.P.Overflow = value;
         var branchCondition = Low;
         var flagInitValue = Low;
         var pcInitValue = new UInt16(0x01F0);
@@ -563,7 +563,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BVCrel;
         var operand = new UInt8(0xF0);
-        var flag = Regs.P.Overflow;
+        Action<BitFlag> flag = value => Regs.P.Overflow = value;
         var branchCondition = Low;
         var flagInitValue = Low;
         var pcInitValue = new UInt16(0x01F0);
@@ -576,7 +576,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BVCrel;
         var operand = new UInt8(0xF0);
-        var flag = Regs.P.Overflow;
+        Action<BitFlag> flag = value => Regs.P.Overflow = value;
         var branchCondition = Low;
         var flagInitValue = Low;
         var pcInitValue = new UInt16(0x0100);
@@ -592,7 +592,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BVSrel;
         var operand = new UInt8(0x08);
-        var flag = Regs.P.Overflow;
+        Action<BitFlag> flag = value => Regs.P.Overflow = value;
         var branchCondition = High;
         var flagInitValue = Low;
         var pcInitValue = new UInt16(0x01F0);
@@ -605,7 +605,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BVSrel;
         var operand = new UInt8(0x08);
-        var flag = Regs.P.Overflow;
+        Action<BitFlag> flag = value => Regs.P.Overflow = value;
         var branchCondition = High;
         var flagInitValue = High;
         var pcInitValue = new UInt16(0x01F0);
@@ -618,7 +618,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BVSrel;
         var operand = new UInt8(0x10);
-        var flag = Regs.P.Overflow;
+        Action<BitFlag> flag = value => Regs.P.Overflow = value;
         var branchCondition = High;
         var flagInitValue = High;
         var pcInitValue = new UInt16(0x01F0);
@@ -631,7 +631,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BVSrel;
         var operand = new UInt8(0xF0);
-        var flag = Regs.P.Overflow;
+        Action<BitFlag> flag = value => Regs.P.Overflow = value;
         var branchCondition = High;
         var flagInitValue = High;
         var pcInitValue = new UInt16(0x01F0);
@@ -644,7 +644,7 @@ public class BranchTests : UnitTestBase
     {
         var opCode = OpCodes.BVSrel;
         var operand = new UInt8(0xF0);
-        var flag = Regs.P.Overflow;
+        Action<BitFlag> flag = value => Regs.P.Overflow = value;
         var branchCondition = High;
         var flagInitValue = High;
         var pcInitValue = new UInt16(0x0100);

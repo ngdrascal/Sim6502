@@ -46,12 +46,14 @@ internal class InstASL : InstBase, IInstruction
         return this;
     }
 
-    private void AslUpdateFlags(Context ctx, UInt8 value)
+    private UInt8 AslUpdateFlags(Context ctx, UInt8 value)
     {
-        ctx.Regs.P.Carry.UpdateValue(value.IsBitSet(7));
-        ctx.Regs.P.Negative.UpdateValue(value.IsBitSet(6));
-        value.Shl();
-        ctx.Regs.P.Zero.UpdateValue(value.EqualsZero());
+        ctx.Regs.P.Carry = value.IsBitSet(7);
+        ctx.Regs.P.Negative = value.IsBitSet(6);
+        value = value.Shl();
+        ctx.Regs.P.Zero = value.EqualsZero();
+
+        return value;
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -75,7 +77,7 @@ internal class InstASL : InstBase, IInstruction
     private void Acc2(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            AslUpdateFlags(ctx, ctx.Regs.A);
+            ctx.Regs.A = AslUpdateFlags(ctx, ctx.Regs.A);
         ctx.AdvanceState(States.Fetch);
     }
 
@@ -99,7 +101,7 @@ internal class InstASL : InstBase, IInstruction
     private void Zpg4(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            AslUpdateFlags(ctx, ctx.Regs.Temp);
+            ctx.Regs.Temp = AslUpdateFlags(ctx, ctx.Regs.Temp);
 
         ctx.AdvanceState(States.InstASLzpg5);
     }
@@ -139,7 +141,7 @@ internal class InstASL : InstBase, IInstruction
     private void Zpgx5(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            AslUpdateFlags(ctx, ctx.Regs.Temp);
+            ctx.Regs.Temp = AslUpdateFlags(ctx, ctx.Regs.Temp);
 
         ctx.AdvanceState(States.InstASLzpgx6);
     }
@@ -177,7 +179,7 @@ internal class InstASL : InstBase, IInstruction
     private void Abs5(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            AslUpdateFlags(ctx, ctx.Regs.Temp);
+            ctx.Regs.Temp = AslUpdateFlags(ctx, ctx.Regs.Temp);
 
         ctx.AdvanceState(States.InstASLabs6);
     }
@@ -223,7 +225,7 @@ internal class InstASL : InstBase, IInstruction
     private void Absx6(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            AslUpdateFlags(ctx, ctx.Regs.Temp);
+            ctx.Regs.Temp = AslUpdateFlags(ctx, ctx.Regs.Temp);
 
         ctx.AdvanceState(States.InstASLabsx7);
     }

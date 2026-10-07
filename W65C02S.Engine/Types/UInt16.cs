@@ -1,137 +1,90 @@
+using System.Diagnostics;
+
 namespace W65C02S.Engine.Types;
 
 /// <summary>
 /// Unsigned 16-bit integer with bitwise and arithmetic utilities.
 /// </summary>
-public class UInt16
+/// <remarks>
+/// An immutable value: every operation returns a new value and leaves this one unchanged, so a
+/// result must be assigned back (e.g. <c>regs.PC = regs.PC.Inc()</c>). Construction from an int
+/// keeps the low 16 bits.
+/// </remarks>
+public readonly struct UInt16 : IEquatable<UInt16>
 {
-    private readonly UInt8 _lsb = new UInt8();
-    private readonly UInt8 _msb = new UInt8();
+    private readonly ushort _value;
 
     public const int Max = 65535;
 
     public const int MaxBit = 16;
 
-    public UInt16() { }
+    public UInt16(int value) => _value = (ushort)value;
 
-    public UInt16(int value) => UpdateValue(value);
+    public UInt16(UInt8 lsb, UInt8 msb) => _value = (ushort)((msb.ToInt() << 8) | lsb.ToInt());
 
-    public UInt16(UInt8 lsb, UInt8 msb) => UpdateValue((msb.ToInt() << 8) | lsb.ToInt());
+    public UInt16(UInt8 lsb) => _value = (ushort)lsb.ToInt();
 
-    public UInt16(UInt8 lsb) => UpdateValue(lsb.ToInt());
+    public static implicit operator UInt16(ushort value) => new(value);
 
-    public static implicit operator UInt16(ushort value) => new UInt16(value);
+    public static implicit operator ushort(UInt16 value) => value._value;
 
-    public static implicit operator ushort(UInt16 value) => (ushort)value.ToInt();
+    public UInt16 Copy() => this;
 
-    public UInt16 Copy() => new UInt16(_lsb, _msb);
+    public bool Equals(UInt16 other) => _value == other._value;
 
-    public override bool Equals(object? o)
-    {
-        if (ReferenceEquals(this, o))
-            return true;
+    public override bool Equals(object? o) => o is UInt16 that && Equals(that);
 
-        if (o is not UInt16 that)
-            return false;
+    public override int GetHashCode() => _value;
 
-        return ToInt() == that.ToInt();
-    }
+    public override string ToString() => $"0x{_value:X4}";
 
-    public override int GetHashCode() => ToInt();
+    public int ToInt() => _value;
 
-    public override string ToString() => $"0x{ToInt():X4}";
-
-    public int ToInt() => (_msb.ToInt() << 8) + _lsb.ToInt();
-
-    public void UpdateValue(int toValue)
-    {
-        if (toValue is < 0 or > Max)
-            throw new ArgumentOutOfRangeException(nameof(toValue));
-
-        _lsb.UpdateValue(toValue & 0xFF);
-        _msb.UpdateValue((toValue & 0xFF00) >> 8);
-    }
-
-    public void UpdateValue(UInt16 toValue) => UpdateValue(toValue.ToInt());
-
-    public bool EqualsZero() => ToInt() == 0;
+    public bool EqualsZero() => _value == 0;
 
     public bool IsBitSet(int bitIndex)
     {
-        if (bitIndex is < 0 or >= MaxBit)
-            throw new ArgumentOutOfRangeException(nameof(bitIndex));
+        Debug.Assert(bitIndex is >= 0 and < MaxBit);
 
-        var mask = 1 << bitIndex;
-        return (ToInt() & mask) > 0;
+        return (_value & (1 << bitIndex)) != 0;
     }
 
-    public void SetBit(int bitIndex)
+    public UInt16 SetBit(int bitIndex)
     {
-        if (bitIndex is < 0 or >= MaxBit)
-            throw new ArgumentOutOfRangeException(nameof(bitIndex));
+        Debug.Assert(bitIndex is >= 0 and < MaxBit);
 
-        var mask = 1 << bitIndex;
-        UpdateValue(ToInt() | mask);
+        return new UInt16(_value | (1 << bitIndex));
     }
 
-    public void ClearBit(int bitIndex)
+    public UInt16 ClearBit(int bitIndex)
     {
-        if (bitIndex is < 0 or >= MaxBit)
-            throw new ArgumentOutOfRangeException(nameof(bitIndex));
+        Debug.Assert(bitIndex is >= 0 and < MaxBit);
 
-        var mask = ~(1 << bitIndex);
-        UpdateValue(ToInt() & mask);
+        return new UInt16(_value & ~(1 << bitIndex));
     }
 
-    public int GetBitValue(int bitIndex)
+    public int GetBitValue(int bitIndex) => IsBitSet(bitIndex) ? 1 : 0;
+
+    public UInt16 SetBitValue(int bitIndex, int toValue)
     {
-        if (bitIndex is < 0 or >= MaxBit)
-            throw new ArgumentOutOfRangeException(nameof(bitIndex));
+        Debug.Assert(toValue is 0 or 1);
 
-        return IsBitSet(bitIndex) ? 1 : 0;
+        return toValue == 0 ? ClearBit(bitIndex) : SetBit(bitIndex);
     }
 
-    public void SetBitValue(int bitIndex, int toValue)
-    {
-        if (bitIndex is < 0 or >= MaxBit)
-            throw new ArgumentOutOfRangeException(nameof(bitIndex));
+    public UInt8 Lsb() => new(_value);
 
-        if (toValue is < 0 or > 1)
-            throw new ArgumentOutOfRangeException(nameof(toValue));
+    public UInt8 Msb() => new(_value >> 8);
 
-        if (toValue == 0)
-            ClearBit(bitIndex);
-        else
-            SetBit(bitIndex);
-    }
+    public UInt16 WithLsb(UInt8 lsb) => new((_value & 0xFF00) | lsb.ToInt());
 
-    public UInt8 Lsb() => _lsb;
+    public UInt16 WithMsb(UInt8 msb) => new((msb.ToInt() << 8) | (_value & 0x00FF));
 
-    public UInt8 Msb() => _msb;
+    public UInt16 Inc() => new(_value + 1);
 
-    public UInt16 Inc()
-    {
-        UpdateValue(ToInt() == Max ? 0 : ToInt() + 1);
-        return this;
-    }
+    public UInt16 Dec() => new(_value - 1);
 
-    public UInt16 Dec()
-    {
-        UpdateValue(ToInt() == 0 ? Max : ToInt() - 1);
-        return this;
-    }
+    public UInt16 AddUnsigned(UInt8 amount) => new(_value + amount.ToInt());
 
-    public UInt16 AddUnsigned(UInt8 amount)
-    {
-        UpdateValue((ToInt() + amount.ToInt()) % Max);
-        return this;
-    }
-
-    public UInt16 AddSigned(UInt8 amount)
-    {
-        var left = ToInt();
-        var right = (sbyte)amount.ToInt();
-        UpdateValue(left + right);
-        return this;
-    }
+    public UInt16 AddSigned(UInt8 amount) => new(_value + (sbyte)amount.ToInt());
 }

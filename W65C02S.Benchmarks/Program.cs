@@ -61,5 +61,17 @@ internal static class Program
         sw.Stop();
         Console.WriteLine($"Dormann: PASS, {cycles:N0} cycles, {sw.Elapsed.TotalMilliseconds:N0} ms, " +
                           $"{cycles / sw.Elapsed.TotalSeconds / 1e6:N2} MHz");
+
+        // ends in BRK; the ERROR byte at $01B0 is 0 when every case matched
+        var bcd = new EngineHarness(LoadTest("BruceClarkBCDTest.bin"), 0x0000, 0x0000) { StopOnBrkVector = true };
+        var bcdCycles = bcd.RunUntilTrapped(500_000_000);
+        var bcdPass = bcd.TrapAddress == EngineHarness.BrkVector && bcd.Memory[0x01B0] == 0;
+        Console.WriteLine($"Bruce Clark BCD: {(bcdPass ? "PASS" : "FAIL")}, stopped at ${bcd.TrapAddress:X4} " +
+                          $"after {bcdCycles:N0} cycles, ERROR = ${bcd.Memory[0x01B0]:X2}");
+    }
+
+    private static byte[] LoadTest(string fileName)
+    {
+        return File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "Tests", fileName));
     }
 }

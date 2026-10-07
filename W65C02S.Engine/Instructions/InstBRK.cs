@@ -97,7 +97,7 @@ internal class InstBRK : InstBase, IInstruction
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.PC.Lsb().UpdateValue(data);
+            ctx.Regs.PC = ctx.Regs.PC.WithLsb(data);
         }
 
         ctx.AdvanceState(States.InstBRKimp7);
@@ -117,7 +117,7 @@ internal class InstBRK : InstBase, IInstruction
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.PC.Msb().UpdateValue(data);
+            ctx.Regs.PC = ctx.Regs.PC.WithMsb(data);
 
             // the interrupt has been serviced; without this every following fetch re-enters it
             ctx.ClearNmiFlag();

@@ -198,7 +198,7 @@ internal class InstAND : InstBase, IInstruction
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             if (!ctx.CrossedPageBoundary)
             {
                 AndAWithTemp(ctx);
@@ -216,7 +216,7 @@ internal class InstAND : InstBase, IInstruction
         if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             AndAWithTemp(ctx);
         }
         ctx.AdvanceState(States.Fetch);
@@ -252,7 +252,7 @@ internal class InstAND : InstBase, IInstruction
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             if (!ctx.CrossedPageBoundary)
             {
                 AndAWithTemp(ctx);
@@ -270,7 +270,7 @@ internal class InstAND : InstBase, IInstruction
         if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             AndAWithTemp(ctx);
         }
         ctx.AdvanceState(States.Fetch);
@@ -289,8 +289,8 @@ internal class InstAND : InstBase, IInstruction
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
-            ctx.Regs.EA.Lsb().AddWithWrapAround(ctx.Regs.X);
-            ctx.Regs.EA.Msb().Zero();
+            ctx.Regs.EA = ctx.Regs.EA.WithLsb(ctx.Regs.EA.Lsb().AddWithWrapAround(ctx.Regs.X));
+            ctx.Regs.EA = ctx.Regs.EA.WithMsb(0);
         }
         ctx.AdvanceState(States.InstANDindx4);
     }
@@ -355,7 +355,7 @@ internal class InstAND : InstBase, IInstruction
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             if (!ctx.CrossedPageBoundary)
             {
                 AndAWithTemp(ctx);

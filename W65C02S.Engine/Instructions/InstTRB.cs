@@ -32,7 +32,7 @@ internal class InstTRB : InstBase, IInstruction
         var temp = ctx.Regs.Temp;
 
         var result = acc.Not().And(temp);
-        temp.UpdateValue(result);
+        ctx.Regs.Temp = result;
 
         if (result.EqualsZero())
             ctx.Regs.P.SetZero();
@@ -68,7 +68,7 @@ internal class InstTRB : InstBase, IInstruction
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
         {
             var result = ctx.Regs.A.And(ctx.Regs.Temp);
-            ctx.Regs.P.Zero.UpdateValue(result.EqualsZero());
+            ctx.Regs.P.Zero = result.EqualsZero();
         }
 
         ctx.AdvanceState(States.InstTRBzpg4);

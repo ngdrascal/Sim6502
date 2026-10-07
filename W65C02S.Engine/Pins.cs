@@ -9,8 +9,6 @@ namespace W65C02S.Engine;
 /// </summary>
 public class Pins : IPinsInternal, IPinsExternal
 {
-    private readonly UInt8 _dbgInstReg = new();
-
     private int _addr;
     private int _data;
 
@@ -142,11 +140,7 @@ public class Pins : IPinsInternal, IPinsExternal
 
     public byte DBGSUBSTEP { get; set; }
 
-    public UInt8 DBGINST
-    {
-        get => _dbgInstReg;
-        set => _dbgInstReg.UpdateValue(value);
-    }
+    public UInt8 DBGINST { get; set; }
 
     private byte AddrBit(int bit) => (byte)((_addr >> bit) & 1);
 

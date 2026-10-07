@@ -272,8 +272,8 @@ internal class InstLDA : InstBase, IInstruction
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
-            ctx.Regs.EA.Lsb().AddWithWrapAround(ctx.Regs.X);
-            ctx.Regs.EA.Msb().Zero();
+            ctx.Regs.EA = ctx.Regs.EA.WithLsb(ctx.Regs.EA.Lsb().AddWithWrapAround(ctx.Regs.X));
+            ctx.Regs.EA = ctx.Regs.EA.WithMsb(0);
         }
         ctx.AdvanceState(States.InstLDAindx4);
     }

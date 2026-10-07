@@ -20,10 +20,10 @@ public class CMPTests : UnitTestBase
         var opCode = OpCodes.CMPimm.ToUInt8();
 
         BootToAddress(BootAddr);
-        Regs.P.Carry.UpdateValue(expectedC.Copy().Not());
-        Regs.P.Zero.UpdateValue(expectedZ.Copy().Not());
-        Regs.P.Negative.UpdateValue(expectedN.Copy().Not());
-        Regs.A.UpdateValue(aValue);
+        Regs.P.Carry = expectedC.Copy().Not();
+        Regs.P.Zero = expectedZ.Copy().Not();
+        Regs.P.Negative = expectedN.Copy().Not();
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -87,10 +87,10 @@ public class CMPTests : UnitTestBase
         var operand = new UInt8(0x12);
 
         BootToAddress(BootAddr);
-        Regs.P.Carry.UpdateValue(expectedC.Copy().Not());
-        Regs.P.Zero.UpdateValue(expectedZ.Copy().Not());
-        Regs.P.Negative.UpdateValue(expectedN.Copy().Not());
-        Regs.A.UpdateValue(aValue);
+        Regs.P.Carry = expectedC.Copy().Not();
+        Regs.P.Zero = expectedZ.Copy().Not();
+        Regs.P.Negative = expectedN.Copy().Not();
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -158,8 +158,8 @@ public class CMPTests : UnitTestBase
         var xValue = new UInt8(0x10);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
-        Regs.X.UpdateValue(xValue);
+        Regs.A = aValue;
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -229,10 +229,10 @@ public class CMPTests : UnitTestBase
         var operand2 = new UInt8(0x43);
 
         BootToAddress(BootAddr);
-        Regs.P.Carry.UpdateValue(expectedC.Copy().Not());
-        Regs.P.Zero.UpdateValue(expectedZ.Copy().Not());
-        Regs.P.Negative.UpdateValue(expectedN.Copy().Not());
-        Regs.A.UpdateValue(aValue);
+        Regs.P.Carry = expectedC.Copy().Not();
+        Regs.P.Zero = expectedZ.Copy().Not();
+        Regs.P.Negative = expectedN.Copy().Not();
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -304,8 +304,8 @@ public class CMPTests : UnitTestBase
         var expectedAddr = new UInt16(operand1, operand2).AddUnsigned(xValue);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
-        Regs.X.UpdateValue(xValue);
+        Regs.A = aValue;
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -426,8 +426,8 @@ public class CMPTests : UnitTestBase
         var expectedAddr = new UInt16(operand1, operand2).AddUnsigned(yValue);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
-        Regs.Y.UpdateValue(yValue);
+        Regs.A = aValue;
+        Regs.Y = yValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -548,8 +548,8 @@ public class CMPTests : UnitTestBase
         var indAddrMsb = new UInt8(0xEF);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
-        Regs.X.UpdateValue(xValue);
+        Regs.A = aValue;
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -630,8 +630,8 @@ public class CMPTests : UnitTestBase
         var expectedAddr = new UInt16(indAddrLsb, indAddrMsb).AddUnsigned(yValue);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
-        Regs.Y.UpdateValue(yValue);
+        Regs.A = aValue;
+        Regs.Y = yValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -758,7 +758,7 @@ public class CMPTests : UnitTestBase
         var indAddrMsb = new UInt8(0xEF);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = (opCode);

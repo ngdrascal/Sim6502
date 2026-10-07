@@ -30,22 +30,28 @@ public class UInt8Tests : UnitTestBase
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    // UpdateValue
+    // Construction from an out-of-range int
     ////////////////////////////////////////////////////////////////////////////
 
-    [Fact]
-    public void TestUpdateValueOutOfRange()
+    /*
+       TITLE: Constructing from an int outside 0-255 keeps the low 8 bits
+       GIVEN: ints just outside the byte range
+       WHEN: a UInt8 is constructed from each
+       THEN: the value wraps to the low 8 bits (-1 -> 0xFF, 256 -> 0x00, 0x1A5 -> 0xA5)
+     */
+    [Theory]
+    [InlineData(-1, 0xFF)]
+    [InlineData(UInt8.Max, 0x00)]
+    [InlineData(0x1A5, 0xA5)]
+    public void CtorKeepsLow8Bits(int value, int expected)
     {
         // ARRANGE:
-        var value = new UInt8(0);
 
         // ACT:
-        void TooLow() => value.UpdateValue(-1);
-        void TooHigh() => value.UpdateValue(UInt8.Max + 1);
+        var actual = new UInt8(value);
 
         // ASSERT:
-        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
-        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
+        Assert.Equal(expected, actual.ToInt());
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -678,19 +684,6 @@ public class UInt8Tests : UnitTestBase
         Assert.Equal(High, value.GetBitFlag(7));
     }
 
-    [Fact]
-    public void TestGetBitFlagIndexOutOfRange()
-    {
-        // ARRANGE:
-        var value = new UInt8(0xFF);
-
-        // ACT:
-
-        // ASSERT:
-        Assert.Throws<ArgumentOutOfRangeException>(() => value.GetBitFlag(-1));
-        Assert.Throws<ArgumentOutOfRangeException>(() => value.GetBitFlag(UInt8.MaxBit));
-    }
-
     ////////////////////////////////////////////////////////////////////////////
     // GetBitValue
     ////////////////////////////////////////////////////////////////////////////
@@ -714,21 +707,6 @@ public class UInt8Tests : UnitTestBase
         Assert.Equal(1, value.GetBitValue(7));
     }
 
-    [Fact]
-    public void TestGetBitValueIndexOutOfRange()
-    {
-        // ARRANGE:
-        var value = new UInt8(0x00);
-
-        // ACT:
-        void TooLow() => value.GetBitValue(-1);
-        void TooHigh() => value.GetBitValue(UInt8.MaxBit);
-
-        // // ASSERT:
-        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
-        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
-    }
-
     ////////////////////////////////////////////////////////////////////////////
     // IsBitSet
     ////////////////////////////////////////////////////////////////////////////
@@ -750,21 +728,6 @@ public class UInt8Tests : UnitTestBase
         Assert.Equal(expectedValue, actualValue);
     }
 
-    [Fact]
-    public void TestIsBitSetIndexOutOfRange()
-    {
-        // ARRANGE:
-        var value = new UInt8(0);
-
-        // ACT:
-        void TooLow() => value.IsBitSet(-1);
-        void TooHigh() => value.IsBitSet(UInt8.MaxBit);
-
-        // ASSERT:
-        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
-        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
-    }
-
     ////////////////////////////////////////////////////////////////////////////
     // SetBit
     ////////////////////////////////////////////////////////////////////////////
@@ -784,25 +747,10 @@ public class UInt8Tests : UnitTestBase
         var value = new UInt8(initialValue);
 
         // ACT:
-        value.SetBit(bitIndex);
+        value = value.SetBit(bitIndex);
 
         // ASSERT:
         Assert.Equal(expectedValue, value.ToInt());
-    }
-
-    [Fact]
-    public void TestSetBitIndexOutOfRange()
-    {
-        // ARRANGE:
-        var value = new UInt8(0);
-
-        // ACT:
-        void TooLow() => value.SetBit(-1);
-        void TooHigh() => value.SetBit(UInt8.MaxBit);
-
-        // ASSERT:
-        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
-        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -826,25 +774,10 @@ public class UInt8Tests : UnitTestBase
         var value = new UInt8(initialValue);
 
         // ACT:
-        value.ClearBit(bitIndex);
+        value = value.ClearBit(bitIndex);
 
         // ASSERT:
         Assert.Equal(expectedValue, value.ToInt());
-    }
-
-    [Fact]
-    public void TestClearBitIndexOutOfRange()
-    {
-        // ARRANGE:
-        var value = new UInt8(0);
-
-        // ACT:
-        void TooLow() => value.ClearBit(-1);
-        void TooHigh() => value.ClearBit(UInt8.MaxBit);
-
-        // ASSERT:
-        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
-        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -875,40 +808,10 @@ public class UInt8Tests : UnitTestBase
         var value = new UInt8(initialValue);
 
         // ACT:
-        value.SetBitValue(bitIndex, bitValue);
+        value = value.SetBitValue(bitIndex, bitValue);
 
         // ASSERT:
         Assert.Equal(expectedValue, value.ToInt());
-    }
-
-    [Fact]
-    public void TestSetBitValueOutOfRangeIndex()
-    {
-        // ARRANGE:
-        var value = new UInt8(0);
-
-        // ACT:
-        void TooLow() => value.SetBitValue(-1, 1);
-        void TooHigh() => value.SetBitValue(8, 1);
-
-        // ASSERT:
-        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
-        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
-    }
-
-    [Fact]
-    public void TestSetBitValueBitValueOutOfRange()
-    {
-        // ARRANGE:
-        var value = new UInt8(0);
-
-        // ACT:
-        void TooLow() => value.SetBitValue(0, -1);
-        void TooHigh() => value.SetBitValue(0, 2);
-
-        // ASSERT:
-        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
-        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
     }
 
     ////////////////////////////////////////////////////////////////////////////

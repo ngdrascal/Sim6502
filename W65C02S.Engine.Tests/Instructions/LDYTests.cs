@@ -115,7 +115,7 @@ public class LDYTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.X.UpdateValue(xValue);
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -223,7 +223,7 @@ public class LDYTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.X.UpdateValue(xValue);
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);

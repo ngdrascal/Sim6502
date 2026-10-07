@@ -20,10 +20,10 @@ public class CPYTests : UnitTestBase
         var opCode = OpCodes.CPYimm.ToUInt8();
 
         BootToAddress(BootAddr);
-        Regs.P.Carry.UpdateValue(expectedC.Copy().Not());
-        Regs.P.Zero.UpdateValue(expectedZ.Copy().Not());
-        Regs.P.Negative.UpdateValue(expectedN.Copy().Not());
-        Regs.Y.UpdateValue(yValue);
+        Regs.P.Carry = expectedC.Copy().Not();
+        Regs.P.Zero = expectedZ.Copy().Not();
+        Regs.P.Negative = expectedN.Copy().Not();
+        Regs.Y = yValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -87,10 +87,10 @@ public class CPYTests : UnitTestBase
         var operand = new UInt8(0x12);
 
         BootToAddress(BootAddr);
-        Regs.P.Carry.UpdateValue(expectedC.Copy().Not());
-        Regs.P.Zero.UpdateValue(expectedZ.Copy().Not());
-        Regs.P.Negative.UpdateValue(expectedN.Copy().Not());
-        Regs.Y.UpdateValue(yValue);
+        Regs.P.Carry = expectedC.Copy().Not();
+        Regs.P.Zero = expectedZ.Copy().Not();
+        Regs.P.Negative = expectedN.Copy().Not();
+        Regs.Y = yValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -158,10 +158,10 @@ public class CPYTests : UnitTestBase
         var operand2 = new UInt8(0x43);
 
         BootToAddress(BootAddr);
-        Regs.P.Carry.UpdateValue(expectedC.Copy().Not());
-        Regs.P.Zero.UpdateValue(expectedZ.Copy().Not());
-        Regs.P.Negative.UpdateValue(expectedN.Copy().Not());
-        Regs.Y.UpdateValue(yValue);
+        Regs.P.Carry = expectedC.Copy().Not();
+        Regs.P.Zero = expectedZ.Copy().Not();
+        Regs.P.Negative = expectedN.Copy().Not();
+        Regs.Y = yValue;
 
         // ACT:
         Pins.DataBus = (opCode);

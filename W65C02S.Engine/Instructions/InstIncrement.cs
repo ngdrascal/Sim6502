@@ -47,16 +47,19 @@ internal class InstIncrement : InstBase, IInstruction
     private void IncTempAndUpdateFlags(Context ctx)
     {
         var temp = ctx.Regs.Temp;
-        temp.Inc();
-        ctx.Regs.P.Zero.UpdateValue(temp.EqualsZero());
-        ctx.Regs.P.Negative.UpdateValue(temp.IsBitSet(7));
+        temp = temp.Inc();
+        ctx.Regs.Temp = temp;
+        ctx.Regs.P.Zero = temp.EqualsZero();
+        ctx.Regs.P.Negative = temp.IsBitSet(7);
     }
 
-    private void IncAndUpdateFlags(Context ctx, UInt8 value)
+    private UInt8 IncAndUpdateFlags(Context ctx, UInt8 value)
     {
-        value.Inc();
-        ctx.Regs.P.Zero.UpdateValue(value.EqualsZero());
-        ctx.Regs.P.Negative.UpdateValue(value.IsBitSet(7));
+        value = value.Inc();
+        ctx.Regs.P.Zero = value.EqualsZero();
+        ctx.Regs.P.Negative = value.IsBitSet(7);
+
+        return value;
     }
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -80,7 +83,7 @@ internal class InstIncrement : InstBase, IInstruction
     private void IncAcc2(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            IncAndUpdateFlags(ctx, ctx.Regs.A);
+            ctx.Regs.A = IncAndUpdateFlags(ctx, ctx.Regs.A);
 
         ctx.AdvanceState(States.Fetch);
     }
@@ -256,7 +259,7 @@ internal class InstIncrement : InstBase, IInstruction
     private void InxImp2(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            IncAndUpdateFlags(ctx, ctx.Regs.X);
+            ctx.Regs.X = IncAndUpdateFlags(ctx, ctx.Regs.X);
 
         ctx.AdvanceState(States.Fetch);
     }
@@ -274,7 +277,7 @@ internal class InstIncrement : InstBase, IInstruction
     private void InyImp2(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            IncAndUpdateFlags(ctx, ctx.Regs.Y);
+            ctx.Regs.Y = IncAndUpdateFlags(ctx, ctx.Regs.Y);
 
         ctx.AdvanceState(States.Fetch);
     }

@@ -74,11 +74,11 @@ internal class InstSBC : InstBase, IInstruction
         var p = ctx.Regs.P;
         var operand = ctx.Regs.Temp;
         var result = ctx.Regs.A.Sbc(operand, p.Carry, p.Decimal);
-        ctx.Regs.A.UpdateValue(result.Value());
-        p.Negative.UpdateValue(result.Value().IsBitSet(7));
-        p.Overflow.UpdateValue(result.Overflow());
-        p.Zero.UpdateValue(result.Value().EqualsZero());
-        p.Carry.UpdateValue(result.Carry());
+        ctx.Regs.A = result.Value();
+        p.Negative = result.Value().IsBitSet(7);
+        p.Overflow = result.Overflow();
+        p.Zero = result.Value().EqualsZero();
+        p.Carry = result.Carry();
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -112,7 +112,7 @@ internal class InstSBC : InstBase, IInstruction
         if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             SbcThenUpdateFlags(ctx);
             ctx.DbgOperand1 = data;
         }
@@ -260,7 +260,7 @@ internal class InstSBC : InstBase, IInstruction
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             if (!ctx.CrossedPageBoundary)
             {
                 SbcThenUpdateFlags(ctx);
@@ -279,7 +279,7 @@ internal class InstSBC : InstBase, IInstruction
         if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             SbcThenUpdateFlags(ctx);
         }
 
@@ -327,7 +327,7 @@ internal class InstSBC : InstBase, IInstruction
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             if (!ctx.CrossedPageBoundary)
             {
                 SbcThenUpdateFlags(ctx);
@@ -346,7 +346,7 @@ internal class InstSBC : InstBase, IInstruction
         if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             SbcThenUpdateFlags(ctx);
         }
 
@@ -376,8 +376,8 @@ internal class InstSBC : InstBase, IInstruction
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
-            ctx.Regs.EA.Lsb().AddWithWrapAround(ctx.Regs.X);
-            ctx.Regs.EA.Msb().Zero();
+            ctx.Regs.EA = ctx.Regs.EA.WithLsb(ctx.Regs.EA.Lsb().AddWithWrapAround(ctx.Regs.X));
+            ctx.Regs.EA = ctx.Regs.EA.WithMsb(0);
         }
 
         ctx.AdvanceState(States.InstSBCindx4);
@@ -458,7 +458,7 @@ internal class InstSBC : InstBase, IInstruction
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             if (!ctx.CrossedPageBoundary)
             {
                 SbcThenUpdateFlags(ctx);

@@ -20,9 +20,9 @@ public class IncrementTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(accValue);
-        Regs.P.Zero.UpdateValue(expectedZFlag.Copy().Not());
-        Regs.P.Negative.UpdateValue(expectedNFlag.Copy().Not());
+        Regs.A = accValue;
+        Regs.P.Zero = expectedZFlag.Copy().Not();
+        Regs.P.Negative = expectedNFlag.Copy().Not();
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -50,8 +50,8 @@ public class IncrementTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.P.Zero.UpdateValue(expectedZFlag.Copy().Not());
-        Regs.P.Negative.UpdateValue(expectedNFlag.Copy().Not());
+        Regs.P.Zero = expectedZFlag.Copy().Not();
+        Regs.P.Negative = expectedNFlag.Copy().Not();
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -125,9 +125,9 @@ public class IncrementTests : UnitTestBase
         var expectedAddr = new UInt16(operand1.Copy().AddWithWrapAround(xValue));
 
         BootToAddress(BootAddr);
-        Regs.P.Zero.UpdateValue(expectedZFlag.Copy().Not());
-        Regs.P.Negative.UpdateValue(expectedNFlag.Copy().Not());
-        Regs.X.UpdateValue(xValue);
+        Regs.P.Zero = expectedZFlag.Copy().Not();
+        Regs.P.Negative = expectedNFlag.Copy().Not();
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -185,8 +185,8 @@ public class IncrementTests : UnitTestBase
         var expectedAddr = new UInt16(operand1, operand2);
 
         BootToAddress(BootAddr);
-        Regs.P.Zero.UpdateValue(expectedZFlag.Copy().Not());
-        Regs.P.Negative.UpdateValue(expectedNFlag.Copy().Not());
+        Regs.P.Zero = expectedZFlag.Copy().Not();
+        Regs.P.Negative = expectedNFlag.Copy().Not();
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -246,9 +246,9 @@ public class IncrementTests : UnitTestBase
         var expectedAddr = new UInt16(operand1, operand2).AddUnsigned(xValue);
 
         BootToAddress(BootAddr);
-        Regs.P.Zero.UpdateValue(expectedZFlag.Copy().Not());
-        Regs.P.Negative.UpdateValue(expectedNFlag.Copy().Not());
-        Regs.X.UpdateValue(xValue);
+        Regs.P.Zero = expectedZFlag.Copy().Not();
+        Regs.P.Negative = expectedNFlag.Copy().Not();
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -306,9 +306,9 @@ public class IncrementTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.X.UpdateValue(regValue);
-        Regs.P.Zero.UpdateValue(expectedZFlag.Copy().Not());
-        Regs.P.Negative.UpdateValue(expectedNFlag.Copy().Not());
+        Regs.X = regValue;
+        Regs.P.Zero = expectedZFlag.Copy().Not();
+        Regs.P.Negative = expectedNFlag.Copy().Not();
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -352,9 +352,9 @@ public class IncrementTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.Y.UpdateValue(regValue);
-        Regs.P.Zero.UpdateValue(expectedZFlag.Copy().Not());
-        Regs.P.Negative.UpdateValue(expectedNFlag.Copy().Not());
+        Regs.Y = regValue;
+        Regs.P.Zero = expectedZFlag.Copy().Not();
+        Regs.P.Negative = expectedNFlag.Copy().Not();
 
         // ACT:
         Pins.DataBus = (opCode);

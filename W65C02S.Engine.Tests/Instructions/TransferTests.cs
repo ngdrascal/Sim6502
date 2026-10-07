@@ -19,7 +19,7 @@ public class TransferTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -62,7 +62,7 @@ public class TransferTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -105,7 +105,7 @@ public class TransferTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.S.UpdateValue(sValue);
+        Regs.S = sValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -148,7 +148,7 @@ public class TransferTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.X.UpdateValue(xValue);
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -191,7 +191,7 @@ public class TransferTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.X.UpdateValue(xValue);
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -232,7 +232,7 @@ public class TransferTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.Y.UpdateValue(yValue);
+        Regs.Y = yValue;
 
         // ACT:
         Pins.DataBus = (opCode);

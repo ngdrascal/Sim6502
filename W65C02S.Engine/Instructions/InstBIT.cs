@@ -75,7 +75,7 @@ internal class InstBIT : InstBase, IInstruction
         if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             ctx.DbgOperand1 = data;
             // NOTE: in the imm addressing mode only the Z flag is effected.  Unlike the other
             // addressing modes the V and N flags are unaffected.
@@ -196,7 +196,7 @@ internal class InstBIT : InstBase, IInstruction
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
 
             // if adding Y did not cross the page boundary, then a fifth cycle is not needed
             if (!ctx.CrossedPageBoundary)
@@ -216,7 +216,7 @@ internal class InstBIT : InstBase, IInstruction
         if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             AndAWithTempSetFlags(ctx);
         }
 

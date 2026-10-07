@@ -1,41 +1,35 @@
-#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
 namespace W65C02S.Engine.Types;
 
 /// <summary>
 /// Represents a single bit flag with utility methods.
 /// </summary>
-public class BitFlag
+/// <remarks>
+/// An immutable value: <see cref="Not"/> returns a new flag, so a result must be assigned back.
+/// </remarks>
+public readonly struct BitFlag : IEquatable<BitFlag>
 {
-    private bool _value;
-    private static readonly BitFlag FlagSetObject = new(true);
-    private static readonly BitFlag FlagClearedObject = new(false);
+    private readonly bool _value;
 
-    public static BitFlag High() => FlagSetObject;
-    public static BitFlag Low() => FlagClearedObject;
+    public static BitFlag High() => new(true);
+
+    public static BitFlag Low() => new(false);
 
     public BitFlag(bool value)
     {
         _value = value;
     }
 
-    public override bool Equals(object? o)
-    {
-        if (ReferenceEquals(this, o))
-            return true;
+    public static implicit operator BitFlag(bool value) => new(value);
 
-        if (o is not BitFlag that)
-            return false;
+    public bool Equals(BitFlag other) => _value == other._value;
 
-        return _value == that._value;
-    }
+    public override bool Equals(object? o) => o is BitFlag that && Equals(that);
+
+    public override int GetHashCode() => _value ? 1 : 0;
 
     public override string ToString() => _value.ToString();
 
-    public BitFlag Copy() => new(_value);
-
-    public void Set() => _value = true;
-
-    public void Clear() => _value = false;
+    public BitFlag Copy() => this;
 
     public bool IsSet() => _value;
 
@@ -43,15 +37,7 @@ public class BitFlag
 
     public bool GetValue() => _value;
 
-    public void UpdateValue(bool toValue) => _value = toValue;
-
-    public void UpdateValue(BitFlag toValue) => _value = toValue._value;
-
-    public BitFlag Not()
-    {
-        _value = !_value;
-        return this;
-    }
+    public BitFlag Not() => new(!_value);
 
     public int ToInt() => _value ? 1 : 0;
 }

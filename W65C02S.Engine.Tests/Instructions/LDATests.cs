@@ -115,7 +115,7 @@ public class LDATests : UnitTestBase
         var finalAddr = new UInt16(operand1).AddUnsigned(yValue);
 
         BootToAddress(BootAddr);
-        Regs.X.UpdateValue(xValue);
+        Regs.X = xValue;
 
         Pins.DataBus = (opCode);
         ExecuteClockCycles(1);
@@ -223,7 +223,7 @@ public class LDATests : UnitTestBase
         var finalAddr = opAddr.Copy().AddUnsigned(xValue);
 
         BootToAddress(BootAddr);
-        Regs.X.UpdateValue(xValue);
+        Regs.X = xValue;
 
         // fetch the opcode
         Pins.DataBus = (opCode);
@@ -305,7 +305,7 @@ public class LDATests : UnitTestBase
         var finalAddr = opAddr.Copy().AddUnsigned(yValue);
 
         BootToAddress(BootAddr);
-        Regs.Y.UpdateValue(yValue);
+        Regs.Y = yValue;
 
         // fetch the opcode
         Pins.DataBus = (opCode);
@@ -387,7 +387,7 @@ public class LDATests : UnitTestBase
         var finalAddr = new UInt16(addrLsb, addrMsb);
 
         BootToAddress(BootAddr);
-        Regs.X.UpdateValue(xValue);
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -448,7 +448,7 @@ public class LDATests : UnitTestBase
         var finalAddr = new UInt16(addrLsb, addrMsb).AddUnsigned(yValue);
 
         BootToAddress(BootAddr);
-        Regs.Y.UpdateValue(yValue);
+        Regs.Y = yValue;
 
         // ACT:
         Pins.DataBus = (opCode);

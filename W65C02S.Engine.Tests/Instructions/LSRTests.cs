@@ -21,7 +21,7 @@ public class LSRTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(input);
+        Regs.A = input;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -139,7 +139,7 @@ public class LSRTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.X.UpdateValue(xValue);
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -272,7 +272,7 @@ public class LSRTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.X.UpdateValue(xValue);
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);

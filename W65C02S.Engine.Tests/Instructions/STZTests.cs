@@ -52,7 +52,7 @@ public class STZTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.X.UpdateValue(xValue);
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -137,7 +137,7 @@ public class STZTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.X.UpdateValue(xValue);
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);

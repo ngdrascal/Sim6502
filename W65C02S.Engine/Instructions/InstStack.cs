@@ -93,7 +93,7 @@ internal class InstStack : InstBase, IInstruction
         }
         else if (ctx.Substep == Constants.P2LastSubstep)
         {
-            ctx.Regs.S.Dec();
+            ctx.Regs.S = ctx.Regs.S.Dec();
         }
 
         ctx.AdvanceState(States.Fetch);
@@ -126,7 +126,7 @@ internal class InstStack : InstBase, IInstruction
         }
         else if (ctx.Substep == Constants.P2LastSubstep)
         {
-            ctx.Regs.S.Dec();
+            ctx.Regs.S = ctx.Regs.S.Dec();
         }
 
         ctx.AdvanceState(States.Fetch);
@@ -159,7 +159,7 @@ internal class InstStack : InstBase, IInstruction
         }
         else if (ctx.Substep == Constants.P2LastSubstep)
         {
-            ctx.Regs.S.Dec();
+            ctx.Regs.S = ctx.Regs.S.Dec();
         }
 
         ctx.AdvanceState(States.Fetch);
@@ -192,7 +192,7 @@ internal class InstStack : InstBase, IInstruction
         }
         else if (ctx.Substep == Constants.P2LastSubstep)
         {
-            ctx.Regs.S.Dec();
+            ctx.Regs.S = ctx.Regs.S.Dec();
         }
 
         ctx.AdvanceState(States.Fetch);
@@ -219,7 +219,7 @@ internal class InstStack : InstBase, IInstruction
     {
         if (ctx.Substep == Constants.P2LastSubstep)
         {
-            ctx.Regs.S.Inc();
+            ctx.Regs.S = ctx.Regs.S.Inc();
         }
 
         ctx.AdvanceState(States.InstPLAimp4);
@@ -258,7 +258,7 @@ internal class InstStack : InstBase, IInstruction
     {
         if (ctx.Substep == Constants.P2LastSubstep)
         {
-            ctx.Regs.S.Inc();
+            ctx.Regs.S = ctx.Regs.S.Inc();
         }
         ctx.AdvanceState(States.InstPLPimp4);
     }
@@ -296,7 +296,7 @@ internal class InstStack : InstBase, IInstruction
     {
         if (ctx.Substep == Constants.P2LastSubstep)
         {
-            ctx.Regs.S.Inc();
+            ctx.Regs.S = ctx.Regs.S.Inc();
         }
 
         ctx.AdvanceState(States.InstPLXimp4);
@@ -335,7 +335,7 @@ internal class InstStack : InstBase, IInstruction
     {
         if (ctx.Substep == Constants.P2LastSubstep)
         {
-            ctx.Regs.S.Inc();
+            ctx.Regs.S = ctx.Regs.S.Inc();
         }
 
         ctx.AdvanceState(States.InstPLYimp4);

@@ -1,236 +1,145 @@
+using System.Diagnostics;
+
 namespace W65C02S.Engine.Types;
 
 /// <summary>
 /// Unsigned 8-bit integer with bitwise and arithmetic utilities.
 /// </summary>
-public class UInt8
+/// <remarks>
+/// An immutable value: every operation returns a new value and leaves this one unchanged, so a
+/// result must be assigned back (e.g. <c>regs.S = regs.S.Inc()</c>). Construction from an int keeps
+/// the low 8 bits.
+/// </remarks>
+public readonly struct UInt8 : IEquatable<UInt8>
 {
-    private int _value;
+    private readonly byte _value;
 
     public const int Max = 256;
 
     public const int MaxBit = 8;
-    
-    public UInt8() => UpdateValue(0);
 
-    public UInt8(int value) => UpdateValue(value);
+    public UInt8(int value) => _value = (byte)value;
 
     public static implicit operator UInt8(byte value) => new(value);
 
-    public static implicit operator byte(UInt8 value) => (byte)value._value;
+    public static implicit operator byte(UInt8 value) => value._value;
 
-    public UInt8 Copy() => new(_value);
+    public UInt8 Copy() => this;
 
-    public override bool Equals(object? o)
-    {
-        if (ReferenceEquals(this, o))
-            return true;
+    public bool Equals(UInt8 other) => _value == other._value;
 
-        if (o is not UInt8 that)
-            return false;
+    public override bool Equals(object? o) => o is UInt8 that && Equals(that);
 
-        return _value == that._value;
-    }
-    public override int GetHashCode() => _value.GetHashCode();
+    public override int GetHashCode() => _value;
 
     public override string ToString() => $"0x{_value:X2}";
 
     public int ToInt() => _value;
 
-    public void UpdateValue(int toValue)
-    {
-        if (toValue is < 0 or > 255)
-            throw new ArgumentOutOfRangeException(nameof(toValue));
-
-        _value = toValue;
-    }
-
-    public void UpdateValue(UInt8 toValue) => _value = toValue._value;
-
     public bool EqualsZero() => _value == 0;
 
     public bool IsBitSet(int bitIndex)
     {
-        if (bitIndex is < 0 or >= MaxBit)
-            throw new ArgumentOutOfRangeException(nameof(bitIndex));
+        Debug.Assert(bitIndex is >= 0 and < MaxBit);
 
-        var mask = 1 << bitIndex;
-        return (_value & mask) > 0;
+        return (_value & (1 << bitIndex)) != 0;
     }
 
-    public void SetBit(int bitIndex)
+    public UInt8 SetBit(int bitIndex)
     {
-        if (bitIndex is < 0 or >= MaxBit)
-            throw new ArgumentOutOfRangeException(nameof(bitIndex));
+        Debug.Assert(bitIndex is >= 0 and < MaxBit);
 
-        var mask = 1 << bitIndex;
-        _value |= mask;
+        return new UInt8(_value | (1 << bitIndex));
     }
 
-    public void ClearBit(int bitIndex)
+    public UInt8 ClearBit(int bitIndex)
     {
-        if (bitIndex is < 0 or >= MaxBit)
-            throw new ArgumentOutOfRangeException(nameof(bitIndex));
+        Debug.Assert(bitIndex is >= 0 and < MaxBit);
 
-        var mask = ~(1 << bitIndex);
-        _value &= mask;
+        return new UInt8(_value & ~(1 << bitIndex));
     }
 
-    public int GetBitValue(int bitIndex)
+    public int GetBitValue(int bitIndex) => IsBitSet(bitIndex) ? 1 : 0;
+
+    public BitFlag GetBitFlag(int bitIndex) => new(IsBitSet(bitIndex));
+
+    public UInt8 SetBitValue(int bitIndex, int toValue)
     {
-        if (bitIndex is < 0 or >= MaxBit)
-            throw new ArgumentOutOfRangeException(nameof(bitIndex));
+        Debug.Assert(toValue is 0 or 1);
 
-        return IsBitSet(bitIndex) ? 1 : 0;
+        return toValue == 0 ? ClearBit(bitIndex) : SetBit(bitIndex);
     }
 
-    public BitFlag GetBitFlag(int bitIndex)
-    {
-        if (bitIndex is < 0 or >= MaxBit)
-            throw new ArgumentOutOfRangeException(nameof(bitIndex));
+    public UInt8 Zero() => default;
 
-        return IsBitSet(bitIndex) ? BitFlag.High() : BitFlag.Low();
-    }
+    public UInt8 Inc() => new(_value + 1);
 
-    public void SetBitValue(int bitIndex, int toValue)
-    {
-        if (bitIndex is < 0 or >= MaxBit)
-            throw new ArgumentOutOfRangeException(nameof(bitIndex));
+    public UInt8 Dec() => new(_value - 1);
 
-        if (toValue is < 0 or > 1)
-            throw new ArgumentOutOfRangeException(nameof(toValue));
+    public UInt8 Shl() => new(_value << 1);
 
-        if (toValue == 0)
-            ClearBit(bitIndex);
-        else
-            SetBit(bitIndex);
-    }
+    public UInt8 Shl(BitFlag newBitValue) => new((_value << 1) | newBitValue.ToInt());
 
-    public UInt8 Zero()
-    {
-        _value = 0;
-        return this;
-    }
+    public UInt8 Shr() => new(_value >> 1);
 
-    public UInt8 Inc()
-    {
-        _value = (_value == 255) ? 0 : _value + 1;
-        return this;
-    }
+    public UInt8 Shr(BitFlag newBitValue) => new((_value >> 1) | (newBitValue.ToInt() << 7));
 
-    public UInt8 Dec()
-    {
-        _value = (_value == 0) ? 255 : _value - 1;
-        return this;
-    }
+    public UInt8 And(UInt8 operand2) => new(_value & operand2._value);
 
-    public UInt8 Shl()
-    {
-        _value = (_value << 1) & 0xFF;
-        return this;
-    }
+    public UInt8 Or(UInt8 operand2) => new(_value | operand2._value);
 
-    public UInt8 Shl(BitFlag newBitValue)
-    {
-        Shl();
-        if (newBitValue.IsCleared())
-            _value &= 0xFE;
-        else
-            _value |= 0x01;
-        return this;
-    }
+    public UInt8 Xor(UInt8 operand2) => new(_value ^ operand2._value);
 
-    public UInt8 Shr()
-    {
-        _value = _value >> 1;
-        return this;
-    }
-
-    public UInt8 Shr(BitFlag newBitValue)
-    {
-        _value = _value >> 1;
-        if (newBitValue.IsCleared())
-            _value &= 0x7F;
-        else
-            _value |= 0x80;
-        return this;
-    }
-
-    public UInt8 And(UInt8 operand2)
-    {
-        _value &= operand2._value;
-        return this;
-    }
-
-    public UInt8 Or(UInt8 operand2)
-    {
-        _value |= operand2._value;
-        return this;
-    }
-
-    public UInt8 Xor(UInt8 operand2)
-    {
-        _value ^= operand2._value;
-        return this;
-    }
-
-    public UInt8 Not()
-    {
-        _value = ~_value & 0xFF;
-        return this;
-    }
+    public UInt8 Not() => new(~_value);
 
     public int Parity()
     {
         var parity = 0;
-        var temp = _value;
+        var temp = (int)_value;
         while (temp != 0)
         {
             parity ^= temp & 1;
             temp >>= 1;
         }
+
         return parity;
     }
 
-    public UInt8 AddWithWrapAround(UInt8 operand2)
-    {
-        _value = (_value + operand2._value) % Max;
-        return this;
-    }
+    public UInt8 AddWithWrapAround(UInt8 operand2) => new(_value + operand2._value);
 
     private MathResult AdcDecimal(UInt8 operand, BitFlag carryIn)
     {
-        var right = operand._value;
+        var left = (int)_value;
+        var right = (int)operand._value;
         var halfCarry = 0;
         var carryOut = 0;
 
-        var lowNibble = (_value & 0x0F) + (right & 0x0F) + (carryIn.ToInt());
+        var lowNibble = (left & 0x0F) + (right & 0x0F) + (carryIn.ToInt());
         if (lowNibble >= 10)
         {
             lowNibble = (lowNibble + 6) & 0x0F;
             halfCarry = 1;
         }
 
-        var highNibble = ((_value & 0xF0) >> 4) + ((right & 0xF0) >> 4) + halfCarry;
+        var highNibble = ((left & 0xF0) >> 4) + ((right & 0xF0) >> 4) + halfCarry;
         if (highNibble >= 10)
         {
             highNibble = (highNibble + 6) & 0x0F;
             carryOut = 1;
         }
 
-        var vFlag = CalcADCOverflow(_value, right, carryIn.ToInt());
+        var vFlag = CalcADCOverflow(left, right, carryIn.ToInt());
 
         var result = (highNibble << 4) | (lowNibble);
-        _value = result & 0xFF;
 
         var cFlag = new BitFlag(carryOut == 1);
         var zFlag = new BitFlag(result == 0);
         var nFlag = new BitFlag((result & 0x80) > 0);
 
-        return new MathResult(new UInt8(_value), nFlag, vFlag, zFlag, cFlag);
+        return new MathResult(new UInt8(result), nFlag, vFlag, zFlag, cFlag);
     }
 
-    private BitFlag CalcADCOverflow(int left, int right, int carryIn)
+    private static BitFlag CalcADCOverflow(int left, int right, int carryIn)
     {
         var lowNibble = (left & 0x0F) + (right & 0x0F) + carryIn;
         if (lowNibble >= 10)
@@ -243,24 +152,23 @@ public class UInt8
 
     private MathResult AdcBinary(UInt8 operand, BitFlag carryIn)
     {
-        var right = operand._value;
+        var left = (int)_value;
+        var right = (int)operand._value;
         var carry = carryIn.ToInt();
 
-        var result = _value + right + carry;
+        var result = left + right + carry;
 
         var cFlag = new BitFlag(result > 255);
 
         var rightSign = (right & 0x80) != 0 ? 1 : 0;
-        var valueSign = (_value & 0x80) != 0 ? 1 : 0;
+        var valueSign = (left & 0x80) != 0 ? 1 : 0;
         var resultSign = (result & 0x80) != 0 ? 1 : 0;
         var vFlag = new BitFlag(((rightSign ^ resultSign) & (valueSign ^ resultSign)) != 0);
 
         var zFlag = new BitFlag(result == 0);
         var nFlag = new BitFlag((result & 0x80) > 0);
 
-        _value = result & 0x00FF;
-
-        return new MathResult(this, nFlag, vFlag, zFlag, cFlag);
+        return new MathResult(new UInt8(result), nFlag, vFlag, zFlag, cFlag);
     }
 
     public MathResult Adc(UInt8 operand, BitFlag carryIn, BitFlag decimalMode)
@@ -276,8 +184,8 @@ public class UInt8
          * 0 ? 1 = 0 Carry-1
          * 1 - 0 = 1
          * 1 ? 1 = 0
-         * 
-         * 
+         *
+         *
          * SUB2 CPY #1 ; set carry if Y = 1, clear carry if Y = 0
          * LDA N1L
          * SBC N2L
@@ -308,13 +216,11 @@ public class UInt8
         // N2L = N2 & $0F
         var N2L = (sbyte)(N2 & 0x0F);
 
-        var N2H = new sbyte[2];
-
         // N2H = N2 & $F0
-        N2H[0] = (sbyte)(N2 & 0xF0);
+        var N2H0 = (sbyte)(N2 & 0xF0);
 
         // N2H+1 = (N2 & $F0) + $0F
-        N2H[1] = (sbyte)((N2 & 0xF0) + 0x0F);
+        var N2H1 = (sbyte)((N2 & 0xF0) + 0x0F);
 
         // N1L = N1 & $0F
         var N1L = (sbyte)(N1 & 0x0F);
@@ -340,44 +246,39 @@ public class UInt8
 
         a |= (byte)(N1H);
 
+        var n2H = x == 0 ? N2H0 : N2H1;
         oldA = (a & 0xFF);
-        a = a - N2H[x] - (1 - c);
-        c = CalcCarry(oldA, N2H[x], c);
+        a = a - n2H - (1 - c);
+        c = CalcCarry(oldA, n2H, c);
 
         if (c == 0)
         {
-            oldA = (a & 0xFF);
             a = a - 0x5F - 1;
-            CalcCarry(oldA, 0x5F, c);
         }
 
         if (x != 0)
         {
-            c = 1;
-            oldA = (a & 0xFF);
             a = a - 0x06;
-            CalcCarry(oldA, 0x06, c);
         }
 
         a &= 0xFF;
-        _value = a;
 
         var cFlag = CalcCarry(N1, N2, carryIn.ToInt()) == 1;
         var vFlag = CalcSBCOverflow(N1, N2, carryIn.ToInt());
-        var zFlag = _value == 0;
-        var nFlag = (_value & 0x80) == 0x80;
+        var zFlag = a == 0;
+        var nFlag = (a & 0x80) == 0x80;
 
-        return new MathResult(new UInt8(_value), new BitFlag(nFlag), new BitFlag(vFlag),
+        return new MathResult(new UInt8(a), new BitFlag(nFlag), new BitFlag(vFlag),
               new BitFlag(zFlag), new BitFlag(cFlag));
     }
 
-    private int CalcCarry(int n1, int n2, int carry)
+    private static int CalcCarry(int n1, int n2, int carry)
     {
         var binaryResult = (n1 & 0xFF) + ((n2 & 0x0FF) ^ 0xFF) + carry;
         return binaryResult > 0xFF ? 1 : 0;
     }
 
-    private bool CalcSBCOverflow(sbyte n1, sbyte n2, int carry)
+    private static bool CalcSBCOverflow(sbyte n1, sbyte n2, int carry)
     {
         var binaryResult = n1 - n2 - (1 - carry);
         return binaryResult is < -128 or > 127;
@@ -385,18 +286,17 @@ public class UInt8
 
     private MathResult SbcBinary(UInt8 operand, BitFlag carryIn)
     {
-        var data = operand.Copy().Not().ToInt();
+        var left = (int)_value;
+        var data = operand.Not().ToInt();
 
-        var diff = (_value) + (data) + (carryIn.ToInt());
+        var diff = left + data + carryIn.ToInt();
 
-        var vFlag = (~(_value ^ data) & (_value ^ diff) & 0x80) == 0x80;
+        var vFlag = (~(left ^ data) & (left ^ diff) & 0x80) == 0x80;
         var cFlag = diff > 0xFF;
         var zFlag = (diff & 0xFF) == 0;
         var nFlag = (diff & 0x80) == 0x80;
 
-        _value = diff & 0xFF;
-
-        return new MathResult(new UInt8(_value), new BitFlag(nFlag), new BitFlag(vFlag),
+        return new MathResult(new UInt8(diff), new BitFlag(nFlag), new BitFlag(vFlag),
               new BitFlag(zFlag), new BitFlag(cFlag));
     }
 

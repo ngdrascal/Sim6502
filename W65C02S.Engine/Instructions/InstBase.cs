@@ -29,7 +29,7 @@ internal class InstBase
         if (ctx.GetSubStep() == P1MiddleStep)
         {
             ctx.Pins.AddrBus = ctx.Regs.PC;
-            ctx.Regs.PC.Inc();
+            ctx.Regs.PC = ctx.Regs.PC.Inc();
             ctx.Pins.RWB = Read;
         }
     }
@@ -41,15 +41,15 @@ internal class InstBase
         if (ctx.GetSubStep() == P1MiddleStep)
         {
             var addr = regs.PC.Copy();
-            regs.PC.Inc();
+            regs.PC = regs.PC.Inc();
             pins.AddrBus = addr;
             pins.RWB = Read;
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = pins.DataBus;
-            regs.EA.Lsb().UpdateValue(data);
-            regs.EA.Msb().Zero();
+            regs.EA = regs.EA.WithLsb(data);
+            regs.EA = regs.EA.WithMsb(0);
             ctx.DbgOperand1 = data;
             ctx.DbgOperand2 = new UInt8(0);
         }
@@ -62,14 +62,14 @@ internal class InstBase
         if (ctx.GetSubStep() == P1MiddleStep)
         {
             var addr = regs.PC.Copy();
-            regs.PC.Inc();
+            regs.PC = regs.PC.Inc();
             pins.AddrBus = addr;
             pins.RWB = Read;
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = pins.DataBus;
-            regs.EA.Msb().UpdateValue(data);
+            regs.EA = regs.EA.WithMsb(data);
             ctx.DbgOperand2 = data;
         }
     }
@@ -84,8 +84,8 @@ internal class InstBase
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.EA2.Lsb().UpdateValue(data);
-            ctx.Regs.EA2.Msb().Zero();
+            ctx.Regs.EA2 = ctx.Regs.EA2.WithLsb(data);
+            ctx.Regs.EA2 = ctx.Regs.EA2.WithMsb(0);
         }
     }
 
@@ -94,14 +94,14 @@ internal class InstBase
         if (ctx.GetSubStep() == P1MiddleStep)
         {
             var eaPlus1 = ctx.Regs.EA.Copy();
-            eaPlus1.Inc();
+            eaPlus1 = eaPlus1.Inc();
             ctx.Pins.AddrBus = eaPlus1;
             ctx.Pins.RWB = Read;
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.EA2.Msb().UpdateValue(data);
+            ctx.Regs.EA2 = ctx.Regs.EA2.WithMsb(data);
         }
     }
 
@@ -129,7 +129,7 @@ internal class InstBase
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
         }
     }
 
@@ -157,9 +157,9 @@ internal class InstBase
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             ctx.DbgOperand1 = data;
-            ctx.Regs.PC.Inc();
+            ctx.Regs.PC = ctx.Regs.PC.Inc();
         }
     }
 
@@ -178,7 +178,7 @@ internal class InstBase
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
         }
     }
 
@@ -224,15 +224,17 @@ internal class InstBase
         }
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
-            _ = ctx.Regs.S.Dec();
+            ctx.Regs.S = ctx.Regs.S.Dec();
         }
     }
 
-    protected void PullFromStack(Context ctx, UInt8 value)
+    // returns true, with the pulled byte in value, on the substep that latches it
+    protected bool PullFromStack(Context ctx, out UInt8 value)
     {
+        value = default;
         if (ctx.GetSubStep() == P1MiddleStep)
         {
-            ctx.Regs.S.Inc();
+            ctx.Regs.S = ctx.Regs.S.Inc();
             var sp = new UInt16(0x100).AddUnsigned(ctx.Regs.S);
             ctx.Pins.AddrBus = sp;
             ctx.Pins.DataBusMode = DataBusMode.Input;
@@ -241,9 +243,13 @@ internal class InstBase
         else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            value.UpdateValue(data);
+            value = data;
             // var addr = ctx.Regs.S;
             // _logger.Debug($"RTS|RTI: pull {value.ToInt():X2} from 0x1{addr.ToInt():X2}");
+
+            return true;
         }
+
+        return false;
     }
 }

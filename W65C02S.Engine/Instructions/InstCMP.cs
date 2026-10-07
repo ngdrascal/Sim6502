@@ -60,9 +60,9 @@ internal class InstCMP : InstBase, IInstruction
         var a = ctx.Regs.A.ToInt();
         var operand = ctx.Regs.Temp.ToInt();
         var result = a - operand;
-        flags.Carry.UpdateValue(result >= 0);
-        flags.Zero.UpdateValue(result == 0);
-        flags.Negative.UpdateValue((result & 0x80) > 0);
+        flags.Carry = result >= 0;
+        flags.Zero = result == 0;
+        flags.Negative = (result & 0x80) > 0;
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -95,7 +95,7 @@ internal class InstCMP : InstBase, IInstruction
         if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             CmpWithTemp(ctx);
             ctx.DbgOperand1 = data;
         }
@@ -296,8 +296,8 @@ internal class InstCMP : InstBase, IInstruction
     {
         if (ctx.GetSubStep() == P2LastSubstep)
         {
-            ctx.Regs.EA.Lsb().AddWithWrapAround(ctx.Regs.X);
-            ctx.Regs.EA.Msb().Zero();
+            ctx.Regs.EA = ctx.Regs.EA.WithLsb(ctx.Regs.EA.Lsb().AddWithWrapAround(ctx.Regs.X));
+            ctx.Regs.EA = ctx.Regs.EA.WithMsb(0);
         }
 
         ctx.AdvanceState(States.InstCMPindx4);

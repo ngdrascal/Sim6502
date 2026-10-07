@@ -111,7 +111,7 @@ internal class InstTransfer : InstBase, IInstruction
     private void InstTXSimp2(Context ctx)
     {
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
-            ctx.Regs.S.UpdateValue(ctx.Regs.X);
+            ctx.Regs.S = ctx.Regs.X;
 
         ctx.AdvanceState(States.Fetch);
     }

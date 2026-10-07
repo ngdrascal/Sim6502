@@ -29,9 +29,9 @@ internal class InstCPX : InstBase, IInstruction
         var x = ctx.Regs.X.ToInt();
         var operand = ctx.Regs.Temp.ToInt();
         var result = x - operand;
-        flags.Carry.UpdateValue(result >= 0);
-        flags.Zero.UpdateValue(result == 0);
-        flags.Negative.UpdateValue((result & 0x80) > 0);
+        flags.Carry = result >= 0;
+        flags.Zero = result == 0;
+        flags.Negative = (result & 0x80) > 0;
     }
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -56,7 +56,7 @@ internal class InstCPX : InstBase, IInstruction
         if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp.UpdateValue(data);
+            ctx.Regs.Temp = data;
             CpxWithTemp(ctx);
             ctx.DbgOperand1 = data;
         }

@@ -22,7 +22,7 @@ public class STATests : UnitTestBase
         var expectedAddr = new UInt16(operand1);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(expectedValue);
+        Regs.A = expectedValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -55,8 +55,8 @@ public class STATests : UnitTestBase
         var expectedAddr = new UInt16(operand1).AddUnsigned(xValue);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(expectedValue);
-        Regs.X.UpdateValue(xValue);
+        Regs.A = expectedValue;
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -91,7 +91,7 @@ public class STATests : UnitTestBase
         var expectedAddr = new UInt16(operand1, operand2);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(expectedValue);
+        Regs.A = expectedValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -126,8 +126,8 @@ public class STATests : UnitTestBase
         var expectedAddr = new UInt16(operand1, operand2).AddUnsigned(xValue);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(expectedValue);
-        Regs.X.UpdateValue(xValue);
+        Regs.A = expectedValue;
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -182,8 +182,8 @@ public class STATests : UnitTestBase
         var expectedAddr = new UInt16(operand1, operand2).AddUnsigned(yValue);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(expectedValue);
-        Regs.Y.UpdateValue(yValue);
+        Regs.A = expectedValue;
+        Regs.Y = yValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -234,8 +234,8 @@ public class STATests : UnitTestBase
 
         BootToAddress(BootAddr);
 
-        Regs.A.UpdateValue(expectedValue);
-        Regs.X.UpdateValue(xValue);
+        Regs.A = expectedValue;
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -290,8 +290,8 @@ public class STATests : UnitTestBase
         var expectedAddr = indAddr.Copy().AddUnsigned(yValue);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(expectedValue);
-        Regs.Y.UpdateValue(yValue);
+        Regs.A = expectedValue;
+        Regs.Y = yValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -347,7 +347,7 @@ public class STATests : UnitTestBase
         var expectedAddr = new UInt16(indAddrLsb, indAddrMsb);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(expectedValue);
+        Regs.A = expectedValue;
 
         // ACT:
         Pins.DataBus = (opCode);

@@ -1,6 +1,6 @@
 namespace W65C02S.Engine.Types;
 
-public class MathResult
+public readonly struct MathResult
 {
     private readonly UInt8 _value;
     private readonly BitFlag _negative;
@@ -26,7 +26,7 @@ public class MathResult
         _carry = FlagValue(flags, 'C');
     }
 
-    private BitFlag FlagValue(string nvzc, char flag)
+    private static BitFlag FlagValue(string nvzc, char flag)
     {
         if (string.IsNullOrEmpty(nvzc) || nvzc.ToLower() != "nvzc")
             throw new ArgumentException(

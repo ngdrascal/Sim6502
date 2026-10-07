@@ -68,7 +68,7 @@ internal class InstControl : InstBase, IInstruction
         // fetch the high byte of the jump to address into the EA reg
         FetchEffAddrHigh(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
-            ctx.Regs.PC.UpdateValue(ctx.Regs.EA);
+            ctx.Regs.PC = ctx.Regs.EA;
 
         ctx.AdvanceState(States.Fetch);
     }
@@ -100,7 +100,7 @@ internal class InstControl : InstBase, IInstruction
     private void JmpInd5(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
-        ctx.Regs.PC.UpdateValue(ctx.Regs.EA2);
+        ctx.Regs.PC = ctx.Regs.EA2;
 
         ctx.AdvanceState(States.Fetch);
     }
@@ -135,7 +135,7 @@ internal class InstControl : InstBase, IInstruction
         // The JSR instruction pushes the address of the second operand and not the address of the
         // next inst as one would expect.
         if (ctx.GetSubStep() == 1)
-            ctx.Regs.PC.Dec();
+            ctx.Regs.PC = ctx.Regs.PC.Dec();
         PushOnStack(ctx, ctx.Regs.PC.Msb());
 
         ctx.AdvanceState(States.InstJSRabs5);
@@ -151,7 +151,7 @@ internal class InstControl : InstBase, IInstruction
     private void JsrAbs6(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            ctx.Regs.PC.UpdateValue(ctx.Regs.EA);
+            ctx.Regs.PC = ctx.Regs.EA;
 
         ctx.AdvanceState(States.Fetch);
     }
@@ -181,9 +181,8 @@ internal class InstControl : InstBase, IInstruction
     private void RtiImp4(Context ctx)
     {
         // pull status register
-        var flags = ctx.Regs.P.ToUInt8();
-        PullFromStack(ctx, flags);
-        ctx.Regs.P.SetFlags(flags);
+        if (PullFromStack(ctx, out var flags))
+            ctx.Regs.P.SetFlags(flags);
 
         ctx.AdvanceState(States.InstRTIimp5);
     }
@@ -191,7 +190,8 @@ internal class InstControl : InstBase, IInstruction
     private void RtiImp5(Context ctx)
     {
         // pull PC low byte
-        PullFromStack(ctx, ctx.Regs.PC.Lsb());
+        if (PullFromStack(ctx, out var pcLsb))
+            ctx.Regs.PC = ctx.Regs.PC.WithLsb(pcLsb);
 
         ctx.AdvanceState(States.InstRTIimp6);
     }
@@ -199,7 +199,8 @@ internal class InstControl : InstBase, IInstruction
     private void RtiImp6(Context ctx)
     {
         // pull PC high byte
-        PullFromStack(ctx, ctx.Regs.PC.Msb());
+        if (PullFromStack(ctx, out var pcMsb))
+            ctx.Regs.PC = ctx.Regs.PC.WithMsb(pcMsb);
 
         ctx.AdvanceState(States.Fetch);
     }
@@ -229,7 +230,8 @@ internal class InstControl : InstBase, IInstruction
     private void RtsImp4(Context ctx)
     {
         // pull PCL
-        PullFromStack(ctx, ctx.Regs.PC.Lsb());
+        if (PullFromStack(ctx, out var pcLsb))
+            ctx.Regs.PC = ctx.Regs.PC.WithLsb(pcLsb);
 
         ctx.AdvanceState(States.InstRTSimp5);
     }
@@ -237,7 +239,8 @@ internal class InstControl : InstBase, IInstruction
     private void RtsImp5(Context ctx)
     {
         // pull PCH
-        PullFromStack(ctx, ctx.Regs.PC.Msb());
+        if (PullFromStack(ctx, out var pcMsb))
+            ctx.Regs.PC = ctx.Regs.PC.WithMsb(pcMsb);
 
         ctx.AdvanceState(States.InstRTSimp6);
     }
@@ -247,7 +250,7 @@ internal class InstControl : InstBase, IInstruction
         // NOTE: the address pushed on the stack was the address of the second operand and
         // not the address of the next instruction.  The increment points it to the next instruction.
         if (ctx.GetSubStep() == P2LastSubstep)
-            ctx.Regs.PC.Inc();
+            ctx.Regs.PC = ctx.Regs.PC.Inc();
 
         ctx.AdvanceState(States.Fetch);
     }

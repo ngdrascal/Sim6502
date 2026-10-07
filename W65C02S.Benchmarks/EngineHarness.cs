@@ -44,8 +44,16 @@ internal sealed class EngineHarness
 
     public byte[] Memory => _memory;
 
-    /// <summary>Address of the self-looping instruction that stopped <see cref="RunUntilTrapped"/>.</summary>
+    /// <summary>
+    /// Address of the self-looping instruction that stopped <see cref="RunUntilTrapped"/>, or
+    /// <see cref="BrkVector"/> when it stopped on a vector read.
+    /// </summary>
     public int TrapAddress { get; private set; } = -1;
+
+    public const int BrkVector = 0xFFFE;
+
+    /// <summary>Also stop <see cref="RunUntilTrapped"/> when the IRQ/BRK vector is read (a test ending in BRK).</summary>
+    public bool StopOnBrkVector { get; init; }
 
     /// <summary>Runs exactly <paramref name="cycles"/> CPU cycles.</summary>
     public void RunCycles(long cycles)
@@ -98,6 +106,11 @@ internal sealed class EngineHarness
                     {
                         TrapAddress = addr;
                     }
+                }
+                else if (StopOnBrkVector && addr == BrkVector)
+                {
+                    trapped = true;
+                    TrapAddress = addr;
                 }
 
                 _ctx.Pins.DataBusMode = DataBusMode.Input;

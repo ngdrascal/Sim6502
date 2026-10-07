@@ -221,37 +221,50 @@ public class UInt16Tests : UnitTestBase
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    // UpdateValue
+    // Construction from an out-of-range int
     ////////////////////////////////////////////////////////////////////////////
 
-    [Fact]
-    public void TestUpdateSetsNewValueUInt16()
+    /*
+       TITLE: Constructing from an int outside 0-65535 keeps the low 16 bits
+       GIVEN: ints just outside the 16-bit range
+       WHEN: a UInt16 is constructed from each
+       THEN: the value wraps to the low 16 bits (-1 -> 0xFFFF, 65536 -> 0x0000)
+     */
+    [Theory]
+    [InlineData(-1, 0xFFFF)]
+    [InlineData(UInt16.Max + 1, 0x0000)]
+    [InlineData(0x1ABCD, 0xABCD)]
+    public void CtorKeepsLow16Bits(int value, int expected)
     {
         // ARRANGE:
-        const int expected = 1234;
-        var instance = new UInt16(expected + 1);
 
         // ACT:
-        instance.UpdateValue(new UInt16(expected));
-        var actual = instance.ToInt();
+        var actual = new UInt16(value);
 
         // ASSERT:
-        Assert.Equal(expected, actual);
+        Assert.Equal(expected, actual.ToInt());
     }
 
-    [Fact]
-    public void TestUpdateValueOutOfRange()
+    /*
+       TITLE: AddUnsigned wraps at 0x10000, not 0xFFFF
+       GIVEN: addresses at the top of the 64K space
+       WHEN: an unsigned byte is added
+       THEN: $FFF0+$0F is $FFFF and $FFFF+$01 is $0000
+     */
+    [Theory]
+    [InlineData(0xFFF0, 0x0F, 0xFFFF)]
+    [InlineData(0xFFFF, 0x01, 0x0000)]
+    [InlineData(0xFFFF, 0x10, 0x000F)]
+    public void AddUnsignedWrapsAt64K(int start, int amount, int expected)
     {
         // ARRANGE:
-        var value = new UInt16(0);
+        var value = new UInt16(start);
 
         // ACT:
-        void TooLow() => value.UpdateValue(-1);
-        void TooHigh() => value.UpdateValue(UInt16.Max + 1);
+        var actual = value.AddUnsigned(new UInt8(amount));
 
         // ASSERT:
-        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
-        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
+        Assert.Equal(expected, actual.ToInt());
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -277,21 +290,6 @@ public class UInt16Tests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(expectedValue, actualValue);
-    }
-
-    [Fact]
-    public void TestIsBitSetIndexOutOfRange()
-    {
-        // ARRANGE:
-        var value = new UInt16(0);
-
-        // ACT:
-        void TooLow() => value.IsBitSet(-1);
-        void TooHigh() => value.IsBitSet(UInt16.MaxBit);
-
-        // ASSERT:
-        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
-        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -323,25 +321,10 @@ public class UInt16Tests : UnitTestBase
         var value = new UInt16(initialValue);
 
         // ACT:
-        value.SetBit(bitIndex);
+        value = value.SetBit(bitIndex);
 
         // ASSERT:
         Assert.Equal(expectedValue, value.ToInt());
-    }
-
-    [Fact]
-    public void TestSetBitIndexOutOfRange()
-    {
-        // ARRANGE:
-        var value = new UInt16(0);
-
-        // ACT:
-        void TooLow() => value.SetBit(-1);
-        void TooHigh() => value.SetBit(UInt16.MaxBit);
-
-        // ASSERT:
-        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
-        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -373,25 +356,10 @@ public class UInt16Tests : UnitTestBase
         var value = new UInt16(initialValue);
 
         // ACT:
-        value.ClearBit(bitIndex);
+        value = value.ClearBit(bitIndex);
 
         // ASSERT:
         Assert.Equal(expectedValue, value.ToInt());
-    }
-
-    [Fact]
-    public void TestClearBitIndexOutOfRange()
-    {
-        // ARRANGE:
-        var value = new UInt16(0);
-
-        // ACT:
-        void TooLow() => value.ClearBit(-1);
-        void TooHigh() => value.ClearBit(UInt16.MaxBit);
-
-        // ASSERT:
-        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
-        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -423,21 +391,6 @@ public class UInt16Tests : UnitTestBase
         Assert.Equal(0, value.GetBitValue(13));
         Assert.Equal(1, value.GetBitValue(14));
         Assert.Equal(0, value.GetBitValue(15));
-    }
-
-    [Fact]
-    public void TestGetBitFlagIndexOutOfRange()
-    {
-        // ARRANGE:
-        var value = new UInt16(0xFF);
-
-        // ACT:
-        void TooLow() => value.GetBitValue(-1);
-        void TooHigh() => value.GetBitValue(UInt16.MaxBit);
-
-        // // ASSERT:
-        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
-        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -484,40 +437,10 @@ public class UInt16Tests : UnitTestBase
         var value = new UInt16(initialValue);
 
         // ACT:
-        value.SetBitValue(bitIndex, bitValue);
+        value = value.SetBitValue(bitIndex, bitValue);
 
         // ASSERT:
         Assert.Equal(expectedValue, value.ToInt());
-    }
-
-    [Fact]
-    public void TestSetBitValueOutOfRangeIndex()
-    {
-        // ARRANGE:
-        var value = new UInt16(0);
-
-        // ACT:
-        void TooLow() => value.SetBitValue(-1, 1);
-        void TooHigh() => value.SetBitValue(16, 1);
-
-        // ASSERT:
-        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
-        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
-    }
-
-    [Fact]
-    public void TestSetBitValueBitValueOutOfRange()
-    {
-        // ARRANGE:
-        var value = new UInt16(0);
-
-        // ACT:
-        void TooLow() => value.SetBitValue(0, -1);
-        void TooHigh() => value.SetBitValue(0, 2);
-
-        // ASSERT:
-        Assert.Throws<ArgumentOutOfRangeException>(TooLow);
-        Assert.Throws<ArgumentOutOfRangeException>(TooHigh);
     }
 
     ////////////////////////////////////////////////////////////////////////////

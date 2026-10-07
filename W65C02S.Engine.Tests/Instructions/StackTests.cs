@@ -19,8 +19,8 @@ public class StackTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
-        Regs.S.UpdateValue(spValue);
+        Regs.A = aValue;
+        Regs.S = spValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -49,7 +49,7 @@ public class StackTests : UnitTestBase
         // ARRANGE:
         BootToAddress(BootAddr);
         Regs.P.LoadFlags(pValue);
-        Regs.S.UpdateValue(spValue);
+        Regs.S = spValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -78,8 +78,8 @@ public class StackTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.X.UpdateValue(xValue);
-        Regs.S.UpdateValue(spValue);
+        Regs.X = xValue;
+        Regs.S = spValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -108,8 +108,8 @@ public class StackTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.X.UpdateValue(yValue);
-        Regs.S.UpdateValue(spValue);
+        Regs.X = yValue;
+        Regs.S = spValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -138,7 +138,7 @@ public class StackTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.S.UpdateValue(spValue);
+        Regs.S = spValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -171,7 +171,7 @@ public class StackTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.S.UpdateValue(spValue);
+        Regs.S = spValue;
         Regs.P.LoadFlags("nvbdizc");
 
         // ACT:
@@ -205,7 +205,7 @@ public class StackTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.S.UpdateValue(spValue);
+        Regs.S = spValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -238,7 +238,7 @@ public class StackTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.S.UpdateValue(spValue);
+        Regs.S = spValue;
 
         // ACT:
         Pins.DataBus = opCode;

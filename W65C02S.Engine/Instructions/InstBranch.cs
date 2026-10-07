@@ -84,7 +84,7 @@ internal class InstBranch : InstBase, IInstruction
         {
             var regs = ctx.Regs;
             var beforePage = regs.PC.Msb().Copy();
-            regs.PC.AddSigned(regs.Temp);
+            regs.PC = regs.PC.AddSigned(regs.Temp);
             var afterPage = regs.PC.Msb().Copy();
             if (afterPage.Equals(beforePage))
             {

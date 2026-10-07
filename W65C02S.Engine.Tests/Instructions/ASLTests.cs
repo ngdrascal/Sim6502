@@ -23,7 +23,7 @@ public class ASLTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(accValue);
+        Regs.A = accValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -163,7 +163,7 @@ public class ASLTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.X.UpdateValue(xValue);
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -320,7 +320,7 @@ public class ASLTests : UnitTestBase
 
         // ARRANGE:
         BootToAddress(BootAddr);
-        Regs.X.UpdateValue(xValue);
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = opCode;

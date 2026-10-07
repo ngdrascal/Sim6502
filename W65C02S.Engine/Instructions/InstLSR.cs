@@ -42,12 +42,14 @@ internal class InstLSR : InstBase, IInstruction
         return this;
     }
 
-    private void LsrUpdateFlags(Context ctx, UInt8 value)
+    private UInt8 LsrUpdateFlags(Context ctx, UInt8 value)
     {
-        ctx.Regs.P.Carry.UpdateValue(value.IsBitSet(0));
-        ctx.Regs.P.Negative.Clear();
-        value.Shr();
-        ctx.Regs.P.Zero.UpdateValue(value.EqualsZero());
+        ctx.Regs.P.Carry = value.IsBitSet(0);
+        ctx.Regs.P.ClearNegative();
+        value = value.Shr();
+        ctx.Regs.P.Zero = value.EqualsZero();
+
+        return value;
     }
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -71,7 +73,7 @@ internal class InstLSR : InstBase, IInstruction
     private void Acc2(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            LsrUpdateFlags(ctx, ctx.Regs.A);
+            ctx.Regs.A = LsrUpdateFlags(ctx, ctx.Regs.A);
 
         ctx.AdvanceState(States.Fetch);
     }
@@ -96,7 +98,7 @@ internal class InstLSR : InstBase, IInstruction
     private void Zpg4(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            LsrUpdateFlags(ctx, ctx.Regs.Temp);
+            ctx.Regs.Temp = LsrUpdateFlags(ctx, ctx.Regs.Temp);
 
         ctx.AdvanceState(States.InstLSRzpg5);
     }
@@ -136,7 +138,7 @@ internal class InstLSR : InstBase, IInstruction
     private void Zpgx5(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            LsrUpdateFlags(ctx, ctx.Regs.Temp);
+            ctx.Regs.Temp = LsrUpdateFlags(ctx, ctx.Regs.Temp);
 
         ctx.AdvanceState(States.InstLSRzpgx6);
     }
@@ -173,7 +175,7 @@ internal class InstLSR : InstBase, IInstruction
     private void Abs5(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            LsrUpdateFlags(ctx, ctx.Regs.Temp);
+            ctx.Regs.Temp = LsrUpdateFlags(ctx, ctx.Regs.Temp);
 
         ctx.AdvanceState(States.InstLSRabs6);
     }
@@ -220,7 +222,7 @@ internal class InstLSR : InstBase, IInstruction
     private void Absx6(Context ctx)
     {
         if (ctx.GetSubStep() == P2LastSubstep)
-            LsrUpdateFlags(ctx, ctx.Regs.Temp);
+            ctx.Regs.Temp = LsrUpdateFlags(ctx, ctx.Regs.Temp);
 
         ctx.AdvanceState(States.InstLSRabsx7);
     }

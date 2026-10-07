@@ -21,11 +21,11 @@ public class SBCTests : UnitTestBase
 
     private void PrepareFlags(MathResult expected, BitFlag cFlag, BitFlag dFlag)
     {
-        Regs.P.Negative.UpdateValue(expected.Negative().Copy().Not());
-        Regs.P.Overflow.UpdateValue(expected.Overflow().Copy().Not());
-        Regs.P.Decimal.UpdateValue(dFlag);
-        Regs.P.Zero.UpdateValue(expected.Zero().Copy().Not());
-        Regs.P.Carry.UpdateValue(cFlag);
+        Regs.P.Negative = expected.Negative().Copy().Not();
+        Regs.P.Overflow = expected.Overflow().Copy().Not();
+        Regs.P.Decimal = dFlag;
+        Regs.P.Zero = expected.Zero().Copy().Not();
+        Regs.P.Carry = cFlag;
     }
 
     // -------------------------------------------------------------------------
@@ -40,7 +40,7 @@ public class SBCTests : UnitTestBase
         BootToAddress(BootAddr);
 
         PrepareFlags(expected, cIn, dIn);
-        Regs.A.UpdateValue(aValue);
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -120,7 +120,7 @@ public class SBCTests : UnitTestBase
 
         BootToAddress(BootAddr);
         PrepareFlags(expected, cIn, dIn);
-        Regs.A.UpdateValue(aValue);
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -204,8 +204,8 @@ public class SBCTests : UnitTestBase
 
         BootToAddress(BootAddr);
         PrepareFlags(expected, cIn, dIn);
-        Regs.A.UpdateValue(aValue);
-        Regs.X.UpdateValue(xValue);
+        Regs.A = aValue;
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -291,7 +291,7 @@ public class SBCTests : UnitTestBase
 
         BootToAddress(BootAddr);
         PrepareFlags(expected, cIn, dIn);
-        Regs.A.UpdateValue(aValue);
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -379,8 +379,8 @@ public class SBCTests : UnitTestBase
 
         BootToAddress(BootAddr);
         PrepareFlags(expected, cIn, dIn);
-        Regs.A.UpdateValue(aValue);
-        Regs.X.UpdateValue(xValue);
+        Regs.A = aValue;
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -475,8 +475,8 @@ public class SBCTests : UnitTestBase
 
         BootToAddress(BootAddr);
         PrepareFlags(expected, cIn, dIn);
-        Regs.A.UpdateValue(aValue);
-        Regs.Y.UpdateValue(yValue);
+        Regs.A = aValue;
+        Regs.Y = yValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -572,8 +572,8 @@ public class SBCTests : UnitTestBase
 
         BootToAddress(BootAddr);
         PrepareFlags(expected, cIn, dIn);
-        Regs.A.UpdateValue(aValue);
-        Regs.X.UpdateValue(xValue);
+        Regs.A = aValue;
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -667,8 +667,8 @@ public class SBCTests : UnitTestBase
 
         BootToAddress(BootAddr);
         PrepareFlags(expected, cIn, dIn);
-        Regs.A.UpdateValue(aValue);
-        Regs.Y.UpdateValue(yValue);
+        Regs.A = aValue;
+        Regs.Y = yValue;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -769,7 +769,7 @@ public class SBCTests : UnitTestBase
 
         BootToAddress(BootAddr);
         PrepareFlags(expected, cIn, dIn);
-        Regs.A.UpdateValue(aValue);
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = (opCode);

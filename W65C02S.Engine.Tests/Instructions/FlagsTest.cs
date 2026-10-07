@@ -15,7 +15,7 @@ public class FlagsTests : UnitTestBase
         var expected = Low;
 
         BootToAddress(BootAddr);
-        Regs.P.Carry.UpdateValue(High);
+        Regs.P.Carry = High;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -37,7 +37,7 @@ public class FlagsTests : UnitTestBase
         var expected = Low;
 
         BootToAddress(BootAddr);
-        Regs.P.Decimal.UpdateValue(High);
+        Regs.P.Decimal = High;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -59,7 +59,7 @@ public class FlagsTests : UnitTestBase
         var expected = Low;
 
         BootToAddress(BootAddr);
-        Regs.P.IRQDisabled.UpdateValue(High);
+        Regs.P.IRQDisabled = High;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -81,7 +81,7 @@ public class FlagsTests : UnitTestBase
         var expected = Low;
 
         BootToAddress(BootAddr);
-        Regs.P.Overflow.UpdateValue(High);
+        Regs.P.Overflow = High;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -103,7 +103,7 @@ public class FlagsTests : UnitTestBase
         var expected = High;
 
         BootToAddress(BootAddr);
-        Regs.P.Carry.UpdateValue(Low);
+        Regs.P.Carry = Low;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -125,7 +125,7 @@ public class FlagsTests : UnitTestBase
         var expected = High;
 
         BootToAddress(BootAddr);
-        Regs.P.Decimal.UpdateValue(Low);
+        Regs.P.Decimal = Low;
 
         // ACT:
         Pins.DataBus = (opCode);
@@ -147,7 +147,7 @@ public class FlagsTests : UnitTestBase
         var expected = High;
 
         BootToAddress(BootAddr);
-        Regs.P.IRQDisabled.UpdateValue(Low);
+        Regs.P.IRQDisabled = Low;
 
         // ACT:
         Pins.DataBus = (opCode);

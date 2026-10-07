@@ -21,7 +21,7 @@ public class ANDTests : UnitTestBase
         var expectedValue = new UInt8(aValue.ToInt() & operand.ToInt());
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -70,7 +70,7 @@ public class ANDTests : UnitTestBase
         var expectedAddr = new UInt16(operand);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -123,8 +123,8 @@ public class ANDTests : UnitTestBase
         var expectedAddr = new UInt16(operand.Copy().AddWithWrapAround(xValue));
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
-        Regs.X.UpdateValue(xValue);
+        Regs.A = aValue;
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -179,7 +179,7 @@ public class ANDTests : UnitTestBase
         var expectedAddr = new UInt16(operand1, operand2);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -235,8 +235,8 @@ public class ANDTests : UnitTestBase
         var expectedAddr = new UInt16(operand1, operand2).AddUnsigned(xValue);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
-        Regs.X.UpdateValue(xValue);
+        Regs.A = aValue;
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -317,8 +317,8 @@ public class ANDTests : UnitTestBase
         var expectedAddr = new UInt16(operand1, operand2).AddUnsigned(yValue);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
-        Regs.Y.UpdateValue(yValue);
+        Regs.A = aValue;
+        Regs.Y = yValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -400,8 +400,8 @@ public class ANDTests : UnitTestBase
         var finalAddr = new UInt16(indAddrLsb, indAddrMsb);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
-        Regs.X.UpdateValue(xValue);
+        Regs.A = aValue;
+        Regs.X = xValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -463,8 +463,8 @@ public class ANDTests : UnitTestBase
         var expectedAddr = new UInt16(indAddrLsb, indAddrMsb).AddUnsigned(yValue);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
-        Regs.Y.UpdateValue(yValue);
+        Regs.A = aValue;
+        Regs.Y = yValue;
 
         // ACT:
         Pins.DataBus = opCode;
@@ -552,7 +552,7 @@ public class ANDTests : UnitTestBase
         var expectedAddr = new UInt16(indAddrLsb, indAddrMsb);
 
         BootToAddress(BootAddr);
-        Regs.A.UpdateValue(aValue);
+        Regs.A = aValue;
 
         // ACT:
         Pins.DataBus = opCode;
