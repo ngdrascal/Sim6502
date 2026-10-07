@@ -10,6 +10,7 @@ Projects:
 - `W65C02S.Engine` - the simulator library.
 - `W65C02S.Engine.Tests` - xUnit v3 unit tests (namespace is still `Sim6502.Tests`).
 - `W65C02S.ValidationSuite` - console exe that runs Klaus Dormann functional, 65C02 extended opcode, and Bruce Clark BCD test binaries (`Tests/*.bin`). Not an xUnit project; pick which suite runs by editing `Program.cs`.
+- `W65C02S.Benchmarks` - BenchmarkDotNet exe (mixed-loop and Dormann workloads, `--verify` for a quick correctness run). Results and how to run: `Docs/Performance.md`. Built in CI, not run.
 - `W65C02S.DigisimPlugin` - wraps the engine as a component (`W65C02SCpu`) for the Digisim circuit simulator.
 - `W65C02S.DigisimPlugin.Tests` - xUnit v3 tests driving the plugin through the real Digisim scheduler.
 - `W65C22.Engine` - the VIA simulator library (no dependencies). Design: `Docs/W65C22-Design.md`; vocabulary: `CONTEXT.md`.

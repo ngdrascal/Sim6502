@@ -4,6 +4,7 @@
   </Folder>
   <Folder Name="/Solution Items/Docs/">
     <File Path="Docs/ARCHITECTURE.md" />
+    <File Path="Docs/Performance.md" />
   </Folder>
   <Folder Name="/Solution Items/Docs/DataSheets/">
     <File Path="Docs/DataSheets/w65c02s.pdf" />
@@ -15,6 +16,7 @@
     <File Path="Docs/Images/WriteTiming.png" />
   </Folder>
   <Folder Name="/W65C02S/">
+    <Project Path="W65C02S.Benchmarks/W65C02S.Benchmarks.csproj" />
     <Project Path="W65C02S.DigisimPlugin.Tests/W65C02S.DigisimPlugin.Tests.csproj" />
     <Project Path="W65C02S.DigisimPlugin/W65C02S.DigisimPlugin.csproj" />
     <Project Path="W65C02S.Engine.Tests/W65C02S.Engine.Tests.csproj" />
