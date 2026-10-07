@@ -157,10 +157,16 @@ public class STATests : UnitTestBase
         ExecuteSTAabsx(new UInt8(0x01));
     }
 
+    /*
+       TITLE: STA absolute,X carries the index into the high byte of the address
+       GIVEN: a booted CPU with A=$AA and X=$F0
+       WHEN: STA $4321,X executes ($21 + $F0 crosses into page $44)
+       THEN: A is written to $4411
+     */
     [Fact]
     public void TestSTAabsxPageChange()
     {
-        ExecuteSTAabsx(new UInt8(0x80));
+        ExecuteSTAabsx(new UInt8(0xF0));
     }
 
     // -------------------------------------------------------------------------

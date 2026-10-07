@@ -113,10 +113,26 @@ public class STZTests : UnitTestBase
     [Fact]
     public void TestSTZabsx()
     {
+        ExecuteSTZabsx(new UInt8(0x10));
+    }
+
+    /*
+       TITLE: STZ absolute,X carries the index into the high byte of the address
+       GIVEN: a booted CPU with X=$F0
+       WHEN: STZ $4321,X executes ($21 + $F0 crosses into page $44)
+       THEN: zero is written to $4411
+     */
+    [Fact]
+    public void TestSTZabsxPageChange()
+    {
+        ExecuteSTZabsx(new UInt8(0xF0));
+    }
+
+    private void ExecuteSTZabsx(UInt8 xValue)
+    {
         var opCode = OpCodes.STZabsx.ToUInt8();
         var operand1 = new UInt8(0x21);
         var operand2 = new UInt8(0x43);
-        var xValue = new UInt8(0x10);
         var expectedAddr = new UInt16(operand1, operand2).AddUnsigned(xValue);
 
         // ARRANGE:

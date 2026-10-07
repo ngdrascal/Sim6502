@@ -171,7 +171,7 @@ internal class InstSTA : InstBase, IInstruction
     {
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
         {
-            ctx.Regs.IncEALWithX();
+            ctx.Regs.IncEAWithX();
         }
 
         ctx.AdvanceState(States.InstSTAabsx5);
