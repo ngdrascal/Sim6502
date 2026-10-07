@@ -78,34 +78,6 @@ internal class InstBranch : InstBase, IInstruction
             ctx.AdvanceState(States.Fetch);
     }
 
-    private void Branch3(Context ctx, States nextState)
-    {
-        if (ctx.GetSubStep() == P2LastSubstep)
-        {
-            var regs = ctx.Regs;
-            var beforePage = regs.PC.Msb().Copy();
-            regs.PC = regs.PC.AddSigned(regs.Temp);
-            var afterPage = regs.PC.Msb().Copy();
-            if (afterPage.Equals(beforePage))
-            {
-                ctx.Pins.AddrBus = ctx.Regs.PC;
-                ctx.AdvanceState(States.Fetch);
-            }
-            else
-            {
-                ctx.AdvanceState(nextState);
-            }
-        }
-    }
-
-    private void Branch4(Context ctx)
-    {
-        if (ctx.GetSubStep() == P2LastSubstep)
-            ctx.Pins.AddrBus = ctx.Regs.PC;
-
-        ctx.AdvanceState(States.Fetch);
-    }
-
     /////////////////////////////////////////////////////////////////////////////
     // BRA - Branch on Carry Clear
     // Branch on C = 0

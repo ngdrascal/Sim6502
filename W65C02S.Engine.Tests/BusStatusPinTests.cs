@@ -257,6 +257,22 @@ public class BusStatusPinTests : UnitTestBase
     [InlineData(OpCodes.TRBabs, 6)]
     [InlineData(OpCodes.TSBzpg, 5)]
     [InlineData(OpCodes.TSBabs, 6)]
+    [InlineData(OpCodes.RMB0zpg, 5)]
+    [InlineData(OpCodes.RMB1zpg, 5)]
+    [InlineData(OpCodes.RMB2zpg, 5)]
+    [InlineData(OpCodes.RMB3zpg, 5)]
+    [InlineData(OpCodes.RMB4zpg, 5)]
+    [InlineData(OpCodes.RMB5zpg, 5)]
+    [InlineData(OpCodes.RMB6zpg, 5)]
+    [InlineData(OpCodes.RMB7zpg, 5)]
+    [InlineData(OpCodes.SMB0zpg, 5)]
+    [InlineData(OpCodes.SMB1zpg, 5)]
+    [InlineData(OpCodes.SMB2zpg, 5)]
+    [InlineData(OpCodes.SMB3zpg, 5)]
+    [InlineData(OpCodes.SMB4zpg, 5)]
+    [InlineData(OpCodes.SMB5zpg, 5)]
+    [InlineData(OpCodes.SMB6zpg, 5)]
+    [InlineData(OpCodes.SMB7zpg, 5)]
     public void MlbIsLowDuringReadModifyWriteCycles(OpCodes opCode, int cycles)
     {
         // ARRANGE:

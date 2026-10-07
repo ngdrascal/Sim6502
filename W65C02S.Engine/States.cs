@@ -138,6 +138,42 @@ public enum States
     InstTSBzpg2, InstTSBzpg3, InstTSBzpg4, InstTSBzpg5, // TSB zeropage
     InstTSBabs2, InstTSBabs3, InstTSBabs4, InstTSBabs5, InstTSBabs6, // TSB absolute
 
+    InstRMB0zpg2, InstRMB0zpg3, InstRMB0zpg4, InstRMB0zpg5, // RMB0 zeropage
+    InstRMB1zpg2, InstRMB1zpg3, InstRMB1zpg4, InstRMB1zpg5, // RMB1 zeropage
+    InstRMB2zpg2, InstRMB2zpg3, InstRMB2zpg4, InstRMB2zpg5, // RMB2 zeropage
+    InstRMB3zpg2, InstRMB3zpg3, InstRMB3zpg4, InstRMB3zpg5, // RMB3 zeropage
+    InstRMB4zpg2, InstRMB4zpg3, InstRMB4zpg4, InstRMB4zpg5, // RMB4 zeropage
+    InstRMB5zpg2, InstRMB5zpg3, InstRMB5zpg4, InstRMB5zpg5, // RMB5 zeropage
+    InstRMB6zpg2, InstRMB6zpg3, InstRMB6zpg4, InstRMB6zpg5, // RMB6 zeropage
+    InstRMB7zpg2, InstRMB7zpg3, InstRMB7zpg4, InstRMB7zpg5, // RMB7 zeropage
+
+    InstSMB0zpg2, InstSMB0zpg3, InstSMB0zpg4, InstSMB0zpg5, // SMB0 zeropage
+    InstSMB1zpg2, InstSMB1zpg3, InstSMB1zpg4, InstSMB1zpg5, // SMB1 zeropage
+    InstSMB2zpg2, InstSMB2zpg3, InstSMB2zpg4, InstSMB2zpg5, // SMB2 zeropage
+    InstSMB3zpg2, InstSMB3zpg3, InstSMB3zpg4, InstSMB3zpg5, // SMB3 zeropage
+    InstSMB4zpg2, InstSMB4zpg3, InstSMB4zpg4, InstSMB4zpg5, // SMB4 zeropage
+    InstSMB5zpg2, InstSMB5zpg3, InstSMB5zpg4, InstSMB5zpg5, // SMB5 zeropage
+    InstSMB6zpg2, InstSMB6zpg3, InstSMB6zpg4, InstSMB6zpg5, // SMB6 zeropage
+    InstSMB7zpg2, InstSMB7zpg3, InstSMB7zpg4, InstSMB7zpg5, // SMB7 zeropage
+
+    InstBBR0zpgrel2, InstBBR0zpgrel3, InstBBR0zpgrel4, InstBBR0zpgrel5, InstBBR0zpgrel6, InstBBR0zpgrel7, // BBR0 zeropage, relative
+    InstBBR1zpgrel2, InstBBR1zpgrel3, InstBBR1zpgrel4, InstBBR1zpgrel5, InstBBR1zpgrel6, InstBBR1zpgrel7, // BBR1 zeropage, relative
+    InstBBR2zpgrel2, InstBBR2zpgrel3, InstBBR2zpgrel4, InstBBR2zpgrel5, InstBBR2zpgrel6, InstBBR2zpgrel7, // BBR2 zeropage, relative
+    InstBBR3zpgrel2, InstBBR3zpgrel3, InstBBR3zpgrel4, InstBBR3zpgrel5, InstBBR3zpgrel6, InstBBR3zpgrel7, // BBR3 zeropage, relative
+    InstBBR4zpgrel2, InstBBR4zpgrel3, InstBBR4zpgrel4, InstBBR4zpgrel5, InstBBR4zpgrel6, InstBBR4zpgrel7, // BBR4 zeropage, relative
+    InstBBR5zpgrel2, InstBBR5zpgrel3, InstBBR5zpgrel4, InstBBR5zpgrel5, InstBBR5zpgrel6, InstBBR5zpgrel7, // BBR5 zeropage, relative
+    InstBBR6zpgrel2, InstBBR6zpgrel3, InstBBR6zpgrel4, InstBBR6zpgrel5, InstBBR6zpgrel6, InstBBR6zpgrel7, // BBR6 zeropage, relative
+    InstBBR7zpgrel2, InstBBR7zpgrel3, InstBBR7zpgrel4, InstBBR7zpgrel5, InstBBR7zpgrel6, InstBBR7zpgrel7, // BBR7 zeropage, relative
+
+    InstBBS0zpgrel2, InstBBS0zpgrel3, InstBBS0zpgrel4, InstBBS0zpgrel5, InstBBS0zpgrel6, InstBBS0zpgrel7, // BBS0 zeropage, relative
+    InstBBS1zpgrel2, InstBBS1zpgrel3, InstBBS1zpgrel4, InstBBS1zpgrel5, InstBBS1zpgrel6, InstBBS1zpgrel7, // BBS1 zeropage, relative
+    InstBBS2zpgrel2, InstBBS2zpgrel3, InstBBS2zpgrel4, InstBBS2zpgrel5, InstBBS2zpgrel6, InstBBS2zpgrel7, // BBS2 zeropage, relative
+    InstBBS3zpgrel2, InstBBS3zpgrel3, InstBBS3zpgrel4, InstBBS3zpgrel5, InstBBS3zpgrel6, InstBBS3zpgrel7, // BBS3 zeropage, relative
+    InstBBS4zpgrel2, InstBBS4zpgrel3, InstBBS4zpgrel4, InstBBS4zpgrel5, InstBBS4zpgrel6, InstBBS4zpgrel7, // BBS4 zeropage, relative
+    InstBBS5zpgrel2, InstBBS5zpgrel3, InstBBS5zpgrel4, InstBBS5zpgrel5, InstBBS5zpgrel6, InstBBS5zpgrel7, // BBS5 zeropage, relative
+    InstBBS6zpgrel2, InstBBS6zpgrel3, InstBBS6zpgrel4, InstBBS6zpgrel5, InstBBS6zpgrel6, InstBBS6zpgrel7, // BBS6 zeropage, relative
+    InstBBS7zpgrel2, InstBBS7zpgrel3, InstBBS7zpgrel4, InstBBS7zpgrel5, InstBBS7zpgrel6, InstBBS7zpgrel7, // BBS7 zeropage, relative
+
     InstADCimm2, InstADCimm3, // ADC immediate
     InstADCzpg2, InstADCzpg3, InstADCzpg4, // ADC zeropage
     InstADCzpgx2, InstADCzpgx3, InstADCzpgx4, InstADCzpgx5, // ADC zeropage,X

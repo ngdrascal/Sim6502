@@ -48,21 +48,22 @@ public class OpCodesTests
     }
 
     /*
-       TITLE: FromValue rejects a byte value with no opcode
-       GIVEN: a byte value that no OpCodes member has
-       WHEN: FromValue is called
-       THEN: ArgumentException is thrown
+       TITLE: FromValue maps every byte value to the opcode with that value
+       GIVEN: the byte values 0 through 255
+       WHEN: FromValue is called with each
+       THEN: each returns a defined OpCodes member whose value is that byte
      */
     [Fact]
-    public void FromValueRejectsAnUndefinedValue()
+    public void FromValueMapsEveryByteValue()
     {
         // ARRANGE:
-        var undefined = Enumerable.Range(0, 256).First(v => !Enum.IsDefined((OpCodes)v));
+        var values = Enumerable.Range(0, 256).ToList();
 
         // ACT:
-        Action act = () => OpCodesExtensions.FromValue(undefined);
+        var opCodes = values.Select(OpCodesExtensions.FromValue).ToList();
 
         // ASSERT:
-        Assert.Throws<ArgumentException>(act);
+        Assert.All(opCodes, opCode => Assert.True(Enum.IsDefined(opCode)));
+        Assert.Equal(values, opCodes.Select(opCode => opCode.ToInt()));
     }
 }

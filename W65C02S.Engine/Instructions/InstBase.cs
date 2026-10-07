@@ -252,4 +252,33 @@ internal class InstBase
 
         return false;
     }
+
+    // branch taken: add the signed offset in Temp to PC; a page change costs one more cycle
+    protected void Branch3(Context ctx, States nextState)
+    {
+        if (ctx.GetSubStep() == P2LastSubstep)
+        {
+            var regs = ctx.Regs;
+            var beforePage = regs.PC.Msb().Copy();
+            regs.PC = regs.PC.AddSigned(regs.Temp);
+            var afterPage = regs.PC.Msb().Copy();
+            if (afterPage.Equals(beforePage))
+            {
+                ctx.Pins.AddrBus = ctx.Regs.PC;
+                ctx.AdvanceState(States.Fetch);
+            }
+            else
+            {
+                ctx.AdvanceState(nextState);
+            }
+        }
+    }
+
+    protected void Branch4(Context ctx)
+    {
+        if (ctx.GetSubStep() == P2LastSubstep)
+            ctx.Pins.AddrBus = ctx.Regs.PC;
+
+        ctx.AdvanceState(States.Fetch);
+    }
 }

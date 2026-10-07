@@ -154,6 +154,46 @@ public enum OpCodes
     TSBzpg = 0x04,
     TSBabs = 0x0C,
 
+    // RMB
+    RMB0zpg = 0x07,
+    RMB1zpg = 0x17,
+    RMB2zpg = 0x27,
+    RMB3zpg = 0x37,
+    RMB4zpg = 0x47,
+    RMB5zpg = 0x57,
+    RMB6zpg = 0x67,
+    RMB7zpg = 0x77,
+
+    // SMB
+    SMB0zpg = 0x87,
+    SMB1zpg = 0x97,
+    SMB2zpg = 0xA7,
+    SMB3zpg = 0xB7,
+    SMB4zpg = 0xC7,
+    SMB5zpg = 0xD7,
+    SMB6zpg = 0xE7,
+    SMB7zpg = 0xF7,
+
+    // BBR
+    BBR0zpgrel = 0x0F,
+    BBR1zpgrel = 0x1F,
+    BBR2zpgrel = 0x2F,
+    BBR3zpgrel = 0x3F,
+    BBR4zpgrel = 0x4F,
+    BBR5zpgrel = 0x5F,
+    BBR6zpgrel = 0x6F,
+    BBR7zpgrel = 0x7F,
+
+    // BBS
+    BBS0zpgrel = 0x8F,
+    BBS1zpgrel = 0x9F,
+    BBS2zpgrel = 0xAF,
+    BBS3zpgrel = 0xBF,
+    BBS4zpgrel = 0xCF,
+    BBS5zpgrel = 0xDF,
+    BBS6zpgrel = 0xEF,
+    BBS7zpgrel = 0xFF,
+
     // ADC
     ADCimm = 0x69,
     ADCzpg = 0x65,
@@ -306,24 +346,11 @@ public static class OpCodesExtensions
 
     public static UInt8 ToUInt8(this OpCodes opCode) => new((int)opCode);
 
-    // true for each byte value that has an OpCodes member; built once so decode is a table lookup
-    private static readonly bool[] Defined = BuildDefined();
-
-    private static bool[] BuildDefined()
-    {
-        var defined = new bool[256];
-        foreach (var code in Enum.GetValues<OpCodes>())
-            defined[(int)code] = true;
-
-        return defined;
-    }
-
+    // every byte value 0..255 has an OpCodes member, so only the range is checked
     public static OpCodes FromValue(int value)
     {
         if (value < 0 || value > 255)
             throw new ArgumentOutOfRangeException(nameof(value));
-        if (!Defined[value])
-            throw new ArgumentException($"No matching OpCode for {value}", nameof(value));
 
         return (OpCodes)value;
     }

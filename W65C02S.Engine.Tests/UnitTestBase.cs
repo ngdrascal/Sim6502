@@ -13,6 +13,8 @@ public class UnitTestBase
     private byte _phi2;
     private readonly W65C02SEngine _engine;
 
+    protected W65C02SEngine Engine => _engine;
+
     protected readonly Pins Pins;
     protected internal readonly Registers Regs;
 

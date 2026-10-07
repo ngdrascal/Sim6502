@@ -55,7 +55,25 @@ internal static class BusStatusSignals
         States.InstTRBabs4, States.InstTRBabs5, States.InstTRBabs6,
 
         States.InstTSBzpg3, States.InstTSBzpg4, States.InstTSBzpg5,
-        States.InstTSBabs4, States.InstTSBabs5, States.InstTSBabs6
+        States.InstTSBabs4, States.InstTSBabs5, States.InstTSBabs6,
+
+        States.InstRMB0zpg3, States.InstRMB0zpg4, States.InstRMB0zpg5,
+        States.InstRMB1zpg3, States.InstRMB1zpg4, States.InstRMB1zpg5,
+        States.InstRMB2zpg3, States.InstRMB2zpg4, States.InstRMB2zpg5,
+        States.InstRMB3zpg3, States.InstRMB3zpg4, States.InstRMB3zpg5,
+        States.InstRMB4zpg3, States.InstRMB4zpg4, States.InstRMB4zpg5,
+        States.InstRMB5zpg3, States.InstRMB5zpg4, States.InstRMB5zpg5,
+        States.InstRMB6zpg3, States.InstRMB6zpg4, States.InstRMB6zpg5,
+        States.InstRMB7zpg3, States.InstRMB7zpg4, States.InstRMB7zpg5,
+
+        States.InstSMB0zpg3, States.InstSMB0zpg4, States.InstSMB0zpg5,
+        States.InstSMB1zpg3, States.InstSMB1zpg4, States.InstSMB1zpg5,
+        States.InstSMB2zpg3, States.InstSMB2zpg4, States.InstSMB2zpg5,
+        States.InstSMB3zpg3, States.InstSMB3zpg4, States.InstSMB3zpg5,
+        States.InstSMB4zpg3, States.InstSMB4zpg4, States.InstSMB4zpg5,
+        States.InstSMB5zpg3, States.InstSMB5zpg4, States.InstSMB5zpg5,
+        States.InstSMB6zpg3, States.InstSMB6zpg4, States.InstSMB6zpg5,
+        States.InstSMB7zpg3, States.InstSMB7zpg4, States.InstSMB7zpg5
     ]);
 
     public static bool IsOpcodeFetch(States state) => OpcodeFetchStates[(int)state];

@@ -65,6 +65,48 @@ public static class Disassembler
                 operandStr = BuildZpg(operand1);
                 break;
 
+            case OpCodes.RMB0zpg:
+            case OpCodes.RMB1zpg:
+            case OpCodes.RMB2zpg:
+            case OpCodes.RMB3zpg:
+            case OpCodes.RMB4zpg:
+            case OpCodes.RMB5zpg:
+            case OpCodes.RMB6zpg:
+            case OpCodes.RMB7zpg:
+            case OpCodes.SMB0zpg:
+            case OpCodes.SMB1zpg:
+            case OpCodes.SMB2zpg:
+            case OpCodes.SMB3zpg:
+            case OpCodes.SMB4zpg:
+            case OpCodes.SMB5zpg:
+            case OpCodes.SMB6zpg:
+            case OpCodes.SMB7zpg:
+                // the bit number is part of the mnemonic
+                opCodeStr = opCode.ToString()[..4];
+                operandStr = BuildZpg(operand1);
+                break;
+
+            case OpCodes.BBR0zpgrel:
+            case OpCodes.BBR1zpgrel:
+            case OpCodes.BBR2zpgrel:
+            case OpCodes.BBR3zpgrel:
+            case OpCodes.BBR4zpgrel:
+            case OpCodes.BBR5zpgrel:
+            case OpCodes.BBR6zpgrel:
+            case OpCodes.BBR7zpgrel:
+            case OpCodes.BBS0zpgrel:
+            case OpCodes.BBS1zpgrel:
+            case OpCodes.BBS2zpgrel:
+            case OpCodes.BBS3zpgrel:
+            case OpCodes.BBS4zpgrel:
+            case OpCodes.BBS5zpgrel:
+            case OpCodes.BBS6zpgrel:
+            case OpCodes.BBS7zpgrel:
+                // the bit number is part of the mnemonic
+                opCodeStr = opCode.ToString()[..4];
+                operandStr = $"{BuildZpg(operand1)},{BuildRel(operand2)}";
+                break;
+
             case OpCodes.ADCzpgx:
             case OpCodes.ANDzpgx:
             case OpCodes.ASLzpgx:
