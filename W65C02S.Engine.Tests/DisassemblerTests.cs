@@ -8,21 +8,28 @@ namespace W65C02S.Engine.Tests;
 public class DisassemblerTests
 {
     /*
-       TITLE: Disassemble formats JMP absolute indexed indirect as JMP ($hhll,X)
-       GIVEN: opcode JMPabsxind at $1000 with operand bytes $34, $12
+       TITLE: Disassemble formats each addressing mode's operand in standard syntax
+       GIVEN: an opcode at $1000 with operand bytes $34, $12; cases cover JMP (abs), JMP (abs,X),
+              zp,X, zp,Y, (zp,X) and (zp),Y
        WHEN: Disassemble is called
-       THEN: it returns "1000: JMP ($1234,X)"
+       THEN: it returns the address, mnemonic and operand in that mode's syntax
      */
-    [Fact]
-    public void DisassemblesJmpAbsoluteIndexedIndirect()
+    [Theory]
+    [InlineData(OpCodes.JMPind, "1000: JMP ($1234)")]
+    [InlineData(OpCodes.JMPabsxind, "1000: JMP ($1234,X)")]
+    [InlineData(OpCodes.LDAzpgx, "1000: LDA $34,X")]
+    [InlineData(OpCodes.LDXzpgy, "1000: LDX $34,Y")]
+    [InlineData(OpCodes.LDAindx, "1000: LDA ($34,X)")]
+    [InlineData(OpCodes.LDAindy, "1000: LDA ($34),Y")]
+    public void DisassemblesOperandSyntax(OpCodes opCode, string expected)
     {
         // ARRANGE:
         var address = new UInt16(0x1000);
 
         // ACT:
-        var text = Disassembler.Disassemble(address, OpCodes.JMPabsxind, new UInt8(0x34), new UInt8(0x12));
+        var text = Disassembler.Disassemble(address, opCode, new UInt8(0x34), new UInt8(0x12));
 
         // ASSERT:
-        Assert.Equal("1000: JMP ($1234,X)", text);
+        Assert.Equal(expected, text);
     }
 }

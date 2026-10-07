@@ -185,6 +185,10 @@ public static class Disassembler
                 operandStr = BuildInd(operand1);
                 break;
 
+            case OpCodes.JMPind:
+                operandStr = BuildAbsInd(operand1, operand2);
+                break;
+
             case OpCodes.JMPabsxind:
                 operandStr = BuildAbsXInd(operand1, operand2);
                 break;
@@ -308,12 +312,12 @@ public static class Disassembler
 
     private static string BuildZpgx(UInt8 value)
     {
-        return $"(${value.ToInt():X2},X)";
+        return $"${value.ToInt():X2},X";
     }
 
     private static string BuildZpgy(UInt8 value)
     {
-        return $"(${value.ToInt():X2}),Y";
+        return $"${value.ToInt():X2},Y";
     }
 
     private static string BuildAbs(UInt8 low, UInt8 high)
@@ -324,6 +328,11 @@ public static class Disassembler
     private static string BuildAbsX(UInt8 low, UInt8 high)
     {
         return $"${high.ToInt():X2}{low.ToInt():X2},X";
+    }
+
+    private static string BuildAbsInd(UInt8 low, UInt8 high)
+    {
+        return $"(${high.ToInt():X2}{low.ToInt():X2})";
     }
 
     private static string BuildAbsXInd(UInt8 low, UInt8 high)
