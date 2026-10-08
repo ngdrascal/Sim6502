@@ -76,6 +76,7 @@ internal class InstROR : InstBase, IInstruction
     // -------------------------------------------------------------------------
     private void Acc2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.A = RorUpdateFlags(ctx, ctx.Regs.A);
 

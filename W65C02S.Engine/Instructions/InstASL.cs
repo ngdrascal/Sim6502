@@ -76,6 +76,7 @@ internal class InstASL : InstBase, IInstruction
     // -------------------------------------------------------------------------
     private void Acc2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.A = AslUpdateFlags(ctx, ctx.Regs.A);
         ctx.AdvanceState(States.Fetch);

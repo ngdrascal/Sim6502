@@ -31,7 +31,7 @@ public class LSRTests : UnitTestBase
 
         // ASSERT:
         Assert.Equal(opCode, Pins.DBGINST);
-        Assert.Equal(new UInt16(0x1000), Pins.AddrBus);
+        Assert.Equal(new UInt16(0x1001), Pins.AddrBus);
         Assert.Equal(new UInt16(0x1001), Regs.PC);
         Assert.Equal(expectedValue, Regs.A);
         Assert.Equal(expectedZFlag, Regs.P.Zero);

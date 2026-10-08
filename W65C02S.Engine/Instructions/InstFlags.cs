@@ -40,6 +40,7 @@ internal class InstFlags : InstBase, IInstruction
     ///////////////////////////////////////////////////////////////////////////////
     private void ClcImp2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         ctx.Regs.P.ClearCarry();
         ctx.AdvanceState(States.Fetch);
     }
@@ -56,6 +57,7 @@ internal class InstFlags : InstBase, IInstruction
     ///////////////////////////////////////////////////////////////////////////////   
     private void CldImp2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         ctx.Regs.P.ClearDecimal();
         ctx.AdvanceState(States.Fetch);
     }
@@ -72,6 +74,7 @@ internal class InstFlags : InstBase, IInstruction
     ///////////////////////////////////////////////////////////////////////////////
     private void CliImp2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         ctx.Regs.P.ClearIRQDisabled();
         ctx.AdvanceState(States.Fetch);
     }
@@ -88,6 +91,7 @@ internal class InstFlags : InstBase, IInstruction
     ///////////////////////////////////////////////////////////////////////////////
     private void ClvImp2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         ctx.Regs.P.ClearOverflow();
         ctx.AdvanceState(States.Fetch);
     }
@@ -104,6 +108,7 @@ internal class InstFlags : InstBase, IInstruction
     ///////////////////////////////////////////////////////////////////////////////
     private void SecImp2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         ctx.Regs.P.SetCarry();
         ctx.AdvanceState(States.Fetch);
     }
@@ -120,6 +125,7 @@ internal class InstFlags : InstBase, IInstruction
     ///////////////////////////////////////////////////////////////////////////////
     private void SedImp2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         ctx.Regs.P.SetDecimal();
         ctx.AdvanceState(States.Fetch);
     }
@@ -136,6 +142,7 @@ internal class InstFlags : InstBase, IInstruction
     ///////////////////////////////////////////////////////////////////////////////
     private void SeiImp2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         ctx.Regs.P.SetIRQDisabled();
         ctx.AdvanceState(States.Fetch);
     }

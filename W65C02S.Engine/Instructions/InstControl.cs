@@ -145,9 +145,14 @@ internal class InstControl : InstBase, IInstruction
 
     private void JmpAbsxInd4(Context ctx)
     {
-        // internal operation: the address bus keeps PC+2 from the previous cycle while X is
-        // added to the base address (full 16-bit add, carries into the high byte)
-        if (ctx.GetSubStep() == P2LastSubstep)
+        // dummy read of the first operand byte (PC - 2) while X is added to the base address (full
+        // 16-bit add, carries into the high byte); SingleStepTests wdc65c02 vectors
+        if (ctx.GetSubStep() == P1MiddleStep)
+        {
+            ctx.Pins.AddrBus = ctx.Regs.PC.Dec().Dec();
+            ctx.Pins.RWB = Read;
+        }
+        else if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.IncEAWithX();
 
         ctx.AdvanceState(States.InstJMPabsxind5);
@@ -189,7 +194,8 @@ internal class InstControl : InstBase, IInstruction
 
     private void JsrAbs3(Context ctx)
     {
-        FetchEffAddrHigh(ctx);
+        // dummy read of the stack at S
+        PrepareStackRead(ctx);
 
         ctx.AdvanceState(States.InstJSRabs4);
     }
@@ -197,10 +203,8 @@ internal class InstControl : InstBase, IInstruction
     private void JsrAbs4(Context ctx)
     {
         // push PCH
-        // The JSR instruction pushes the address of the second operand and not the address of the
-        // next inst as one would expect.
-        if (ctx.GetSubStep() == 1)
-            ctx.Regs.PC = ctx.Regs.PC.Dec();
+        // PC is the address of the second operand byte, which is pushed instead of the address of
+        // the next instruction (RTS adds 1).
         PushOnStack(ctx, ctx.Regs.PC.Msb());
 
         ctx.AdvanceState(States.InstJSRabs5);
@@ -215,6 +219,10 @@ internal class InstControl : InstBase, IInstruction
 
     private void JsrAbs6(Context ctx)
     {
+        // fetch the high byte of the target address last; the data bus turns around after the pushes
+        if (ctx.GetSubStep() == P1MiddleStep)
+            ctx.Pins.DataBusMode = DataBusMode.Input;
+        FetchEffAddrHigh(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.PC = ctx.Regs.EA;
 
@@ -233,13 +241,16 @@ internal class InstControl : InstBase, IInstruction
     /////////////////////////////////////////////////////////////////////////////
     private void RtiImp2(Context ctx)
     {
-        // internal operation, nothing to simulate
+        ReadAndDiscard(ctx);
+
         ctx.AdvanceState(States.InstRTIimp3);
     }
 
     private void RtiImp3(Context ctx)
     {
-        // internal operation, nothing to simulate
+        // dummy read of the stack at S
+        PrepareStackRead(ctx);
+
         ctx.AdvanceState(States.InstRTIimp4);
     }
 
@@ -282,13 +293,16 @@ internal class InstControl : InstBase, IInstruction
     /////////////////////////////////////////////////////////////////////////////
     private void RtsImp2(Context ctx)
     {
-        // internal operation, nothing to simulate
+        ReadAndDiscard(ctx);
+
         ctx.AdvanceState(States.InstRTSimp3);
     }
 
     private void RtsImp3(Context ctx)
     {
-        // internal operation, nothing to simulate
+        // dummy read of the stack at S
+        PrepareStackRead(ctx);
+
         ctx.AdvanceState(States.InstRTSimp4);
     }
 
@@ -313,7 +327,9 @@ internal class InstControl : InstBase, IInstruction
     private void RtsImp6(Context ctx)
     {
         // NOTE: the address pushed on the stack was the address of the second operand and
-        // not the address of the next instruction.  The increment points it to the next instruction.
+        // not the address of the next instruction.  The increment points it to the next instruction,
+        // after a dummy read of the pulled address.
+        ReadAndDiscard(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.PC = ctx.Regs.PC.Inc();
 

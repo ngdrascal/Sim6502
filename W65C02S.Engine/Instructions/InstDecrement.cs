@@ -72,7 +72,7 @@ internal class InstDecrement : InstBase, IInstruction
     //
     // addressing     assembler     opc   bytes  cycles
     // ------------------------------------------------
-    // accumlator     DEC           3A      1      2
+    // accumulator    DEC           3A      1      2
     // zeropage       DEC oper      C6      2      5
     // zeropage,X     DEC oper,X    D6      2      6
     // absolute       DEC oper      CE      3      6
@@ -84,6 +84,7 @@ internal class InstDecrement : InstBase, IInstruction
     // -------------------------------------------------------------------------
     private void DecAcc2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.A = DecAndUpdateFlags(ctx, ctx.Regs.A);
 
@@ -241,6 +242,7 @@ internal class InstDecrement : InstBase, IInstruction
     ///////////////////////////////////////////////////////////////////////////////
     private void DexImp2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.X = DecAndUpdateFlags(ctx, ctx.Regs.X);
 
@@ -259,6 +261,7 @@ internal class InstDecrement : InstBase, IInstruction
     ///////////////////////////////////////////////////////////////////////////////   
     private void DeyImp2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.Y = DecAndUpdateFlags(ctx, ctx.Regs.Y);
 

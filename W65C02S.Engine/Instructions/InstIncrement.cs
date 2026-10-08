@@ -82,6 +82,7 @@ internal class InstIncrement : InstBase, IInstruction
     // -------------------------------------------------------------------------
     private void IncAcc2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.A = IncAndUpdateFlags(ctx, ctx.Regs.A);
 
@@ -257,6 +258,7 @@ internal class InstIncrement : InstBase, IInstruction
     ///////////////////////////////////////////////////////////////////////////////
     private void InxImp2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.X = IncAndUpdateFlags(ctx, ctx.Regs.X);
 
@@ -275,6 +277,7 @@ internal class InstIncrement : InstBase, IInstruction
     ///////////////////////////////////////////////////////////////////////////////   
     private void InyImp2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.Y = IncAndUpdateFlags(ctx, ctx.Regs.Y);
 

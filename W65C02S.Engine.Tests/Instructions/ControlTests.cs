@@ -89,12 +89,13 @@ public class ControlTests : UnitTestBase
     // JMP absolute indexed indirect
     // -------------------------------------------------------------------------
     /*
-      TITLE: JMP (abs,X) loads PC from the pointer at base + X with the datasheet bus activity
+      TITLE: JMP (abs,X) loads PC from the pointer at base + X with the vectors' bus activity
       GIVEN: a CPU booted to $1000 and X set; cases cover X = 0, an ordinary X, base + X carrying
              into the high byte, a pointer at $xxFF, base + X wrapping past $FFFF, and a pointer
              at $FFFF
       WHEN: JMP (abs,X) runs for its 6 cycles with the operand and target bytes on the data bus
-      THEN: cycles 2-4 address PC+1, PC+2, PC+2; cycles 5-6 address base + X and base + X + 1
+      THEN: cycles 2-4 address PC+1, PC+2, PC+1 (SingleStepTests wdc65c02 vectors); cycles 5-6
+            address base + X and base + X + 1
             (full 16-bit adds, no page wrap); every cycle is a read; PC is the target
     */
     [Theory]
@@ -113,7 +114,7 @@ public class ControlTests : UnitTestBase
         var targetMsb = new UInt8(0xDC);
         var expectedAddrs = new[]
         {
-            new UInt16(0x1001), new UInt16(0x1002), new UInt16(0x1002),
+            new UInt16(0x1001), new UInt16(0x1002), new UInt16(0x1001),
             new UInt16(pointer), new UInt16(pointer + 1)
         };
         var addrs = new List<UInt16>();
@@ -129,7 +130,7 @@ public class ControlTests : UnitTestBase
         var dataPerCycle = new[] { operand.Lsb(), operand.Msb(), Pins.DataBus, targetLsb, targetMsb };
         foreach (var data in dataPerCycle)
         {
-            // JMPabsxind2..6 - base low, base high, internal op (add X), target low, target high
+            // JMPabsxind2..6 - base low, base high, dummy read (add X), target low, target high
             Pins.DataBus = data;
             ExecuteClockCycles(1);
             addrs.Add(Pins.AddrBus);
@@ -146,43 +147,42 @@ public class ControlTests : UnitTestBase
     // -------------------------------------------------------------------------
     // JSR absolute
     // -------------------------------------------------------------------------
+    /*
+      TITLE: JSR pushes the address of its last byte with the vectors' bus activity
+      GIVEN: a CPU booted to $1000 holding JSR $4321, and S = $FF
+      WHEN: JSR runs for 6 cycles against memory
+      THEN: the cycles read PC, PC+1, the stack at $01FF (dummy), write $10 to $01FF and $02 to
+            $01FE, then read PC+2; PC is $4321 and S is $FD
+    */
     [Fact]
     public void TestJSRabs()
     {
         // ARRANGE:
-        var opCode = OpCodes.JSRabs.ToUInt8();
-        var operand1 = new UInt8(0x21);
-        var operand2 = new UInt8(0x43);
-        var expectedPC = new UInt16(operand1, operand2);
-        var stackTop = new UInt8(0xFF);
-        var expectedStackTop = stackTop.Copy().Dec().Dec();
-        var expectedReturnAddr = BootAddr.Copy().AddUnsigned(new UInt8(2));
+        var opCode = OpCodes.JSRabs.ToUInt8().ToInt();
+        Memory[0x1000] = (byte)opCode;
+        Memory[0x1001] = 0x21;
+        Memory[0x1002] = 0x43;
+        Memory[0x01FF] = 0x77;
+        var expected = new[]
+        {
+            new MemoryCycle(0x1000, opCode, false),
+            new MemoryCycle(0x1001, 0x21, false),
+            new MemoryCycle(0x01FF, 0x77, false),
+            new MemoryCycle(0x01FF, 0x10, true),
+            new MemoryCycle(0x01FE, 0x02, true),
+            new MemoryCycle(0x1002, 0x43, false)
+        };
 
         BootToAddress(BootAddr);
-        Regs.S = stackTop;
+        Regs.S = new UInt8(0xFF);
 
         // ACT:
-        Pins.DataBus = (opCode);
-        ExecuteClockCycles(1); // fetch the opcode
-
-        Pins.DataBus = (operand1);
-        ExecuteClockCycles(1); // InstJSRabs2 - fetch the low byte of the subroutine address
-
-        Pins.DataBus = (operand2);
-        ExecuteClockCycles(1); // InstJSRabs3 - fetch the high byte of the subroutine address
-
-        ExecuteClockCycles(1); // InstJSRabs4 - push the high byte of the PC
-        Assert.Equal(expectedReturnAddr.Msb(), Pins.DataBus);
-
-        ExecuteClockCycles(1); // InstJSRabs5 - push the low byte of the PC
-        Assert.Equal(expectedReturnAddr.Lsb(), Pins.DataBus);
-
-        ExecuteClockCycles(1); // InstJSRabs6 - set PC reg to the subroutine address
+        var cycles = expected.Select(_ => ExecuteCycleWithMemory()).ToList();
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.DBGINST);
-        Assert.Equal(expectedPC, Regs.PC);
-        Assert.Equal(expectedStackTop, Regs.S);
+        Assert.Equal(expected, cycles);
+        Assert.Equal(new UInt16(0x4321), Regs.PC);
+        Assert.Equal(new UInt8(0xFD), Regs.S);
     }
 
     // -------------------------------------------------------------------------

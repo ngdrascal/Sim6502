@@ -12,40 +12,20 @@ namespace W65C02S.Engine.Tests;
 [ExcludeFromCodeCoverage]
 public class HarteConformanceTests
 {
-    private const string Milestone4 = "implied / stack dummy read address (plan milestone 4)";
-
     private record OptOut(string Reason, Func<HarteCase, bool>? Applies = null);
 
     private static bool DecimalMode(HarteCase c) => (c.Initial.P & 0x08) != 0;
 
-    // Known deviations from the vectors. An entry whose cases all pass fails the test, so the list
-    // shrinks as milestones land. Plan: Docs/Plan-Harte-Conformance.md.
-    private static readonly Dictionary<int, OptOut> OptOuts = BuildOptOuts();
-
-    private static Dictionary<int, OptOut> BuildOptOuts()
+    // Known deviations from the vectors. An entry whose cases all pass fails the test, so remove it.
+    // Background: Docs/Plan-Harte-Conformance.md.
+    private static readonly Dictionary<int, OptOut> OptOuts = new()
     {
-        var optOuts = new Dictionary<int, OptOut>
-        {
-            // permanent: WDC datasheet Table 7-1 gives 5C 8 cycles; the vectors have 4
-            [0x5C] = new("WDC datasheet: 8 cycles, vectors: 4"),
-            // permanent: the vectors put an extra decimal-mode cycle at $7F/$00; no other source
-            [0x69] = new("decimal mode extra cycle address unverified", DecimalMode),
-            [0xE9] = new("decimal mode extra cycle address unverified", DecimalMode),
-        };
-
-        int[] milestone4 =
-        [
-            // implied / accumulator
-            0x0A, 0x1A, 0x2A, 0x3A, 0x4A, 0x6A, 0x18, 0x38, 0x58, 0x78, 0x88, 0x8A, 0x98, 0x9A, 0xA8,
-            0xAA, 0xB8, 0xBA, 0xC8, 0xCA, 0xD8, 0xE8, 0xEA, 0xF8,
-            // pulls, RTS, RTI, JSR, JMP (abs,X)
-            0x28, 0x68, 0x7A, 0xFA, 0x60, 0x40, 0x20, 0x7C
-        ];
-        foreach (var op in milestone4)
-            optOuts[op] = new OptOut(Milestone4);
-
-        return optOuts;
-    }
+        // WDC datasheet Table 7-1 gives 5C 8 cycles; the vectors have 4
+        [0x5C] = new("WDC datasheet: 8 cycles, vectors: 4"),
+        // the vectors put an extra decimal-mode cycle at $7F/$00; no other source
+        [0x69] = new("decimal mode extra cycle address unverified", DecimalMode),
+        [0xE9] = new("decimal mode extra cycle address unverified", DecimalMode),
+    };
 
     private static readonly string DataDir = Path.Combine(AppContext.BaseDirectory, "Harte", "v1");
 

@@ -38,6 +38,7 @@ internal class InstTransfer : InstBase, IInstruction
     /////////////////////////////////////////////////////////////////////////////
     private void InstTAXimp2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.SetXUpdateFlags(ctx.Regs.A);
 
@@ -56,6 +57,7 @@ internal class InstTransfer : InstBase, IInstruction
     /////////////////////////////////////////////////////////////////////////////
     private void InstTAYimp2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.SetYUpdateFlags(ctx.Regs.A);
 
@@ -74,6 +76,7 @@ internal class InstTransfer : InstBase, IInstruction
     /////////////////////////////////////////////////////////////////////////////
     private void InstTSXimp2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.SetXUpdateFlags(ctx.Regs.S);
 
@@ -92,6 +95,7 @@ internal class InstTransfer : InstBase, IInstruction
     /////////////////////////////////////////////////////////////////////////////
     private void InstTXAimp2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.UpdateAUpdateFlags(ctx.Regs.X);
 
@@ -110,6 +114,7 @@ internal class InstTransfer : InstBase, IInstruction
     /////////////////////////////////////////////////////////////////////////////
     private void InstTXSimp2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.S = ctx.Regs.X;
 
@@ -128,6 +133,7 @@ internal class InstTransfer : InstBase, IInstruction
     /////////////////////////////////////////////////////////////////////////////
     private void InstTYAimp2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.UpdateAUpdateFlags(ctx.Regs.Y);
 

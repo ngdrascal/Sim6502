@@ -72,6 +72,7 @@ internal class InstLSR : InstBase, IInstruction
     // -------------------------------------------------------------------------
     private void Acc2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.A = LsrUpdateFlags(ctx, ctx.Regs.A);
 

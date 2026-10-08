@@ -217,6 +217,8 @@ internal class InstStack : InstBase, IInstruction
 
     private void InstPLAimp3(Context ctx)
     {
+        // dummy read of the stack at S before the increment
+        PrepareStackRead(ctx);
         if (ctx.Substep == Constants.P2LastSubstep)
         {
             ctx.Regs.S = ctx.Regs.S.Inc();
@@ -256,6 +258,8 @@ internal class InstStack : InstBase, IInstruction
 
     private void InstPLPimp3(Context ctx)
     {
+        // dummy read of the stack at S before the increment
+        PrepareStackRead(ctx);
         if (ctx.Substep == Constants.P2LastSubstep)
         {
             ctx.Regs.S = ctx.Regs.S.Inc();
@@ -294,6 +298,8 @@ internal class InstStack : InstBase, IInstruction
 
     private void InstPLXimp3(Context ctx)
     {
+        // dummy read of the stack at S before the increment
+        PrepareStackRead(ctx);
         if (ctx.Substep == Constants.P2LastSubstep)
         {
             ctx.Regs.S = ctx.Regs.S.Inc();
@@ -333,6 +339,8 @@ internal class InstStack : InstBase, IInstruction
 
     private void InstPLYimp3(Context ctx)
     {
+        // dummy read of the stack at S before the increment
+        PrepareStackRead(ctx);
         if (ctx.Substep == Constants.P2LastSubstep)
         {
             ctx.Regs.S = ctx.Regs.S.Inc();

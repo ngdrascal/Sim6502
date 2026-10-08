@@ -103,18 +103,19 @@ internal class InstNOP : InstBase, IInstruction
     // implied        NOP           EA      1      2
     //
     // Reserved opcodes execute as NOPs that consume operand bytes and do dummy reads.
-    // Lengths and cycle counts are fixed by WDC; the per-cycle bus follows MAME's W65C02S
-    // model. Other write-ups describe different dummy-read addresses for $5C, $DC and $FC.
+    // Lengths and cycle counts are fixed by WDC; the per-cycle bus follows the SingleStepTests
+    // wdc65c02 vectors, except $5C (8 cycles per the datasheet, 4 in the vectors).
     //
     // reserved       x3, xB                1      1
     // reserved       02 22 42 62 82 C2 E2  2      2    read operand
     // reserved       44                    2      3    read zp
-    // reserved       54 D4 F4              2      4    re-read operand, read (zp+X) & $FF
+    // reserved       54 D4 F4              2      4    read zp, read (zp+X) & $FF
     // reserved       DC FC                 3      4    re-read operand high byte
     // reserved       5C                    3      8    5 reads at the next opcode address
     /////////////////////////////////////////////////////////////////////////////
     private void Nop2(Context ctx)
     {
+        ReadAndDiscard(ctx);
         ctx.AdvanceState(States.Fetch);
     }
 
