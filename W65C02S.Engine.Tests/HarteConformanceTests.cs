@@ -12,7 +12,6 @@ namespace W65C02S.Engine.Tests;
 [ExcludeFromCodeCoverage]
 public class HarteConformanceTests
 {
-    private const string Milestone2 = "cycle count (plan milestone 2)";
     private const string Milestone3 = "indexing dummy read address (plan milestone 3)";
     private const string Milestone4 = "implied / stack dummy read address (plan milestone 4)";
 
@@ -33,10 +32,6 @@ public class HarteConformanceTests
             // permanent: the vectors put an extra decimal-mode cycle at $7F/$00; no other source
             [0x69] = new("decimal mode extra cycle address unverified", DecimalMode),
             [0xE9] = new("decimal mode extra cycle address unverified", DecimalMode),
-
-            [0x6C] = new(Milestone2),
-            [0x71] = new($"{Milestone2}; {Milestone3}"),
-            [0xF1] = new($"{Milestone2}; {Milestone3}"),
         };
 
         int[] milestone3 =
@@ -47,7 +42,7 @@ public class HarteConformanceTests
             // (zp,X)
             0x01, 0x21, 0x41, 0x61, 0x81, 0xA1, 0xC1, 0xE1,
             // (zp),Y
-            0x11, 0x31, 0x51, 0xB1, 0xD1, 0x91,
+            0x11, 0x31, 0x51, 0x71, 0xB1, 0xD1, 0xF1, 0x91,
             // abs,X / abs,Y reads
             0x19, 0x1D, 0x39, 0x3C, 0x3D, 0x59, 0x5D, 0x79, 0x7D, 0xB9, 0xBC, 0xBD, 0xBE, 0xD9, 0xDD,
             0xF9, 0xFD

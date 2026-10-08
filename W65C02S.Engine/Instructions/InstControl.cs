@@ -22,6 +22,7 @@ internal class InstControl : InstBase, IInstruction
         stateRegistry.Map(States.InstJMPind3, JmpInd3);
         stateRegistry.Map(States.InstJMPind4, JmpInd4);
         stateRegistry.Map(States.InstJMPind5, JmpInd5);
+        stateRegistry.Map(States.InstJMPind6, JmpInd6);
         stateRegistry.Map(States.InstJMPabsxind2, JmpAbsxInd2);
         stateRegistry.Map(States.InstJMPabsxind3, JmpAbsxInd3);
         stateRegistry.Map(States.InstJMPabsxind4, JmpAbsxInd4);
@@ -55,7 +56,7 @@ internal class InstControl : InstBase, IInstruction
     // addressing     assembler     opc   bytes  cycles
     // ------------------------------------------------
     // absolute       JMP oper      4C      3      3
-    // indirect       JMP (oper)    6C      3      5
+    // indirect       JMP (oper)    6C      3      6
     // abs,X indirect JMP (oper,X)  7C      3      6
     /////////////////////////////////////////////////////////////////////////////
 
@@ -107,7 +108,20 @@ internal class InstControl : InstBase, IInstruction
     private void JmpInd5(Context ctx)
     {
         FetchEA2HighIndirect(ctx);
-        ctx.Regs.PC = ctx.Regs.EA2;
+
+        ctx.AdvanceState(States.InstJMPind6);
+    }
+
+    private void JmpInd6(Context ctx)
+    {
+        // dummy read: the bus stays on the pointer's high byte (Harte vectors)
+        if (ctx.GetSubStep() == P1MiddleStep)
+        {
+            ctx.Pins.AddrBus = ctx.Regs.EA.Inc();
+            ctx.Pins.RWB = Read;
+        }
+        else if (ctx.GetSubStep() == P2LastSubstep)
+            ctx.Regs.PC = ctx.Regs.EA2;
 
         ctx.AdvanceState(States.Fetch);
     }

@@ -241,7 +241,7 @@ public enum States
     InstBRKimp2, InstBRKimp3, InstBRKimp4, InstBRKimp5, InstBRKimp6, InstBRKimp7, // BRK implied
 
     InstJMPabs2, InstJMPabs3, // JMP absolute
-    InstJMPind2, InstJMPind3, InstJMPind4, InstJMPind5, // JMP indirect
+    InstJMPind2, InstJMPind3, InstJMPind4, InstJMPind5, InstJMPind6, // JMP indirect
     InstJMPabsxind2, InstJMPabsxind3, InstJMPabsxind4, InstJMPabsxind5, InstJMPabsxind6, // JMP absolute indexed indirect
 
     InstJSRabs2, InstJSRabs3, InstJSRabs4, InstJSRabs5, InstJSRabs6, // JSR absolute

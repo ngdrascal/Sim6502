@@ -41,38 +41,48 @@ public class ControlTests : UnitTestBase
     // -------------------------------------------------------------------------
     // JMP indirect
     // -------------------------------------------------------------------------
-    [Fact]
-    public void TestJMPind()
+    /*
+      TITLE: JMP (abs) takes 6 cycles and loads PC from the pointer with the vectors' bus activity
+      GIVEN: a CPU booted to $1000 holding JMP (pointer); the pointer holds $DCBA; cases cover an
+             ordinary pointer and a pointer at $xxFF
+      WHEN: JMP (abs) runs for 6 cycles against memory
+      THEN: the cycles read PC, PC+1, PC+2, pointer, pointer + 1 (carrying into the next page),
+            then pointer + 1 again; PC is $DCBA and the next cycle is an opcode fetch
+    */
+    [Theory]
+    [InlineData(0x4321)]
+    [InlineData(0x43FF)]
+    public void TestJMPind(int pointer)
     {
         // ARRANGE:
         var opCode = OpCodes.JMPind.ToUInt8();
-        var operand1 = new UInt8(0x21);
-        var operand2 = new UInt8(0x43);
-        var indAddrLsb = new UInt8(0xBA);
-        var indAddrMsb = new UInt8(0xDC);
-        var expectedPC = new UInt16(indAddrLsb, indAddrMsb);
+        Memory[0x1000] = (byte)opCode.ToInt();
+        Memory[0x1001] = (byte)(pointer & 0xFF);
+        Memory[0x1002] = (byte)(pointer >> 8);
+        Memory[pointer] = 0xBA;
+        Memory[pointer + 1] = 0xDC;
+        var expected = new[]
+        {
+            new MemoryCycle(0x1000, opCode.ToInt(), false),
+            new MemoryCycle(0x1001, pointer & 0xFF, false),
+            new MemoryCycle(0x1002, pointer >> 8, false),
+            new MemoryCycle(pointer, 0xBA, false),
+            new MemoryCycle(pointer + 1, 0xDC, false),
+            new MemoryCycle(pointer + 1, 0xDC, false)
+        };
 
         BootToAddress(BootAddr);
 
         // ACT:
-        Pins.DataBus = (opCode);
-        ExecuteClockCycles(1); // fetch the opcode
-
-        Pins.DataBus = (operand1);
-        ExecuteClockCycles(1); // InstJMPind2 - fetch the low byte of the indirect address
-
-        Pins.DataBus = (operand2);
-        ExecuteClockCycles(1); // InstJMPind3 - fetch the high byte of the indirect address
-
-        Pins.DataBus = (indAddrLsb);
-        ExecuteClockCycles(1); // InstJMPind4 - fetch the low byte of the target address
-
-        Pins.DataBus = (indAddrMsb);
-        ExecuteClockCycles(1); // InstJMPind5 - fetch the high byte of the target address
+        var cycles = expected.Select(_ => ExecuteCycleWithMemory()).ToList();
+        var pc = Regs.PC;
+        var next = ExecuteCycleWithMemory();
 
         // ASSERT:
-        Assert.Equal(opCode, Pins.DBGINST);
-        Assert.Equal(expectedPC, Regs.PC);
+        Assert.Equal(expected, cycles);
+        Assert.Equal(new UInt16(0xDCBA), pc);
+        Assert.Equal(0xDCBA, next.Addr);
+        Assert.Equal((byte)High.ToInt(), Pins.SYNC);
     }
 
     // -------------------------------------------------------------------------

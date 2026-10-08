@@ -456,7 +456,7 @@ internal class InstADC : InstBase, IInstruction
         if (ctx.GetSubStep() == P2LastSubstep)
             AdcThenUpdateFlags(ctx);
 
-        ctx.AdvanceState(States.Fetch);
+        ctx.AdvanceState(ctx.Regs.P.Decimal.GetValue(), States.InstADCindy7, States.Fetch);
     }
 
     private void Indy7(Context ctx)

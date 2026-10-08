@@ -478,7 +478,7 @@ internal class InstSBC : InstBase, IInstruction
         if (ctx.GetSubStep() == P2LastSubstep)
             SbcThenUpdateFlags(ctx);
 
-        ctx.AdvanceState(States.Fetch);
+        ctx.AdvanceState(ctx.Regs.P.Decimal.GetValue(), States.InstSBCindy7, States.Fetch);
     }
 
     private void Indy7(Context ctx)
