@@ -392,7 +392,7 @@ internal class InstSBC : InstBase, IInstruction
 
     private void Indx5(Context ctx)
     {
-        FetchEA2HighIndirect(ctx);
+        FetchEA2HighIndirectZp(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
 
@@ -436,7 +436,7 @@ internal class InstSBC : InstBase, IInstruction
 
     private void Indy4(Context ctx)
     {
-        FetchEA2HighIndirect(ctx);
+        FetchEA2HighIndirectZp(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
 
@@ -506,7 +506,7 @@ internal class InstSBC : InstBase, IInstruction
 
     private void Ind4(Context ctx)
     {
-        FetchEA2HighIndirect(ctx);
+        FetchEA2HighIndirectZp(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
 

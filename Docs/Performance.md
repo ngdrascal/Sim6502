@@ -15,7 +15,7 @@ dotnet run -c Release --project W65C02S.Benchmarks -- --profile engine|digisim
 - `MixedLoopBenchmark.Run1MCycles` - engine alone, 1M CPU cycles of a loop that mixes zp,X /
   abs,X / (zp),Y addressing, ADC, INC, stack, JSR/RTS and branches. MHz = 1 / mean seconds.
 - `DormannBenchmark.RunToSuccess` - engine alone, Klaus Dormann functional test from reset to
-  the success trap at `$3469` (96,521,371 cycles), tracing off. Throws if it traps anywhere else.
+  the success trap at `$3469` (96,521,323 cycles), tracing off. Throws if it traps anywhere else.
 - `DigisimCpuBenchmark.Run100KCycles` - `W65C02SCpu` + `FakeMemory` + clock in a real Digisim
   `SimulationModel`, 100K cycles of the mixed loop. MHz = 0.1 / mean seconds. End to end:
   includes the Digisim scheduler and pin resolution.

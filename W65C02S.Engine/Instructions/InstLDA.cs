@@ -286,7 +286,7 @@ internal class InstLDA : InstBase, IInstruction
 
     private void Indx5(Context ctx)
     {
-        FetchEA2HighIndirect(ctx);
+        FetchEA2HighIndirectZp(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstLDAindx6);
@@ -315,7 +315,7 @@ internal class InstLDA : InstBase, IInstruction
 
     private void Indy4(Context ctx)
     {
-        FetchEA2HighIndirect(ctx);
+        FetchEA2HighIndirectZp(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstLDAindy5);
@@ -366,7 +366,7 @@ internal class InstLDA : InstBase, IInstruction
 
     private void Ind4(Context ctx)
     {
-        FetchEA2HighIndirect(ctx);
+        FetchEA2HighIndirectZp(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstLDAind5);

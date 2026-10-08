@@ -244,7 +244,7 @@ internal class InstSTA : InstBase, IInstruction
 
     private void Indx5(Context ctx)
     {
-        FetchEA2HighIndirect(ctx);
+        FetchEA2HighIndirectZp(ctx);
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
 
@@ -277,7 +277,7 @@ internal class InstSTA : InstBase, IInstruction
 
     private void Indy4(Context ctx)
     {
-        FetchEA2HighIndirect(ctx);
+        FetchEA2HighIndirectZp(ctx);
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstSTAindy5);
@@ -317,7 +317,7 @@ internal class InstSTA : InstBase, IInstruction
 
     private void Ind4(Context ctx)
     {
-        FetchEA2HighIndirect(ctx);
+        FetchEA2HighIndirectZp(ctx);
         if (ctx.GetSubStep() == Constants.P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
 

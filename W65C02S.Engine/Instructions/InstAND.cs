@@ -303,7 +303,7 @@ internal class InstAND : InstBase, IInstruction
 
     private void Indx5(Context ctx)
     {
-        FetchEA2HighIndirect(ctx);
+        FetchEA2HighIndirectZp(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstANDindx6);
@@ -334,7 +334,7 @@ internal class InstAND : InstBase, IInstruction
 
     private void Indy4(Context ctx)
     {
-        FetchEA2HighIndirect(ctx);
+        FetchEA2HighIndirectZp(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstANDindy5);
@@ -393,7 +393,7 @@ internal class InstAND : InstBase, IInstruction
 
     private void Ind4(Context ctx)
     {
-        FetchEA2HighIndirect(ctx);
+        FetchEA2HighIndirectZp(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
             ctx.Regs.CopyEA2ToEA();
         ctx.AdvanceState(States.InstANDind5);

@@ -89,13 +89,24 @@ internal class InstBase
         }
     }
 
+    // 16-bit pointer (JMP (a), JMP (a,x)): the high byte is at EA + 1
     protected void FetchEA2HighIndirect(Context ctx)
+    {
+        FetchEA2High(ctx, ctx.Regs.EA.Inc());
+    }
+
+    // zero page pointer ((zp), (zp,x), (zp),y): the high byte is at (EA + 1) & $FF, so a pointer at
+    // $FF takes its high byte from $00
+    protected void FetchEA2HighIndirectZp(Context ctx)
+    {
+        FetchEA2High(ctx, new UInt16(ctx.Regs.EA.Lsb().ToInt() + 1 & 0xFF));
+    }
+
+    private void FetchEA2High(Context ctx, UInt16 addr)
     {
         if (ctx.GetSubStep() == P1MiddleStep)
         {
-            var eaPlus1 = ctx.Regs.EA.Copy();
-            eaPlus1 = eaPlus1.Inc();
-            ctx.Pins.AddrBus = eaPlus1;
+            ctx.Pins.AddrBus = addr;
             ctx.Pins.RWB = Read;
         }
         else if (ctx.GetSubStep() == P2LastSubstep)

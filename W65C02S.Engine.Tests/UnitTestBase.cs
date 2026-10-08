@@ -139,6 +139,38 @@ public class UnitTestBase
         }
     }
 
+    protected record MemoryCycle(int Addr, int Data, bool IsWrite);
+
+    // runs one cycle against Memory: a read is served from Memory before the engine latches it, a
+    // write is stored to Memory; returns the cycle's bus activity
+    protected MemoryCycle ExecuteCycleWithMemory()
+    {
+        const byte write = 0;
+        MemoryCycle? cycle = null;
+
+        for (var i = 0; i < Constants.P2LastSubstep; i++)
+        {
+            ExecuteMicroSteps(1);
+            if (_ctx.GetSubStep() != Constants.P2LastSubstep)
+                continue;
+
+            var addr = Pins.AddrBus.ToInt();
+            if (Pins.RWB == write)
+            {
+                Memory[addr] = (byte)Pins.DataBus.ToInt();
+                cycle = new MemoryCycle(addr, Memory[addr], true);
+            }
+            else
+            {
+                Pins.DataBusMode = DataBusMode.Input;
+                Pins.DataBus = new UInt8(Memory[addr]);
+                cycle = new MemoryCycle(addr, Memory[addr], false);
+            }
+        }
+
+        return cycle ?? throw new InvalidOperationException("cycle did not reach its last substep");
+    }
+
     protected BitFlag FlagValue(string nvzc, char flag)
     {
         return flag switch
