@@ -10,6 +10,6 @@ internal static class Program
         var testSuite = new ValidationTests();
         // testSuite.RunBruceClarkBcdTest();
         testSuite.RunKlausDormannTest();
-        // testSuite.RunExtendedOpCodeTest();
+        testSuite.RunExtendedOpCodeTest();
     }
 }

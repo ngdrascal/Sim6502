@@ -271,7 +271,12 @@ public enum States
 
     InstWAIimp2, InstWAIimp3, // WAI implied
 
-    InstNOP2, InstNOP3, InstNOP4, InstNOP5, InstNOP6, InstNOP7, InstNOP8 // NOP
+    InstNOP2, // NOP implied
+    InstNOPimm2, // reserved NOP, 2 bytes 2 cycles
+    InstNOPzpg2, InstNOPzpg3, // reserved NOP, 2 bytes 3 cycles
+    InstNOPzpgx2, InstNOPzpgx3, InstNOPzpgx4, // reserved NOP, 2 bytes 4 cycles
+    InstNOPabsx2, InstNOPabsx3, InstNOPabsx4, // reserved NOP, 3 bytes 4 cycles
+    InstNOP5C2, InstNOP5C3, InstNOP5C4, InstNOP5C5, InstNOP5C6, InstNOP5C7, InstNOP5C8 // reserved NOP $5C
 }
 
 internal class StateExtensions

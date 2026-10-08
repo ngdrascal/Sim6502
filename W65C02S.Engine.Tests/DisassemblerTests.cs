@@ -11,7 +11,7 @@ public class DisassemblerTests
        TITLE: Disassemble formats each addressing mode's operand in standard syntax
        GIVEN: an opcode at $1000 with operand bytes $34, $12; cases cover JMP (abs), JMP (abs,X),
               zp,X, zp,Y, (zp,X), (zp),Y,
-              RMBn/SMBn zero page, and BBRn/BBSn zero page,relative
+              RMBn/SMBn zero page, BBRn/BBSn zero page,relative, and the reserved NOPs
        WHEN: Disassemble is called
        THEN: it returns the address, mnemonic and operand in that mode's syntax
      */
@@ -26,6 +26,12 @@ public class DisassemblerTests
     [InlineData(OpCodes.SMB7zpg, "1000: SMB7 $34")]
     [InlineData(OpCodes.BBR3zpgrel, "1000: BBR3 $34,$12")]
     [InlineData(OpCodes.BBS7zpgrel, "1000: BBS7 $34,$12")]
+    [InlineData(OpCodes.NOP03, "1000: NOP ")]
+    [InlineData(OpCodes.NOP02, "1000: NOP #$34")]
+    [InlineData(OpCodes.NOP44, "1000: NOP $34")]
+    [InlineData(OpCodes.NOP54, "1000: NOP $34,X")]
+    [InlineData(OpCodes.NOPDC, "1000: NOP $1234,X")]
+    [InlineData(OpCodes.NOP5C, "1000: NOP $1234")]
     public void DisassemblesOperandSyntax(OpCodes opCode, string expected)
     {
         // ARRANGE:

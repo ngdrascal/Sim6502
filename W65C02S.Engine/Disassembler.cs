@@ -290,30 +290,22 @@ public static class Disassembler
                 operandStr = string.Empty;
                 break;
 
-            case OpCodes.NOP02:
             case OpCodes.NOP03:
             case OpCodes.NOP0B:
             case OpCodes.NOP13:
             case OpCodes.NOP1B:
-            case OpCodes.NOP22:
             case OpCodes.NOP23:
             case OpCodes.NOP2B:
             case OpCodes.NOP33:
             case OpCodes.NOP3B:
-            case OpCodes.NOP42:
             case OpCodes.NOP43:
-            case OpCodes.NOP44:
             case OpCodes.NOP4B:
             case OpCodes.NOP53:
-            case OpCodes.NOP54:
             case OpCodes.NOP5B:
-            case OpCodes.NOP5C:
-            case OpCodes.NOP62:
             case OpCodes.NOP63:
             case OpCodes.NOP6B:
             case OpCodes.NOP73:
             case OpCodes.NOP7B:
-            case OpCodes.NOP82:
             case OpCodes.NOP83:
             case OpCodes.NOP8B:
             case OpCodes.NOP93:
@@ -322,18 +314,44 @@ public static class Disassembler
             case OpCodes.NOPAB:
             case OpCodes.NOPB3:
             case OpCodes.NOPBB:
-            case OpCodes.NOPC2:
             case OpCodes.NOPC3:
             case OpCodes.NOPD3:
-            case OpCodes.NOPD4:
-            case OpCodes.NOPDC:
-            case OpCodes.NOPE2:
             case OpCodes.NOPE3:
             case OpCodes.NOPEB:
             case OpCodes.NOPF3:
-            case OpCodes.NOPF4:
             case OpCodes.NOPFB:
+                operandStr = string.Empty;
+                break;
+
+            case OpCodes.NOP02:
+            case OpCodes.NOP22:
+            case OpCodes.NOP42:
+            case OpCodes.NOP62:
+            case OpCodes.NOP82:
+            case OpCodes.NOPC2:
+            case OpCodes.NOPE2:
+                operandStr = BuildImm(operand1);
+                break;
+
+            case OpCodes.NOP44:
+                operandStr = BuildZpg(operand1);
+                break;
+
+            case OpCodes.NOP54:
+            case OpCodes.NOPD4:
+            case OpCodes.NOPF4:
+                operandStr = BuildZpgx(operand1);
+                break;
+
+            case OpCodes.NOPDC:
             case OpCodes.NOPFC:
+                operandStr = BuildAbsX(operand1, operand2);
+                break;
+
+            case OpCodes.NOP5C:
+                operandStr = BuildAbs(operand1, operand2);
+                break;
+
             default:
                 operandStr = "???";
                 break;
