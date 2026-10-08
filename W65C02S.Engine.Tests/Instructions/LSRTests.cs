@@ -282,9 +282,7 @@ public class LSRTests : UnitTestBase
         ExecuteClockCycles(1); // LSRabsx2 - fetch operand1 into EA low
 
         Pins.DataBus = (operand2);
-        ExecuteClockCycles(1); // LSRabsx3 - fetch operand2 into EA high
-
-        ExecuteClockCycles(1); // LSRabsx4 - add X to the EA reg
+        ExecuteClockCycles(1); // LSRabsx3 - fetch operand2 into EA high, add X (no page cross)
 
         Pins.DataBus = (memValue);
         ExecuteClockCycles(1); // LSRabsx5 - fetch value from memory

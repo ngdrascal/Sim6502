@@ -98,4 +98,42 @@ public class RmwBusActivityTests : UnitTestBase
         Assert.Equal(new BusCycle(ea, write, mlbLow), cycles[^1]);
         Assert.Equal(new BusCycle(ea, read, mlbLow), cycles[^2]);
     }
+
+    /*
+      TITLE: abs,X shifts take the extra PC+2 dummy cycle only on a page cross; INC/DEC always do
+      GIVEN: a CPU at $1000 with X = 5
+      WHEN: the abs,X read-modify-write instruction runs until its write cycle
+      THEN: the bus reads the expected addresses, then writes EA; MLB is low for exactly the read,
+            modify and write cycles
+    */
+    [Theory]
+    [InlineData(OpCodes.ASLabsx, 0x1234, new[] { 0x1000, 0x1001, 0x1002, 0x1239, 0x1239, 0x1239 })]
+    [InlineData(OpCodes.ASLabsx, 0x12FD, new[] { 0x1000, 0x1001, 0x1002, 0x1002, 0x1302, 0x1302, 0x1302 })]
+    [InlineData(OpCodes.LSRabsx, 0x1234, new[] { 0x1000, 0x1001, 0x1002, 0x1239, 0x1239, 0x1239 })]
+    [InlineData(OpCodes.LSRabsx, 0x12FD, new[] { 0x1000, 0x1001, 0x1002, 0x1002, 0x1302, 0x1302, 0x1302 })]
+    [InlineData(OpCodes.ROLabsx, 0x1234, new[] { 0x1000, 0x1001, 0x1002, 0x1239, 0x1239, 0x1239 })]
+    [InlineData(OpCodes.ROLabsx, 0x12FD, new[] { 0x1000, 0x1001, 0x1002, 0x1002, 0x1302, 0x1302, 0x1302 })]
+    [InlineData(OpCodes.RORabsx, 0x1234, new[] { 0x1000, 0x1001, 0x1002, 0x1239, 0x1239, 0x1239 })]
+    [InlineData(OpCodes.RORabsx, 0x12FD, new[] { 0x1000, 0x1001, 0x1002, 0x1002, 0x1302, 0x1302, 0x1302 })]
+    [InlineData(OpCodes.INCabsx, 0x1234, new[] { 0x1000, 0x1001, 0x1002, 0x1002, 0x1239, 0x1239, 0x1239 })]
+    [InlineData(OpCodes.INCabsx, 0x12FD, new[] { 0x1000, 0x1001, 0x1002, 0x1002, 0x1302, 0x1302, 0x1302 })]
+    [InlineData(OpCodes.DECabsx, 0x1234, new[] { 0x1000, 0x1001, 0x1002, 0x1002, 0x1239, 0x1239, 0x1239 })]
+    [InlineData(OpCodes.DECabsx, 0x12FD, new[] { 0x1000, 0x1001, 0x1002, 0x1002, 0x1302, 0x1302, 0x1302 })]
+    public void TestAbsXCycles(OpCodes opCode, int baseAddr, int[] expectedAddrs)
+    {
+        // ARRANGE:
+        var read = (byte)High.ToInt();
+        var write = (byte)Low.ToInt();
+        var count = expectedAddrs.Length;
+        var expected = expectedAddrs
+            .Select((addr, i) => new BusCycle(addr, i == count - 1 ? write : read,
+                                              (byte)(i >= count - 3 ? Low : High).ToInt()))
+            .ToList();
+
+        // ACT:
+        var cycles = ExecuteUntilWrite(opCode, 5, [baseAddr & 0xFF, baseAddr >> 8]);
+
+        // ASSERT:
+        Assert.Equal(expected, cycles);
+    }
 }

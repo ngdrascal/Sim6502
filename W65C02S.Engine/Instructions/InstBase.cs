@@ -136,6 +136,22 @@ internal class InstBase
     // Read-modify-write: the modify cycle before this write leaves the bus on EA (a dummy read),
     // per the SingleStepTests 65x02 wdc65c02 vectors and the W65C02S datasheet ("two read and one
     // write cycle"). MAME's ow65c02s.lst reads EA + 1 for zp, zp,X and abs,X instead.
+    // abs,X read-modify-write without the fixed extra cycle (ASL/LSR/ROL/ROR on the W65C02S): fetch
+    // EA high, add X, and go to the dummy-read state (bus left on PC+2) only when the page changes.
+    // INC/DEC abs,X always take the extra cycle. Source: SingleStepTests 65x02 wdc65c02 vectors and
+    // the W65C02S datasheet Table 4-1.
+    protected void FetchEffAddrHighAddX(Context ctx, States pageCrossState, States noPageCrossState)
+    {
+        FetchEffAddrHigh(ctx);
+        if (ctx.GetSubStep() == P2LastSubstep)
+        {
+            var beforePage = ctx.Regs.EA.Msb();
+            ctx.Regs.IncEAWithX();
+            var crossed = !ctx.Regs.EA.Msb().Equals(beforePage);
+            ctx.AdvanceState(crossed ? pageCrossState : noPageCrossState);
+        }
+    }
+
     protected void StoreTempToEffAddr(Context ctx)
     {
         if (ctx.GetSubStep() == P1MiddleStep)

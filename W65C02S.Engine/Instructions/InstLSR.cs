@@ -199,16 +199,12 @@ internal class InstLSR : InstBase, IInstruction
 
     private void Absx3(Context ctx)
     {
-        FetchEffAddrHigh(ctx);
-
-        ctx.AdvanceState(States.InstLSRabsx4);
+        FetchEffAddrHighAddX(ctx, States.InstLSRabsx4, States.InstLSRabsx5);
     }
 
     private void Absx4(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LastSubstep)
-            ctx.Regs.IncEAWithX();
-
+        // page cross: dummy read, the bus stays on PC+2
         ctx.AdvanceState(States.InstLSRabsx5);
     }
 

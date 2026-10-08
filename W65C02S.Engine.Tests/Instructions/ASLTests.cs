@@ -330,9 +330,7 @@ public class ASLTests : UnitTestBase
         ExecuteClockCycles(1); // ASLabsx2 - fetch operand1 into EA low
 
         Pins.DataBus = operand2;
-        ExecuteClockCycles(1); // ASLabsx3 - fetch operand2 into EA high
-
-        ExecuteClockCycles(1); // ASLabsx4 - add X to the EA reg
+        ExecuteClockCycles(1); // ASLabsx3 - fetch operand2 into EA high, add X (no page cross)
 
         Pins.DataBus = memValue;
         ExecuteClockCycles(1); // ASLabsx5 - fetch value from memory

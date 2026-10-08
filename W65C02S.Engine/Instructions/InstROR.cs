@@ -205,16 +205,12 @@ internal class InstROR : InstBase, IInstruction
 
     private void Absx3(Context ctx)
     {
-        FetchEffAddrHigh(ctx);
-
-        ctx.AdvanceState(States.InstRORabsx4);
+        FetchEffAddrHighAddX(ctx, States.InstRORabsx4, States.InstRORabsx5);
     }
 
     private void Absx4(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LastSubstep)
-            ctx.Regs.IncEAWithX();
-
+        // page cross: dummy read, the bus stays on PC+2
         ctx.AdvanceState(States.InstRORabsx5);
     }
 

@@ -203,15 +203,12 @@ internal class InstASL : InstBase, IInstruction
 
     private void Absx3(Context ctx)
     {
-        FetchEffAddrHigh(ctx);
-        ctx.AdvanceState(States.InstASLabsx4);
+        FetchEffAddrHighAddX(ctx, States.InstASLabsx4, States.InstASLabsx5);
     }
 
     private void Absx4(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LastSubstep)
-            ctx.Regs.IncEAWithX();
-
+        // page cross: dummy read, the bus stays on PC+2
         ctx.AdvanceState(States.InstASLabsx5);
     }
 
