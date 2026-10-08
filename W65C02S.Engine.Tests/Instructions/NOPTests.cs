@@ -133,7 +133,7 @@ public class NOPTests : UnitTestBase
     }
 
     /*
-      TITLE: The reserved multi-byte NOPs skip their operands with the MAME W65C02S bus activity
+      TITLE: The reserved multi-byte NOPs skip their operands with the W65C02S bus activity (zp,X: dummy read of the zp base)
       GIVEN: a CPU at $1000 with A = $AA, the given X, Y = $55, and operand bytes $34, $12
       WHEN: the reserved NOP runs; cases cover every 2- and 3-byte reserved NOP, and a zp,X case
             where $34 + X wraps past $FF
@@ -149,10 +149,10 @@ public class NOPTests : UnitTestBase
     [InlineData(OpCodes.NOPC2, 0x00, 2, 0x1002, new[] { 0x1001 })]
     [InlineData(OpCodes.NOPE2, 0x00, 2, 0x1002, new[] { 0x1001 })]
     [InlineData(OpCodes.NOP44, 0x00, 3, 0x1002, new[] { 0x1001, 0x0034 })]
-    [InlineData(OpCodes.NOP54, 0x05, 4, 0x1002, new[] { 0x1001, 0x1001, 0x0039 })]
-    [InlineData(OpCodes.NOPD4, 0x05, 4, 0x1002, new[] { 0x1001, 0x1001, 0x0039 })]
-    [InlineData(OpCodes.NOPF4, 0x05, 4, 0x1002, new[] { 0x1001, 0x1001, 0x0039 })]
-    [InlineData(OpCodes.NOP54, 0xF0, 4, 0x1002, new[] { 0x1001, 0x1001, 0x0024 })]
+    [InlineData(OpCodes.NOP54, 0x05, 4, 0x1002, new[] { 0x1001, 0x0034, 0x0039 })]
+    [InlineData(OpCodes.NOPD4, 0x05, 4, 0x1002, new[] { 0x1001, 0x0034, 0x0039 })]
+    [InlineData(OpCodes.NOPF4, 0x05, 4, 0x1002, new[] { 0x1001, 0x0034, 0x0039 })]
+    [InlineData(OpCodes.NOP54, 0xF0, 4, 0x1002, new[] { 0x1001, 0x0034, 0x0024 })]
     [InlineData(OpCodes.NOPDC, 0x05, 4, 0x1003, new[] { 0x1001, 0x1002, 0x1002 })]
     [InlineData(OpCodes.NOPFC, 0x05, 4, 0x1003, new[] { 0x1001, 0x1002, 0x1002 })]
     [InlineData(OpCodes.NOP5C, 0x00, 8, 0x1003, new[] { 0x1001, 0x1002, 0x1003, 0x1003, 0x1003, 0x1003, 0x1003 })]

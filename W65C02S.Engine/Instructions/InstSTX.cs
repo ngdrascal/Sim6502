@@ -83,8 +83,7 @@ internal class InstSTX : InstBase, IInstruction
 
     private void Zpgy3(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P2LastSubstep)
-            ctx.Regs.IncEALWithY();
+        IndexZpWithY(ctx);
 
         ctx.AdvanceState(States.InstSTXzpgy4);
     }

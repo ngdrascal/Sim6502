@@ -134,8 +134,7 @@ internal class InstCMP : InstBase, IInstruction
 
     private void Zpgx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LastSubstep)
-            ctx.Regs.IncEALWithX();
+        IndexZpWithX(ctx);
 
         ctx.AdvanceState(States.InstCMPzpgx4);
     }
@@ -195,16 +194,8 @@ internal class InstCMP : InstBase, IInstruction
     private void Absx4(Context ctx)
     {
         var nextState = States.Fetch;
-        if (ctx.GetSubStep() == P1MiddleStep)
-        {
-            var beforePage = ctx.Regs.EA.Msb().Copy();
-            ctx.Regs.IncEAWithX();
-            var afterPage = ctx.Regs.EA.Msb().Copy();
-            ctx.CrossedPageBoundary = !afterPage.Equals(beforePage);
-            ctx.Pins.AddrBus = ctx.Regs.EA;
-            ctx.Pins.RWB = Read;
-        }
-        else if (ctx.GetSubStep() == P2LastSubstep)
+        IndexEffAddr(ctx, ctx.Regs.X);
+        if (ctx.GetSubStep() == P2LastSubstep)
         {
             if (!ctx.CrossedPageBoundary)
             {
@@ -249,16 +240,8 @@ internal class InstCMP : InstBase, IInstruction
     private void Absy4(Context ctx)
     {
         var nextState = States.Fetch;
-        if (ctx.GetSubStep() == P1MiddleStep)
-        {
-            var beforePage = ctx.Regs.EA.Msb().Copy();
-            ctx.Regs.IncEAWithY();
-            var afterPage = ctx.Regs.EA.Msb().Copy();
-            ctx.CrossedPageBoundary = !afterPage.Equals(beforePage);
-            ctx.Pins.AddrBus = ctx.Regs.EA;
-            ctx.Pins.RWB = Read;
-        }
-        else if (ctx.GetSubStep() == P2LastSubstep)
+        IndexEffAddr(ctx, ctx.Regs.Y);
+        if (ctx.GetSubStep() == P2LastSubstep)
         {
             if (!ctx.CrossedPageBoundary)
             {
@@ -294,11 +277,7 @@ internal class InstCMP : InstBase, IInstruction
 
     private void Indx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LastSubstep)
-        {
-            ctx.Regs.EA = ctx.Regs.EA.WithLsb(ctx.Regs.EA.Lsb().AddWithWrapAround(ctx.Regs.X));
-            ctx.Regs.EA = ctx.Regs.EA.WithMsb(0);
-        }
+        IndexZpWithX(ctx);
 
         ctx.AdvanceState(States.InstCMPindx4);
     }
@@ -357,16 +336,8 @@ internal class InstCMP : InstBase, IInstruction
     private void Indy5(Context ctx)
     {
         var nextState = States.Fetch;
-        if (ctx.GetSubStep() == P1MiddleStep)
-        {
-            var beforePage = ctx.Regs.EA.Msb().Copy();
-            ctx.Regs.IncEAWithY();
-            var afterPage = ctx.Regs.EA.Msb().Copy();
-            ctx.CrossedPageBoundary = !afterPage.Equals(beforePage);
-            ctx.Pins.AddrBus = ctx.Regs.EA;
-            ctx.Pins.RWB = Read;
-        }
-        else if (ctx.GetSubStep() == P2LastSubstep)
+        IndexEffAddr(ctx, ctx.Regs.Y);
+        if (ctx.GetSubStep() == P2LastSubstep)
         {
             if (!ctx.CrossedPageBoundary)
             {

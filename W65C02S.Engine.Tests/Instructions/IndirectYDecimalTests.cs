@@ -16,7 +16,7 @@ public class IndirectYDecimalTests : UnitTestBase
       GIVEN: a CPU booted to $1000 holding the instruction with operand $40; $40/$41 point at
              $12F0, Y = $20 (EA $1310 holds $28), D set, and A and C as given
       WHEN: the instruction runs against memory
-      THEN: the cycles read PC, PC+1, $40, $41, EA, EA, EA; A holds the decimal result and the
+      THEN: the cycles read PC, PC+1, $40, $41, PC+1 (page cross dummy), EA, EA; A holds the decimal result and the
             next cycle is an opcode fetch at $1002
     */
     [Theory]
@@ -37,7 +37,7 @@ public class IndirectYDecimalTests : UnitTestBase
             new MemoryCycle(0x1001, 0x40, false),
             new MemoryCycle(0x0040, 0xF0, false),
             new MemoryCycle(0x0041, 0x12, false),
-            new MemoryCycle(0x1310, 0x28, false),
+            new MemoryCycle(0x1001, 0x40, false),
             new MemoryCycle(0x1310, 0x28, false),
             new MemoryCycle(0x1310, 0x28, false)
         };

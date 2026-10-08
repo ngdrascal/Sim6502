@@ -129,8 +129,7 @@ internal class InstDecrement : InstBase, IInstruction
     }
     private void DecZpgx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LastSubstep)
-            ctx.Regs.IncEALWithX();
+        IndexZpWithX(ctx);
 
         ctx.AdvanceState(States.InstDECzpgx4);
     }

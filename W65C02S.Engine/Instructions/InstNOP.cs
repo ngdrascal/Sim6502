@@ -157,10 +157,7 @@ internal class InstNOP : InstBase, IInstruction
 
     private void NopZpgx3(Context ctx)
     {
-        // internal operation: the address bus stays on the operand (dummy read) while X is
-        // added to the zero page address, wrapping within page 0
-        if (ctx.GetSubStep() == P2LastSubstep)
-            ctx.Regs.IncEALWithX();
+        IndexZpWithX(ctx);
 
         ctx.AdvanceState(States.InstNOPzpgx4);
     }

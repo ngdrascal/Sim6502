@@ -113,8 +113,7 @@ internal class InstSTA : InstBase, IInstruction
 
     private void Zpgx3(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P2LastSubstep)
-            ctx.Regs.IncEALWithX();
+        IndexZpWithX(ctx);
 
         ctx.AdvanceState(States.InstSTAzpgx4);
     }
@@ -229,8 +228,7 @@ internal class InstSTA : InstBase, IInstruction
 
     private void Indx3(Context ctx)
     {
-        if (ctx.GetSubStep() == Constants.P2LastSubstep)
-            ctx.Regs.IncEALWithX();
+        IndexZpWithX(ctx);
 
         ctx.AdvanceState(States.InstSTAindx4);
     }
@@ -285,8 +283,13 @@ internal class InstSTA : InstBase, IInstruction
 
     private void Indy5(Context ctx)
     {
+        // dummy read of the last instruction byte (PC - 1) while Y is added
         if (ctx.GetSubStep() == Constants.P1MiddleStep)
+        {
             ctx.Regs.IncEAWithY();
+            ctx.Pins.AddrBus = ctx.Regs.PC.Dec();
+            ctx.Pins.RWB = Read;
+        }
 
         ctx.AdvanceState(States.InstSTAindy6);
     }

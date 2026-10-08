@@ -144,9 +144,44 @@ internal class InstBase
         }
     }
 
-    // Read-modify-write: the modify cycle before this write leaves the bus on EA (a dummy read),
-    // per the SingleStepTests 65x02 wdc65c02 vectors and the W65C02S datasheet ("two read and one
-    // write cycle"). MAME's ow65c02s.lst reads EA + 1 for zp, zp,X and abs,X instead.
+    // zp,X / zp,Y / (zp,X) indexing cycle: a dummy read of the zero page base address while the
+    // index is added, wrapping within page 0 (SingleStepTests 65x02 wdc65c02 vectors)
+    protected void IndexZpWithX(Context ctx)
+    {
+        IndexZp(ctx, ctx.Regs.X);
+    }
+
+    protected void IndexZpWithY(Context ctx)
+    {
+        IndexZp(ctx, ctx.Regs.Y);
+    }
+
+    private void IndexZp(Context ctx, UInt8 index)
+    {
+        if (ctx.GetSubStep() == P1MiddleStep)
+        {
+            ctx.Pins.AddrBus = ctx.Regs.EA;
+            ctx.Pins.RWB = Read;
+        }
+        else if (ctx.GetSubStep() == P2LastSubstep)
+            ctx.Regs.EA = ctx.Regs.EA.WithLsb(ctx.Regs.EA.Lsb().AddWithWrapAround(index));
+    }
+
+    // abs,X / abs,Y / (zp),Y reads: add the index to EA. Without a page cross the cycle reads EA;
+    // with one it is a dummy read of the last instruction byte (PC - 1) and the next cycle reads
+    // EA (W65C02S datasheet Table 7-1, SingleStepTests 65x02 wdc65c02 vectors)
+    protected void IndexEffAddr(Context ctx, UInt8 index)
+    {
+        if (ctx.GetSubStep() != P1MiddleStep)
+            return;
+
+        var beforePage = ctx.Regs.EA.Msb();
+        ctx.Regs.EA = ctx.Regs.EA.AddUnsigned(index);
+        ctx.CrossedPageBoundary = !ctx.Regs.EA.Msb().Equals(beforePage);
+        ctx.Pins.AddrBus = ctx.CrossedPageBoundary ? ctx.Regs.PC.Dec() : ctx.Regs.EA;
+        ctx.Pins.RWB = Read;
+    }
+
     // abs,X read-modify-write without the fixed extra cycle (ASL/LSR/ROL/ROR on the W65C02S): fetch
     // EA high, add X, and go to the dummy-read state (bus left on PC+2) only when the page changes.
     // INC/DEC abs,X always take the extra cycle. Source: SingleStepTests 65x02 wdc65c02 vectors and
@@ -163,6 +198,9 @@ internal class InstBase
         }
     }
 
+    // Read-modify-write: the modify cycle before this write leaves the bus on EA (a dummy read),
+    // per the SingleStepTests 65x02 wdc65c02 vectors and the W65C02S datasheet ("two read and one
+    // write cycle"). MAME's ow65c02s.lst reads EA + 1 for zp, zp,X and abs,X instead.
     protected void StoreTempToEffAddr(Context ctx)
     {
         if (ctx.GetSubStep() == P1MiddleStep)

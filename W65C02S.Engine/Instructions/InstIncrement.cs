@@ -132,8 +132,7 @@ internal class InstIncrement : InstBase, IInstruction
 
     private void IncZpgx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LastSubstep)
-            ctx.Regs.IncEALWithX();
+        IndexZpWithX(ctx);
 
         ctx.AdvanceState(States.InstINCzpgx4);
     }

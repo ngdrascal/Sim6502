@@ -122,8 +122,7 @@ internal class InstBIT : InstBase, IInstruction
 
     private void Zpgx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LastSubstep)
-            ctx.Regs.IncEALWithX();
+        IndexZpWithX(ctx);
 
         ctx.AdvanceState(States.InstBITzpgx4);
     }
@@ -184,16 +183,8 @@ internal class InstBIT : InstBase, IInstruction
     {
         var nextState = States.Fetch;
 
-        if (ctx.GetSubStep() == P1MiddleStep)
-        {
-            var beforePage = ctx.Regs.EA.Msb().Copy();
-            ctx.Regs.IncEAWithX();
-            var afterPage = ctx.Regs.EA.Msb().Copy();
-            ctx.CrossedPageBoundary = !afterPage.Equals(beforePage);
-            ctx.Pins.AddrBus = ctx.Regs.EA;
-            ctx.Pins.RWB = Read;
-        }
-        else if (ctx.GetSubStep() == P2LastSubstep)
+        IndexEffAddr(ctx, ctx.Regs.X);
+        if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
             ctx.Regs.Temp = data;
@@ -213,12 +204,9 @@ internal class InstBIT : InstBase, IInstruction
 
     private void Absx5(Context ctx)
     {
+        LoadTempFromEffAddr(ctx);
         if (ctx.GetSubStep() == P2LastSubstep)
-        {
-            var data = ctx.Pins.DataBus;
-            ctx.Regs.Temp = data;
             AndAWithTempSetFlags(ctx);
-        }
 
         ctx.AdvanceState(States.Fetch);
     }

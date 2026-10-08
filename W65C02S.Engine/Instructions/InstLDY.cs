@@ -106,8 +106,7 @@ internal class InstLDY : InstBase, IInstruction
 
     private void Zpgx3(Context ctx)
     {
-        if (ctx.GetSubStep() == P2LastSubstep)
-            ctx.Regs.IncEALWithX();
+        IndexZpWithX(ctx);
 
         ctx.AdvanceState(States.InstLDYzpgx4);
     }
@@ -163,16 +162,8 @@ internal class InstLDY : InstBase, IInstruction
     private void Absx4(Context ctx)
     {
         var nextState = States.Fetch;
-        if (ctx.GetSubStep() == P1MiddleStep)
-        {
-            var beforePage = ctx.Regs.EA.Msb().Copy();
-            ctx.Regs.IncEAWithX();
-            var afterPage = ctx.Regs.EA.Msb().Copy();
-            ctx.CrossedPageBoundary = !afterPage.Equals(beforePage);
-            ctx.Pins.AddrBus = ctx.Regs.EA;
-            ctx.Pins.RWB = Read;
-        }
-        else if (ctx.GetSubStep() == P2LastSubstep)
+        IndexEffAddr(ctx, ctx.Regs.X);
+        if (ctx.GetSubStep() == P2LastSubstep)
         {
             var data = ctx.Pins.DataBus;
             if (!ctx.CrossedPageBoundary)
