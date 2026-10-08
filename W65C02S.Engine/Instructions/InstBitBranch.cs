@@ -76,7 +76,7 @@ internal class InstBitBranch : InstBase, IInstruction
             registry.Map(s[2], ctx => ZpgRel4(ctx, s[3]));
             registry.Map(s[3], ctx => ZpgRel5(ctx, variant));
             registry.Map(s[4], ctx => Branch3(ctx, s[5]));
-            registry.Map(s[5], Branch4);
+            registry.Map(s[5], ctx => Branch4(ctx, true));
         }
 
         return this;

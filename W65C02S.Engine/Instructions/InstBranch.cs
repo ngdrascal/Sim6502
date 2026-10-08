@@ -104,7 +104,7 @@ internal class InstBranch : InstBase, IInstruction
 
     private void BraRel4(Context ctx)
     {
-        Branch4(ctx);
+        Branch4(ctx, false);
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -131,7 +131,7 @@ internal class InstBranch : InstBase, IInstruction
 
     private void BccRel4(Context ctx)
     {
-        Branch4(ctx);
+        Branch4(ctx, false);
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -156,7 +156,7 @@ internal class InstBranch : InstBase, IInstruction
 
     private void BcsRel4(Context ctx)
     {
-        Branch4(ctx);
+        Branch4(ctx, false);
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -181,7 +181,7 @@ internal class InstBranch : InstBase, IInstruction
 
     private void BeqRel4(Context ctx)
     {
-        Branch4(ctx);
+        Branch4(ctx, false);
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -206,7 +206,7 @@ internal class InstBranch : InstBase, IInstruction
 
     private void BmiRel4(Context ctx)
     {
-        Branch4(ctx);
+        Branch4(ctx, false);
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -231,7 +231,7 @@ internal class InstBranch : InstBase, IInstruction
 
     private void BneRel4(Context ctx)
     {
-        Branch4(ctx);
+        Branch4(ctx, false);
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -256,7 +256,7 @@ internal class InstBranch : InstBase, IInstruction
 
     private void BplRel4(Context ctx)
     {
-        Branch4(ctx);
+        Branch4(ctx, false);
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -281,7 +281,7 @@ internal class InstBranch : InstBase, IInstruction
 
     private void BvcRel4(Context ctx)
     {
-        Branch4(ctx);
+        Branch4(ctx, false);
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -306,6 +306,6 @@ internal class InstBranch : InstBase, IInstruction
 
     private void BvsRel4(Context ctx)
     {
-        Branch4(ctx);
+        Branch4(ctx, false);
     }
 }

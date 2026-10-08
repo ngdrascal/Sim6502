@@ -253,31 +253,55 @@ internal class InstBase
         return false;
     }
 
-    // branch taken: add the signed offset in Temp to PC; a page change costs one more cycle
+    // Branch bus activity. The W65C02S datasheet has no per-cycle table; this follows the
+    // SingleStepTests 65x02 wdc65c02 vectors (and TomHarte/CLK, which generated them):
+    //   taken cycle:      dummy read of PC, the next instruction's address
+    //   page cross cycle: Bxx/BRA dummy read of old PCH : new PCL;
+    //                     BBR/BBS dummy read of the next instruction's address again
+    // MAME (ow65c02.lst bbr_zpb/bbs_zpb) reads old PCH : new PCL for BBR/BBS too.
+
+    // branch taken: add the signed offset in Temp to PCL; a page change costs one more cycle
     protected void Branch3(Context ctx, States nextState)
     {
-        if (ctx.GetSubStep() == P2LastSubstep)
+        if (ctx.GetSubStep() == P1MiddleStep)
+        {
+            ctx.Pins.AddrBus = ctx.Regs.PC;
+            ctx.Pins.RWB = Read;
+        }
+        else if (ctx.GetSubStep() == P2LastSubstep)
         {
             var regs = ctx.Regs;
-            var beforePage = regs.PC.Msb().Copy();
-            regs.PC = regs.PC.AddSigned(regs.Temp);
-            var afterPage = regs.PC.Msb().Copy();
-            if (afterPage.Equals(beforePage))
+            var target = regs.PC.AddSigned(regs.Temp);
+            if (target.Msb().Equals(regs.PC.Msb()))
             {
-                ctx.Pins.AddrBus = ctx.Regs.PC;
+                regs.PC = target;
                 ctx.AdvanceState(States.Fetch);
             }
             else
             {
+                // PCH is fixed in the page cross cycle
+                regs.PC = regs.PC.WithLsb(target.Lsb());
                 ctx.AdvanceState(nextState);
             }
         }
     }
 
-    protected void Branch4(Context ctx)
+    // page cross: PC holds old PCH : new PCL; carry or borrow into PCH
+    protected void Branch4(Context ctx, bool rereadNext)
     {
-        if (ctx.GetSubStep() == P2LastSubstep)
-            ctx.Pins.AddrBus = ctx.Regs.PC;
+        if (ctx.GetSubStep() == P1MiddleStep)
+        {
+            var pc = ctx.Regs.PC;
+            ctx.Pins.AddrBus = rereadNext
+                ? pc.WithLsb(new UInt8(pc.Lsb().ToInt() - ctx.Regs.Temp.ToInt()))
+                : pc;
+            ctx.Pins.RWB = Read;
+        }
+        else if (ctx.GetSubStep() == P2LastSubstep)
+        {
+            var pageDelta = ctx.Regs.Temp.IsBitSet(7) ? -0x100 : 0x100;
+            ctx.Regs.PC = new UInt16(ctx.Regs.PC.ToInt() + pageDelta);
+        }
 
         ctx.AdvanceState(States.Fetch);
     }

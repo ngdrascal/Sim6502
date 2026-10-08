@@ -720,4 +720,71 @@ public class BranchTests : UnitTestBase
         // ASSERT:
         Assert.Equal(0x00, Memory[BootAddr.ToInt() + 0x4C]);
     }
+
+    // -------------------------------------------------------------------------
+    // bus activity during the taken and page cross cycles
+    // -------------------------------------------------------------------------
+
+    // Addrs/Rwbs/Syncs: one entry per extra (taken, page cross) cycle; Fetch*: the next opcode fetch
+    private record BusTrace(List<int> Addrs, List<byte> Rwbs, List<byte> Syncs, int FetchAddr, byte FetchSync);
+
+    // runs a taken branch at pc, sampling the bus after each of extraCycles cycles and the fetch that follows
+    private BusTrace ExecuteTakenBranch(OpCodes opCode, int pc, int offset, int extraCycles)
+    {
+        BootToAddress(new UInt16(pc));
+        Regs.P.Carry = Low;
+
+        Pins.DataBus = opCode.ToUInt8();
+        ExecuteClockCycles(1); // fetch the opcode
+
+        Pins.DataBus = new UInt8(offset);
+        ExecuteClockCycles(1); // fetch the offset
+
+        var trace = new BusTrace([], [], [], 0, 0);
+        Pins.DataBus = OpCodes.NOP.ToUInt8();
+        for (var i = 0; i < extraCycles; i++)
+        {
+            ExecuteClockCycles(1);
+            trace.Addrs.Add(Pins.AddrBus.ToInt());
+            trace.Rwbs.Add(Pins.RWB);
+            trace.Syncs.Add(Pins.SYNC);
+        }
+
+        ExecuteClockCycles(1); // fetch the next opcode
+
+        return trace with { FetchAddr = Pins.AddrBus.ToInt(), FetchSync = Pins.SYNC };
+    }
+
+    /*
+      TITLE: A taken BRA or BCC dummy-reads the next instruction, then old PCH : new PCL on a page cross
+      GIVEN: a CPU at pc with the carry clear
+      WHEN: BRA or BCC with the given offset runs
+      THEN: each extra cycle reads (RWB high, SYNC low) the expected address, and the next opcode
+            is fetched (SYNC high) from the branch target
+    */
+    [Theory]
+    [InlineData(OpCodes.BRArel, 0x1000, 0x08, new[] { 0x1002 }, 0x100A)]
+    [InlineData(OpCodes.BRArel, 0x10F0, 0x20, new[] { 0x10F2, 0x1012 }, 0x1112)]
+    [InlineData(OpCodes.BRArel, 0x1080, 0xF0, new[] { 0x1082 }, 0x1072)]
+    [InlineData(OpCodes.BRArel, 0x1000, 0xF0, new[] { 0x1002, 0x10F2 }, 0x0FF2)]
+    [InlineData(OpCodes.BCCrel, 0x1000, 0x08, new[] { 0x1002 }, 0x100A)]
+    [InlineData(OpCodes.BCCrel, 0x10F0, 0x20, new[] { 0x10F2, 0x1012 }, 0x1112)]
+    [InlineData(OpCodes.BCCrel, 0x1080, 0xF0, new[] { 0x1082 }, 0x1072)]
+    [InlineData(OpCodes.BCCrel, 0x1000, 0xF0, new[] { 0x1002, 0x10F2 }, 0x0FF2)]
+    public void TestTakenBranchBusActivity(OpCodes opCode, int pc, int offset, int[] expectedAddrs, int target)
+    {
+        // ARRANGE:
+        var read = (byte)High.ToInt();
+        var syncLow = (byte)Low.ToInt();
+
+        // ACT:
+        var trace = ExecuteTakenBranch(opCode, pc, offset, expectedAddrs.Length);
+
+        // ASSERT:
+        Assert.Equal(expectedAddrs, trace.Addrs);
+        Assert.All(trace.Rwbs, rwb => Assert.Equal(read, rwb));
+        Assert.All(trace.Syncs, sync => Assert.Equal(syncLow, sync));
+        Assert.Equal(target, trace.FetchAddr);
+        Assert.Equal((byte)High.ToInt(), trace.FetchSync);
+    }
 }
