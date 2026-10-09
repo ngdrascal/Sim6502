@@ -256,8 +256,11 @@ public class W65C22Via : LogicNode, IRegisterComponent
     {
         long normalValue = 0, normalDriven = 0, weakValue = 0, weakDriven = 0;
 
-        foreach (var driver in pin.ConnectedOutputs)
+        // Indexed: foreach over the IReadOnlyList would box an enumerator on every read.
+        var drivers = pin.ConnectedOutputs;
+        for (var i = 0; i < drivers.Count; i++)
         {
+            var driver = drivers[i];
             var driven = ~driver.DrivenHighZMask;
             if (driver.Strength == DriveStrength.Weak)
             {

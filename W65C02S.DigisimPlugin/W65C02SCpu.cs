@@ -58,6 +58,11 @@ public class W65C02SCpu : LogicNode, IRegisterComponent
     private byte _resb = High, _irqb = High, _nmib = High, _rdy = High, _be = High, _sob = High;
     private long _data;
 
+    // The outputs depend only on the engine's pins, PHI2 and BE: they are driven again only after the
+    // engine ran (a PHI2 edge) or BE changed, not on every evaluation. Cleared when the engine is created.
+    private bool _outputsDriven;
+    private byte _drivenBe;
+
     public static ComponentDescriptor BuildDescriptor()
     {
         return new ComponentDescriptor
@@ -191,9 +196,15 @@ public class W65C02SCpu : LogicNode, IRegisterComponent
             ApplyInputs(latchData: !_phi2);
             RunEngineUntil(_phi2 ? NextSubstepAfterRise : NextSubstepAfterFall);
             _lastPhi2 = _phi2;
+            _outputsDriven = false;
         }
 
+        if (_outputsDriven && _be == _drivenBe)
+            return;
+
         DriveOutputs();
+        _outputsDriven = true;
+        _drivenBe = _be;
     }
 
     private void CreateEngine()
@@ -214,6 +225,7 @@ public class W65C02SCpu : LogicNode, IRegisterComponent
         // the engine ignores its first clock transition unless it moves away from high
         _enginePhi2 = High;
         _lastPhi2 = false;
+        _outputsDriven = false;
 
         if (_logger.IsEnabled(LogLevel.Debug))
             _engine.OnInstructionComplete += TraceInstruction;

@@ -75,6 +75,31 @@ public class W65C22ViaTests
     }
 
     /*
+       TITLE: Reading the VIA's inputs allocates nothing
+       GIVEN: a started VIA whose D and port pins have connected drivers, read once to warm up
+       WHEN: ReadInputs is called again
+       THEN: no bytes are allocated on the current thread
+     */
+    [Fact]
+    public void ReadInputs_Warm_AllocatesNothing()
+    {
+        // ARRANGE:
+        var bench = new ViaBench();
+        var port = new SignalSource("pa", 8, 0x5A);
+        bench.Attach(port, y => y.Connect(bench.Via.PA));
+        bench.Start();
+        bench.Via.ReadInputs();
+
+        // ACT:
+        var before = GC.GetAllocatedBytesForCurrentThread();
+        bench.Via.ReadInputs();
+        var allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+
+        // ASSERT:
+        Assert.Equal(0, allocated);
+    }
+
+    /*
        TITLE: A written register reads back over D, addressed through all four RS lines
        GIVEN: a started VIA bench
        WHEN: 0x15 is written to PCR ($C) and PCR is read
