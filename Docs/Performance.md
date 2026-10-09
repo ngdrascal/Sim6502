@@ -34,6 +34,7 @@ Machine: Intel Core i7-13700HX, Windows 11, .NET 10.0.12, BenchmarkDotNet 0.15.8
 | M2        | 132.6 ms        | 7.54 | 154.6 MB| 11.8 s  | 8.21 | 15.0 GB  | 145.9 ms       | 0.69 | 164.8 MB  |
 | M3        | 42.3 ms         | 23.66| 0 B     | 4.93 s  | 19.57| 113 KB   | 72.6 ms        | 1.38 | 135.6 MB  |
 | SDK 1.1.1 | -               | -    | -       | -       | -    | -        | 53.3 ms        | 1.88 | 0 B       |
+| SDK 1.1.2 | -               | -    | -       | -       | -    | -        | 36.0 ms        | 2.78 | 0 B       |
 
 M2: substep/state-change event args only built when subscribed; opcode decode is a table lookup
 (was `Enum.GetValues` + linear scan per fetch); SYNC/VPB/MLB state lookups are arrays (were
@@ -48,6 +49,10 @@ run is the `DriverResolution.Resolve` closure below.
 SDK 1.1.1: Digisim.Sdk / Digisim.Engine 1.1.0 -> 1.1.1 (Digisim 92fd0ea). `DriverResolution` allocates
 nothing for any driver count, `ConnectedOutputs`/`ConnectedInputs` no longer wrap the list per call,
 and the `InOutPin.Mode` trace is guarded. Engine-only benchmarks were not rerun (no engine change).
+
+SDK 1.1.2 (Digisim 2339179): pins re-resolve their drivers only when a driver changed, pins call
+their owning node directly instead of through events, the oscillation detector keeps its counts on
+the nodes, and the pending-node queue is a bitset (no sort).
 
 ## Findings outside the engine
 

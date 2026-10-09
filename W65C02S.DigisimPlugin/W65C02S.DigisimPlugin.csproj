@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <!-- The host supplies the Digisim assemblies at run time, so they are not copied to the output. -->
-    <PackageReference Include="Digisim.Sdk" Version="1.1.1" ExcludeAssets="runtime" />
+    <PackageReference Include="Digisim.Sdk" Version="1.1.2" ExcludeAssets="runtime" />
   </ItemGroup>
 
   <ItemGroup>
