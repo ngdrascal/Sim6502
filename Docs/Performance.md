@@ -33,6 +33,7 @@ Machine: Intel Core i7-13700HX, Windows 11, .NET 10.0.12, BenchmarkDotNet 0.15.8
 | Baseline  | 548.2 ms        | 1.82 | 1.2 GB  | 57.9 s  | 1.67 | 131.2 GB | 215.5 ms       | 0.46 | 289.3 MB  |
 | M2        | 132.6 ms        | 7.54 | 154.6 MB| 11.8 s  | 8.21 | 15.0 GB  | 145.9 ms       | 0.69 | 164.8 MB  |
 | M3        | 42.3 ms         | 23.66| 0 B     | 4.93 s  | 19.57| 113 KB   | 72.6 ms        | 1.38 | 135.6 MB  |
+| SDK 1.1.1 | -               | -    | -       | -       | -    | -        | 53.3 ms        | 1.88 | 0 B       |
 
 M2: substep/state-change event args only built when subscribed; opcode decode is a table lookup
 (was `Enum.GetValues` + linear scan per fetch); SYNC/VPB/MLB state lookups are arrays (were
@@ -44,7 +45,13 @@ updates allocate nothing. The engine alone now runs with zero steady-state alloc
 figure is the one-time harness setup (64K memory, engine tables). The 135.6 MB left in the Digisim
 run is the `DriverResolution.Resolve` closure below.
 
+SDK 1.1.1: Digisim.Sdk / Digisim.Engine 1.1.0 -> 1.1.1 (Digisim 92fd0ea). `DriverResolution` allocates
+nothing for any driver count, `ConnectedOutputs`/`ConnectedInputs` no longer wrap the list per call,
+and the `InOutPin.Mode` trace is guarded. Engine-only benchmarks were not rerun (no engine change).
+
 ## Findings outside the engine
+
+Resolved in Digisim SDK 1.1.1 (see Results).
 
 Handoff with the exact Digisim changes and release steps: `Docs/Digisim-Allocation-Fix.md`.
 
