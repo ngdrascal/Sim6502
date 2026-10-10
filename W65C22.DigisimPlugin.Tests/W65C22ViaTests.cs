@@ -571,4 +571,71 @@ public class W65C22ViaTests
         // ASSERT:
         Assert.Empty(logger.Messages);
     }
+
+    /*
+       TITLE: Reusing unchanged input reads gives the same register reads and port levels as resolving every read
+       GIVEN: two VIA benches with a source on PA and CB1, one with the read cache disabled
+       WHEN: both run the same session of port changes, direction changes, a floating PA and CA1/CB1 edges
+       THEN: every register read and every sampled PA/PB/CB1 level are identical, and the reads saw the port changes
+     */
+    [Fact]
+    public void CachedReads_MatchResolvingEveryRead()
+    {
+        // ARRANGE:
+
+        // ACT:
+        var cached = RunPortSession(disableReadCache: false);
+        var full = RunPortSession(disableReadCache: true);
+
+        // ASSERT:
+        Assert.Equal(full, cached);
+        Assert.Contains(cached, line => line.StartsWith("IRA 5A"));
+        Assert.Contains(cached, line => line.StartsWith("IRA 33"));
+    }
+
+    // returns each register read and the port pin levels after it
+    private static List<string> RunPortSession(bool disableReadCache)
+    {
+        var bench = new ViaBench();
+        bench.Via.DisableReadCache = disableReadCache;
+        var pa = new SignalSource("pa", 8, 0x5A);
+        var cb1 = new SignalSource("cb1", 1, 1);
+        bench.Attach(pa, y => y.Connect(bench.Via.PA));
+        bench.Attach(cb1, y => y.Connect(bench.Via.CB1));
+        bench.Start();
+        var log = new List<string>();
+
+        void Read(string name, int register)
+        {
+            var value = bench.Read(register);
+            log.Add($"{name} {value:X2} PA {bench.Via.PA.Value:X2} PB {bench.Via.PB.Value:X2} CB1 {bench.Via.CB1.Value}");
+        }
+
+        Read("IRA", ViaBench.Ora);
+        pa.Value = 0x33;
+        bench.Settle();
+        Read("IRA", ViaBench.Ora);
+        pa.HighZ = true;
+        bench.Settle();
+        Read("IRA", ViaBench.Ora);
+        bench.Write(ViaBench.Ddrb, 0xF0);
+        bench.Write(ViaBench.Orb, 0xA5);
+        Read("IRB", ViaBench.Orb);
+        bench.Write(ViaBench.Ddra, 0x0F);
+        bench.Write(ViaBench.Ora, 0x0C);
+        Read("IRA", ViaBench.Ora);
+        bench.Write(ViaBench.Pcr, 0x11);
+        bench.Ca1.Value = 0;
+        bench.Settle();
+        bench.Ca1.Value = 1;
+        bench.Settle();
+        cb1.Value = 0;
+        bench.Settle();
+        cb1.Value = 1;
+        bench.Settle();
+        Read("IFR", ViaBench.Ifr);
+        bench.Cycles(3);
+        Read("IRA", ViaBench.Ora);
+        return log;
+    }
 }

@@ -435,4 +435,52 @@ public class W65C02SCpuTests
         // ASSERT:
         Assert.Empty(logger.Messages);
     }
+
+    /*
+       TITLE: Reusing unchanged control input reads gives the same bus activity as resolving every read
+       GIVEN: two CPUs running an INC loop with IRQ and NMI handlers, one with the read cache disabled
+       WHEN: both run the same sequence of IRQB, NMIB, RDY, BE, SOB and RESB pulses
+       THEN: every half-cycle bus sample and the counters in memory are identical, and the handlers ran
+     */
+    [Fact]
+    public void CachedReads_MatchResolvingEveryRead()
+    {
+        // ARRANGE:
+        var cached = new CpuBench();
+        var full = new CpuBench();
+        full.Cpu.DisableReadCache = true;
+
+        // ACT:
+        var cachedRun = RunControlSession(cached);
+        var fullRun = RunControlSession(full);
+
+        // ASSERT:
+        Assert.Equal(fullRun, cachedRun);
+        Assert.Equal(full.Samples, cached.Samples);
+        Assert.All(cachedRun, counter => Assert.NotEqual(0, counter));
+    }
+
+    // CLI / loop: INC $10 / JMP loop, IRQ: INC $11 / RTI, NMI: INC $12 / RTI; returns $10-$12
+    private static byte[] RunControlSession(CpuBench bench)
+    {
+        bench.Memory.Load(CpuBench.ProgramStart, 0x58, 0xE6, 0x10, 0x4C, 0x01, 0x02);
+        bench.Memory.Load(0x0300, 0xE6, 0x11, 0x40);
+        bench.Memory.Load(0x0310, 0xE6, 0x12, 0x40);
+        bench.SetVector(0xFFFE, 0x0300);
+        bench.SetVector(0xFFFA, 0x0310);
+        bench.Start();
+        bench.RunCycles(20);
+
+        foreach (var control in new[] { bench.Irqb, bench.Nmib, bench.Rdy, bench.Be, bench.Sob, bench.Resb })
+        {
+            control.Value = 0;
+            bench.Settle();
+            bench.RunCycles(3);
+            control.Value = 1;
+            bench.Settle();
+            bench.RunCycles(20);
+        }
+
+        return [bench.Memory[0x10], bench.Memory[0x11], bench.Memory[0x12]];
+    }
 }

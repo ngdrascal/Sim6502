@@ -41,6 +41,11 @@ public class W65C22Via : LogicNode, IRegisterComponent
     private long _cb1Held;
     private long _cb2Held;
 
+    // The last read of each input, reused while its pin's Version and the VIA's own drive are unchanged
+    private LevelCache _phi2Cache, _resbCache, _cs1Cache, _cs2bCache;
+    private LevelCache _rs0Cache, _rs1Cache, _rs2Cache, _rs3Cache, _rwbCache, _ca1Cache;
+    private NetCache _dCache, _paCache, _pbCache, _ca2Cache, _cb1Cache, _cb2Cache;
+
     public static ComponentDescriptor BuildDescriptor()
     {
         return new ComponentDescriptor
@@ -144,6 +149,11 @@ public class W65C22Via : LogicNode, IRegisterComponent
 
     public override bool IsSequential => true;
 
+    /// <summary>
+    /// Test-only: resolve every input on every read instead of reusing the last read.
+    /// </summary>
+    internal bool DisableReadCache { get; set; }
+
     public override void Initialize()
     {
         CreateEngine();
@@ -153,24 +163,24 @@ public class W65C22Via : LogicNode, IRegisterComponent
     {
         var pins = _engine.Pins;
 
-        pins.PHI2 = Level(PHI2);
-        pins.RESB = Level(RESB);
-        pins.CS1 = Level(CS1);
-        pins.CS2B = Level(CS2B);
-        pins.RS0 = Level(RS0);
-        pins.RS1 = Level(RS1);
-        pins.RS2 = Level(RS2);
-        pins.RS3 = Level(RS3);
-        pins.RWB = Level(RWB);
+        pins.PHI2 = Level(PHI2, ref _phi2Cache);
+        pins.RESB = Level(RESB, ref _resbCache);
+        pins.CS1 = Level(CS1, ref _cs1Cache);
+        pins.CS2B = Level(CS2B, ref _cs2bCache);
+        pins.RS0 = Level(RS0, ref _rs0Cache);
+        pins.RS1 = Level(RS1, ref _rs1Cache);
+        pins.RS2 = Level(RS2, ref _rs2Cache);
+        pins.RS3 = Level(RS3, ref _rs3Cache);
+        pins.RWB = Level(RWB, ref _rwbCache);
 
-        pins.DataIn = (byte)NetLevels(D, 0, 0, ByteMask);
+        pins.DataIn = (byte)NetLevels(D, ref _dCache, 0, 0, ByteMask);
 
-        _paHeld = NetLevels(PA, pins.PAOut, pins.PADrive, _paHeld);
-        _pbHeld = NetLevels(PB, pins.PBOut, pins.PBDrive, _pbHeld);
-        _ca1Held = HeldLevel(CA1, _ca1Held);
-        _ca2Held = NetLevels(CA2, pins.CA2Out ? 1 : 0, pins.CA2Drive ? 1 : 0, _ca2Held);
-        _cb1Held = NetLevels(CB1, pins.CB1Out ? 1 : 0, pins.CB1Drive ? 1 : 0, _cb1Held);
-        _cb2Held = NetLevels(CB2, pins.CB2Out ? 1 : 0, pins.CB2Drive ? 1 : 0, _cb2Held);
+        _paHeld = NetLevels(PA, ref _paCache, pins.PAOut, pins.PADrive, _paHeld);
+        _pbHeld = NetLevels(PB, ref _pbCache, pins.PBOut, pins.PBDrive, _pbHeld);
+        _ca1Held = HeldLevel(CA1, ref _ca1Cache, _ca1Held);
+        _ca2Held = NetLevels(CA2, ref _ca2Cache, pins.CA2Out ? 1 : 0, pins.CA2Drive ? 1 : 0, _ca2Held);
+        _cb1Held = NetLevels(CB1, ref _cb1Cache, pins.CB1Out ? 1 : 0, pins.CB1Drive ? 1 : 0, _cb1Held);
+        _cb2Held = NetLevels(CB2, ref _cb2Cache, pins.CB2Out ? 1 : 0, pins.CB2Drive ? 1 : 0, _cb2Held);
 
         pins.PAIn = (byte)_paHeld;
         pins.PBIn = (byte)_pbHeld;
@@ -204,6 +214,10 @@ public class W65C22Via : LogicNode, IRegisterComponent
         _ca2Held = 1;
         _cb1Held = 1;
         _cb2Held = 1;
+
+        _phi2Cache = _resbCache = _cs1Cache = _cs2bCache = LevelCache.Empty;
+        _rs0Cache = _rs1Cache = _rs2Cache = _rs3Cache = _rwbCache = _ca1Cache = LevelCache.Empty;
+        _dCache = _paCache = _pbCache = _ca2Cache = _cb1Cache = _cb2Cache = NetCache.Empty;
     }
 
     private void TraceAccess(RegisterAccess access)
@@ -225,25 +239,35 @@ public class W65C22Via : LogicNode, IRegisterComponent
     }
 
     // a floating (unconnected or high-Z) bus-side input reads as high, its inactive level
-    private static bool Level(InputPin pin)
+    private bool Level(InputPin pin, ref LevelCache cache)
     {
-        pin.UpdateFromDrivers();
-
-        if (pin.ConnectedOutputs.Count == 0 || pin.IsHighZ)
-            return true;
-
-        return pin.GetBool();
+        return HeldLevel(pin, ref cache, true);
     }
 
     // a floating control input keeps its last level (bus-holding device)
-    private static bool HeldLevel(InputPin pin, bool held)
+    private bool HeldLevel(InputPin pin, ref LevelCache cache, bool held)
     {
+        // An unchanged Version means the pin is not stale, so resolving again would change nothing
+        if (!DisableReadCache && cache.Version == pin.Version && cache.Held == held)
+            return cache.Level;
+
         pin.UpdateFromDrivers();
 
-        if (pin.ConnectedOutputs.Count == 0 || pin.IsHighZ)
-            return held;
+        var level = pin.ConnectedOutputs.Count == 0 || pin.IsHighZ ? held : pin.GetBool();
+        cache = new LevelCache(pin.Version, held, level);
+        return level;
+    }
 
-        return pin.GetBool();
+    // NetLevels, reused while the pin's Version and every argument are unchanged
+    private long NetLevels(InOutPin pin, ref NetCache cache, long ownValue, long ownDrive, long undriven)
+    {
+        if (!DisableReadCache && cache.Version == pin.Version && cache.OwnValue == ownValue
+            && cache.OwnDrive == ownDrive && cache.Undriven == undriven)
+            return cache.Levels;
+
+        var levels = NetLevels(pin, ownValue, ownDrive, undriven);
+        cache = new NetCache(pin.Version, ownValue, ownDrive, undriven, levels);
+        return levels;
     }
 
     /// <summary>
@@ -279,5 +303,17 @@ public class W65C22Via : LogicNode, IRegisterComponent
                      | (undriven & ~(normalDriven | weakDriven));
         var mask = (1L << pin.Bits) - 1;
         return ((ownValue & ownDrive) | (others & ~ownDrive)) & mask;
+    }
+
+    // the key and result of the last Level/HeldLevel read of one pin; Version -1 matches no pin
+    private readonly record struct LevelCache(long Version, bool Held, bool Level)
+    {
+        public static readonly LevelCache Empty = new(-1, false, false);
+    }
+
+    // the key and result of the last NetLevels read of one pin; Version -1 matches no pin
+    private readonly record struct NetCache(long Version, long OwnValue, long OwnDrive, long Undriven, long Levels)
+    {
+        public static readonly NetCache Empty = new(-1, 0, 0, 0, 0);
     }
 }

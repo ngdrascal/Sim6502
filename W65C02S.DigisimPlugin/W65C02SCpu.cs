@@ -58,6 +58,9 @@ public class W65C02SCpu : LogicNode, IRegisterComponent
     private byte _resb = High, _irqb = High, _nmib = High, _rdy = High, _be = High, _sob = High;
     private long _data;
 
+    // The last read of each control input, reused while its pin's Version is unchanged
+    private LevelCache _phi2Cache, _resbCache, _irqbCache, _nmibCache, _rdyCache, _beCache, _sobCache;
+
     // The outputs depend only on the engine's pins, PHI2 and BE: they are driven again only after the
     // engine ran (a PHI2 edge) or BE changed, not on every evaluation. Cleared when the engine is created.
     private bool _outputsDriven;
@@ -159,6 +162,11 @@ public class W65C02SCpu : LogicNode, IRegisterComponent
 
     public override bool IsSequential => true;
 
+    /// <summary>
+    /// Test-only: resolve every input on every read instead of reusing the last read.
+    /// </summary>
+    internal bool DisableReadCache { get; set; }
+
     public override void Initialize()
     {
         CreateEngine();
@@ -166,21 +174,13 @@ public class W65C02SCpu : LogicNode, IRegisterComponent
 
     public override void ReadInputs()
     {
-        PHI2.UpdateFromDrivers();
-        RESB.UpdateFromDrivers();
-        IRQB.UpdateFromDrivers();
-        NMIB.UpdateFromDrivers();
-        RDY.UpdateFromDrivers();
-        BE.UpdateFromDrivers();
-        SOB.UpdateFromDrivers();
-
-        _phi2 = PHI2.GetBool();
-        _resb = Level(RESB);
-        _irqb = Level(IRQB);
-        _nmib = Level(NMIB);
-        _rdy = Level(RDY);
-        _be = Level(BE);
-        _sob = Level(SOB);
+        _phi2 = Read(PHI2, ref _phi2Cache, clock: true) == High;
+        _resb = Read(RESB, ref _resbCache);
+        _irqb = Read(IRQB, ref _irqbCache);
+        _nmib = Read(NMIB, ref _nmibCache);
+        _rdy = Read(RDY, ref _rdyCache);
+        _be = Read(BE, ref _beCache);
+        _sob = Read(SOB, ref _sobCache);
 
         if (D.Mode == PinModes.Input)
         {
@@ -226,6 +226,8 @@ public class W65C02SCpu : LogicNode, IRegisterComponent
         _enginePhi2 = High;
         _lastPhi2 = false;
         _outputsDriven = false;
+
+        _phi2Cache = _resbCache = _irqbCache = _nmibCache = _rdyCache = _beCache = _sobCache = LevelCache.Empty;
 
         if (_logger.IsEnabled(LogLevel.Debug))
             _engine.OnInstructionComplete += TraceInstruction;
@@ -286,6 +288,20 @@ public class W65C02SCpu : LogicNode, IRegisterComponent
             Disassembler.Disassemble(args.Address, args.OpCode, args.Operand1, args.Operand2), args.Registers);
     }
 
+    // The pin's level: PHI2 (clock) as resolved, any other input through Level. An unchanged Version
+    // means the pin is not stale, so resolving again would change nothing.
+    private byte Read(InputPin pin, ref LevelCache cache, bool clock = false)
+    {
+        if (!DisableReadCache && cache.Version == pin.Version)
+            return cache.Level;
+
+        pin.UpdateFromDrivers();
+
+        var level = clock ? (pin.GetBool() ? High : Low) : Level(pin);
+        cache = new LevelCache(pin.Version, level);
+        return level;
+    }
+
     // a floating (unconnected or high-Z) control input reads as high, its inactive level
     private static byte Level(InputPin pin)
     {
@@ -293,5 +309,11 @@ public class W65C02SCpu : LogicNode, IRegisterComponent
             return High;
 
         return pin.GetBool() ? High : Low;
+    }
+
+    // the key and result of the last read of one pin; Version -1 matches no pin
+    private readonly record struct LevelCache(long Version, byte Level)
+    {
+        public static readonly LevelCache Empty = new(-1, 0);
     }
 }
