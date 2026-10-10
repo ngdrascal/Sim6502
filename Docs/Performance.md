@@ -36,6 +36,7 @@ Machine: Intel Core i7-13700HX, Windows 11, .NET 10.0.12, BenchmarkDotNet 0.15.8
 | SDK 1.1.1 | -               | -    | -       | -       | -    | -        | 53.3 ms        | 1.88 | 0 B       |
 | SDK 1.1.2 | -               | -    | -       | -       | -    | -        | 36.0 ms        | 2.78 | 0 B       |
 | Plugins M4| -               | -    | -       | -       | -    | -        | 35.5 ms        | 2.82 | 0 B       |
+| SDK 1.2.0 | -               | -    | -       | -       | -    | -        | 37.7 ms        | 2.65 | 0 B       |
 
 M2: substep/state-change event args only built when subscribed; opcode decode is a table lookup
 (was `Enum.GetValues` + linear scan per fetch); SYNC/VPB/MLB state lookups are arrays (were
@@ -59,6 +60,11 @@ Plugins M4 (Digisim plan M4): `W65C02SCpu` drives its outputs again only after t
 PHI2 edge) or BE changed, instead of on every evaluation; `W65C22Via.NetLevels` loops over
 `ConnectedOutputs` by index (a `foreach` boxed an enumerator, 233 B per PHI2 half-cycle in
 Digisim's BenEater-6502 benchmark). That benchmark: 949.6 ns -> 865.3 ns per half-cycle, 0 B.
+
+SDK 1.2.0 (Digisim 8524529): node evaluation modes (`NodeEvaluation`): `SignalSwizzler` is evaluated
+inline and `Probe` only after each step. This benchmark has neither, so it is unchanged: the same
+session measured 37.0-37.2 ms on 1.1.2 and 37.7-38.6 ms on 1.2.0 (the 35.5 ms above was another day).
+Digisim's BenEater-6502 benchmark: 865 ns -> 741-812 ns per half-cycle.
 
 ## Findings outside the engine
 
